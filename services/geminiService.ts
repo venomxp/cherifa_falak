@@ -1,6 +1,6 @@
 import { GoogleGenAI, GenerateContentResponse } from "@google/genai";
 
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY! });
+const ai = new GoogleGenAI({ apiKey: process.env.API_KEY! });
 
 // A robust helper function to call the Gemini API with automatic retries on failure
 const generateContentWithRetry = async (prompt: string): Promise<GenerateContentResponse> => {
@@ -10,6 +10,7 @@ const generateContentWithRetry = async (prompt: string): Promise<GenerateContent
       const response = await ai.models.generateContent({
         model: "gemini-2.5-flash",
         contents: prompt,
+        config: { thinkingConfig: { thinkingBudget: 0 } },
       });
       return response;
     } catch (error) {
@@ -87,6 +88,7 @@ Explain its core meaning, its upright significance, and what message it might ho
         const response = await ai.models.generateContentStream({
            model: "gemini-2.5-flash",
            contents: prompt,
+           config: { thinkingConfig: { thinkingBudget: 0 } },
         });
         return response;
     } catch (error) {

@@ -14,3 +14,8 @@ export interface ZodiacSign {
   value: string;
   icon: string;
 }
+
+export interface TarotCardInfo {
+  english: string;
+  arabic: string;
+}

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Page } from '../types';
+import { Page, TarotCardInfo } from '../types';
 import { getTarotInterpretationStream } from '../services/geminiService';
 import { TAROT_CARDS } from '../constants';
 import Button from './common/Button';
@@ -12,7 +12,7 @@ interface TarotReadingPageProps {
 }
 
 const TarotReadingPage: React.FC<TarotReadingPageProps> = ({ setPage }) => {
-  const [drawnCard, setDrawnCard] = useState<string | null>(null);
+  const [drawnCard, setDrawnCard] = useState<TarotCardInfo | null>(null);
   const [interpretation, setInterpretation] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
@@ -44,7 +44,7 @@ const TarotReadingPage: React.FC<TarotReadingPageProps> = ({ setPage }) => {
     setInterpretation('');
 
     try {
-      const stream = await getTarotInterpretationStream(drawnCard);
+      const stream = await getTarotInterpretationStream(drawnCard.english);
       setIsLoading(false);
       setIsStreaming(true);
 
@@ -77,12 +77,11 @@ const TarotReadingPage: React.FC<TarotReadingPageProps> = ({ setPage }) => {
       {/* Tarot Card Display */}
       <div className="w-64 h-96 mb-8 cursor-pointer" onClick={handleCardFlip} style={{ perspective: '1000px' }}>
         {drawnCard && (
-          <TarotCard isFlipped={isFlipped}>
-            {/* Front of the card content */}
-            <div className="flex flex-col items-center justify-center h-full text-center p-2">
-              <p className="text-xl font-bold">{drawnCard}</p>
-            </div>
-          </TarotCard>
+          <TarotCard
+            isFlipped={isFlipped}
+            cardNameEnglish={drawnCard.english}
+            cardNameArabic={drawnCard.arabic}
+          />
         )}
       </div>
 
@@ -95,7 +94,9 @@ const TarotReadingPage: React.FC<TarotReadingPageProps> = ({ setPage }) => {
             <p className="text-red-400 text-center">{error}</p>
           ) : (
             <Card className="animate-fade-in">
-              <h3 className="text-2xl font-bold text-amber-300 mb-4 text-center">{drawnCard}</h3>
+              <h3 className="text-2xl font-bold text-amber-300 mb-4 text-center">
+                {drawnCard?.arabic} ({drawnCard?.english})
+              </h3>
               <p className="text-lg whitespace-pre-wrap leading-relaxed text-right">
                 {interpretation}
                 {isStreaming && <span className="inline-block w-1 h-5 bg-amber-300 animate-pulse ml-1 align-bottom"></span>}

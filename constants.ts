@@ -1,4 +1,4 @@
-import { ZodiacSign } from './types';
+import { ZodiacSign, TarotCardInfo } from './types';
 
 // Zodiac signs data including name, value for API calls, and an SVG icon for display
 export const ZODIAC_SIGNS: ZodiacSign[] = [
@@ -17,9 +17,27 @@ export const ZODIAC_SIGNS: ZodiacSign[] = [
 ];
 
 // List of Tarot cards for the Tarot Reading feature
-export const TAROT_CARDS = [
-  'The Fool', 'The Magician', 'The High Priestess', 'The Empress', 'The Emperor',
-  'The Hierophant', 'The Lovers', 'The Chariot', 'Strength', 'The Hermit',
-  'Wheel of Fortune', 'Justice', 'The Hanged Man', 'Death', 'Temperance',
-  'The Devil', 'The Tower', 'The Star', 'The Moon', 'The Sun', 'Judgement', 'The World'
+export const TAROT_CARDS: TarotCardInfo[] = [
+  { english: 'The Fool', arabic: 'الأحمق' },
+  { english: 'The Magician', arabic: 'الساحر' },
+  { english: 'The High Priestess', arabic: 'الكاهنة العليا' },
+  { english: 'The Empress', arabic: 'الإمبراطورة' },
+  { english: 'The Emperor', arabic: 'الإمبراطور' },
+  { english: 'The Hierophant', arabic: 'الكاهن' },
+  { english: 'The Lovers', arabic: 'العشاق' },
+  { english: 'The Chariot', arabic: 'العربة' },
+  { english: 'Strength', arabic: 'القوة' },
+  { english: 'The Hermit', arabic: 'الناسك' },
+  { english: 'Wheel of Fortune', arabic: 'عجلة الحظ' },
+  { english: 'Justice', arabic: 'العدالة' },
+  { english: 'The Hanged Man', arabic: 'الرجل المشنوق' },
+  { english: 'Death', arabic: 'الموت' },
+  { english: 'Temperance', arabic: 'الاعتدال' },
+  { english: 'The Devil', arabic: 'الشيطان' },
+  { english: 'The Tower', arabic: 'البرج' },
+  { english: 'The Star', arabic: 'النجمة' },
+  { english: 'The Moon', arabic: 'القمر' },
+  { english: 'The Sun', arabic: 'الشمس' },
+  { english: 'Judgement', arabic: 'الحكم' },
+  { english: 'The World', arabic: 'العالم' }
 ];
