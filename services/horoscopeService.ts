@@ -16,7 +16,7 @@ export const getHoroscope = async (sign: string, period: 'daily' | 'weekly' | 'm
     const response = await fetch(`${API_BASE_URL}?zodiac=${sign}`, {
       method: 'GET',
       headers: {
-        'X-Api-Key': process.env.API_KEY!,
+        'X-Api-Key': process.env.GEMINI_API_KEY!,
       },
     });
 

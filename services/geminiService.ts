@@ -1,6 +1,6 @@
 import { GoogleGenAI, GenerateContentResponse } from "@google/genai";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY! });
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY! });
 
 // A robust helper function to call the Gemini API with automatic retries on failure
 const generateContentWithRetry = async (prompt: string): Promise<GenerateContentResponse> => {
