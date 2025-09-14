@@ -4,12 +4,14 @@ import { getNumerologyReport } from '../services/geminiService';
 import Button from './common/Button';
 import Card from './common/Card';
 import Spinner from './common/Spinner';
+import { useSettings } from '../hooks/useSettings';
 
 interface NumerologyPageProps {
   setPage: (page: Page) => void;
 }
 
 const NumerologyPage: React.FC<NumerologyPageProps> = ({ setPage }) => {
+  const { language, t } = useSettings();
   const [name, setName] = useState<string>('');
   const [dob, setDob] = useState<string>('');
   const [report, setReport] = useState<string>('');
@@ -29,7 +31,7 @@ const NumerologyPage: React.FC<NumerologyPageProps> = ({ setPage }) => {
 
   const handleAnalyze = async () => {
     if (!name.trim() || !dob) {
-      setError('الرجاء إدخال الاسم وتاريخ الميلاد.');
+      setError(t('errorEnterNameAndDob'));
       return;
     }
     setIsLoading(true);
@@ -38,10 +40,10 @@ const NumerologyPage: React.FC<NumerologyPageProps> = ({ setPage }) => {
 
     try {
       const gematriaValue = calculateGematria(name);
-      const result = await getNumerologyReport(name, dob, gematriaValue);
+      const result = await getNumerologyReport(name, dob, gematriaValue, language);
       setReport(result);
     } catch (err) {
-      setError('حدث خطأ أثناء إنشاء التقرير. يرجى المحاولة مرة أخرى.');
+      setError(t('errorGenerateReport'));
     } finally {
       setIsLoading(false);
     }
@@ -49,42 +51,42 @@ const NumerologyPage: React.FC<NumerologyPageProps> = ({ setPage }) => {
 
   return (
     <div className="container mx-auto p-4 flex flex-col items-center min-h-screen animate-fade-in">
-      <h2 className="text-4xl font-bold my-8 text-center text-amber-300">
-        علم الأعداد
+      <h2 className="text-4xl font-bold my-8 text-center text-amber-800 dark:text-amber-300">
+        {t('numerologyPageTitle')}
       </h2>
 
       {!report && (
         <Card className="w-full max-w-md mb-8">
             <div className="space-y-4">
                 <div>
-                    <label htmlFor="name" className="block text-lg font-semibold mb-2 text-amber-200">
-                    أدخل اسمك
+                    <label htmlFor="name" className="block text-lg font-semibold mb-2 text-slate-700 dark:text-amber-200">
+                    {t('enterYourName')}
                     </label>
                     <input
                     id="name"
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    placeholder="الاسم الأول"
-                    className="w-full p-3 bg-[#221E1F]/50 text-white border border-amber-500/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-400"
-                    dir="rtl"
+                    placeholder={t('firstName')}
+                    className="w-full p-3 bg-white/50 dark:bg-[#221E1F]/50 text-slate-800 dark:text-white border border-amber-500/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-400"
+                    dir={language === 'ar' ? 'rtl' : 'ltr'}
                     />
                 </div>
                 <div>
-                    <label htmlFor="dob" className="block text-lg font-semibold mb-2 text-amber-200">
-                    أدخل تاريخ ميلادك
+                    <label htmlFor="dob" className="block text-lg font-semibold mb-2 text-slate-700 dark:text-amber-200">
+                    {t('enterYourDob')}
                     </label>
                     <input
                     id="dob"
                     type="date"
                     value={dob}
                     onChange={(e) => setDob(e.target.value)}
-                    className="w-full p-3 bg-[#221E1F]/50 text-white border border-amber-500/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-400"
+                    className="w-full p-3 bg-white/50 dark:bg-[#221E1F]/50 text-slate-800 dark:text-white border border-amber-500/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-400 dark:[color-scheme:dark]"
                     />
                 </div>
             </div>
              <Button onClick={handleAnalyze} disabled={isLoading} className="w-full mt-6">
-                {isLoading ? 'جاري التحليل...' : 'اكشف أسرار أرقامك'}
+                {isLoading ? t('analyzing') : t('analyzeYourNumbers')}
             </Button>
         </Card>
       )}
@@ -97,10 +99,10 @@ const NumerologyPage: React.FC<NumerologyPageProps> = ({ setPage }) => {
         <div className="mt-8 w-full max-w-2xl animate-fade-in">
           <Card>
              <div className="p-4">
-                <h3 className="text-2xl font-bold text-amber-300 mb-4 text-center">تقريرك في علم الأعداد</h3>
-                <p className="text-lg whitespace-pre-wrap leading-relaxed">{report}</p>
+                <h3 className="text-2xl font-bold text-amber-800 dark:text-amber-300 mb-4 text-center">{t('yourNumerologyReport')}</h3>
+                <p className={`text-lg whitespace-pre-wrap leading-relaxed text-slate-800 dark:text-[#F5EFE6] ${language === 'ar' ? 'text-right' : 'text-left'}`}>{report}</p>
                 <div className="text-center">
-                    <Button onClick={() => setReport('')} className="mt-6">تحليل جديد</Button>
+                    <Button onClick={() => setReport('')} className="mt-6">{t('newAnalysis')}</Button>
                 </div>
              </div>
           </Card>
@@ -108,7 +110,7 @@ const NumerologyPage: React.FC<NumerologyPageProps> = ({ setPage }) => {
       )}
 
       <Button onClick={() => setPage(Page.HOME)} variant="secondary" className="mt-12">
-        العودة إلى الرئيسية
+        {t('goHome')}
       </Button>
     </div>
   );

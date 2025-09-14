@@ -1,5 +1,6 @@
 import React from 'react';
 import { Page } from '../../types';
+import { useSettings } from '../../hooks/useSettings';
 
 interface LogoProps {
   className?: string;
@@ -7,6 +8,7 @@ interface LogoProps {
 }
 
 const Logo: React.FC<LogoProps> = ({ className, setPage }) => {
+  const { t } = useSettings();
   
   const Card = ({ rotation, translation, zIndex }: { rotation: string; translation: string; zIndex: string }) => (
     <div 
@@ -42,7 +44,7 @@ const Logo: React.FC<LogoProps> = ({ className, setPage }) => {
         <button
           onClick={() => setPage(Page.HOME)}
           className="focus:outline-none focus:ring-2 focus:ring-amber-400/50 rounded-lg p-2 -m-2 transition-transform transform hover:scale-105"
-          aria-label="العودة إلى الصفحة الرئيسية"
+          aria-label={t('goBackToHomeAria')}
         >
           {cardsVisual}
         </button>
@@ -52,8 +54,8 @@ const Logo: React.FC<LogoProps> = ({ className, setPage }) => {
       )}
 
       {/* The title is always rendered as static text outside the button */}
-      <h1 className="text-2xl font-bold text-[#F5EFE6]" style={{ textShadow: '1px 1px 3px rgba(0,0,0,0.5)' }}>
-        الشريفة الصويرية للفلك
+      <h1 className="text-2xl font-bold text-slate-800 dark:text-[#F5EFE6]" style={{ textShadow: '1px 1px 3px rgba(0,0,0,0.5)' }}>
+        {t('appName')}
       </h1>
     </div>
   );

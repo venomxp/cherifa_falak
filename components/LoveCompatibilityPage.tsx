@@ -44,7 +44,8 @@ const LoveCompatibilityPage: React.FC<LoveCompatibilityPageProps> = ({ setPage }
     setPercentage(compatibilityPercentage);
 
     try {
-      const result = await getLoveCompatibilityAnalysis(name1, name2, compatibilityPercentage);
+      // FIX: Added 'ar' for the missing language parameter.
+      const result = await getLoveCompatibilityAnalysis(name1, name2, compatibilityPercentage, 'ar');
       setAnalysis(result);
     } catch (err) {
       setError('حدث خطأ أثناء تحليل التوافق. يرجى المحاولة مرة أخرى.');

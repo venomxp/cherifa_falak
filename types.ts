@@ -1,3 +1,5 @@
+import { translations } from './localization/translations';
+
 export enum Page {
   SPLASH,
   HOME,
@@ -7,12 +9,17 @@ export enum Page {
   COMPATIBILITY,
   MORE,
   PRIVATE_READING,
+  SETTINGS,
 }
 
+// Redefine TranslationKey to be derived from one of the translation objects
+export type TranslationKey = keyof typeof translations.en;
+
+
 export interface ZodiacSign {
-  name: string;
-  value: string;
+  value: string; // The value for API calls, e.g., 'aries'
   icon: string;
+  translationKey: TranslationKey; // Key for retrieving the translated name
 }
 
 export interface TarotCardInfo {

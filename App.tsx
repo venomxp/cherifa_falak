@@ -8,6 +8,7 @@ import NumerologyPage from './components/NumerologyPage';
 import TarotReadingPage from './components/TarotReadingPage';
 import MorePage from './components/MorePage';
 import PrivateReadingPage from './components/PrivateReadingPage';
+import SettingsPage from './components/SettingsPage';
 
 const App: React.FC = () => {
   // Use a state for the current page, starting with the splash screen
@@ -41,6 +42,8 @@ const App: React.FC = () => {
         return <MorePage setPage={setPage} />;
       case Page.PRIVATE_READING:
         return <PrivateReadingPage setPage={setPage} />;
+      case Page.SETTINGS:
+        return <SettingsPage setPage={setPage} />;
       default:
         return <HomePage setPage={setPage} />;
     }
@@ -48,7 +51,7 @@ const App: React.FC = () => {
 
   return (
     <div className="min-h-screen font-sans">
-      <main className="w-full h-full">{renderPage()}</main>
+      <main className="w-full">{renderPage()}</main>
     </div>
   );
 };

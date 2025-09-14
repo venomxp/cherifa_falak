@@ -5,6 +5,7 @@ import { getHoroscope } from '../services/horoscopeService';
 import Button from './common/Button';
 import Card from './common/Card';
 import Spinner from './common/Spinner';
+import { useSettings } from '../hooks/useSettings';
 
 interface HoroscopePageProps {
   setPage: (page: Page) => void;
@@ -13,6 +14,7 @@ interface HoroscopePageProps {
 type Period = 'daily' | 'weekly' | 'monthly';
 
 const HoroscopePage: React.FC<HoroscopePageProps> = ({ setPage }) => {
+  const { language, t } = useSettings();
   const [selectedSign, setSelectedSign] = useState<ZodiacSign | null>(null);
   const [period, setPeriod] = useState<Period>('daily');
   const [horoscope, setHoroscope] = useState<string>('');
@@ -31,10 +33,10 @@ const HoroscopePage: React.FC<HoroscopePageProps> = ({ setPage }) => {
     setHoroscope('');
     setPeriod(selectedPeriod);
     try {
-      const result = await getHoroscope(sign.value, selectedPeriod);
+      const result = await getHoroscope(sign.value, selectedPeriod, language);
       setHoroscope(result);
     } catch (err) {
-      setError('حدث خطأ أثناء جلب الطالع. يرجى المحاولة مرة أخرى.');
+      setError(t('errorFetchHoroscope'));
     } finally {
       setIsLoading(false);
     }
@@ -47,10 +49,10 @@ const HoroscopePage: React.FC<HoroscopePageProps> = ({ setPage }) => {
         setError('');
         setHoroscope('');
         try {
-          const result = await getHoroscope(selectedSign.value, newPeriod);
+          const result = await getHoroscope(selectedSign.value, newPeriod, language);
           setHoroscope(result);
         } catch (err) {
-          setError('حدث خطأ أثناء جلب الطالع. يرجى المحاولة مرة أخرى.');
+          setError(t('errorFetchHoroscope'));
         } finally {
           setIsLoading(false);
         }
@@ -82,8 +84,8 @@ const HoroscopePage: React.FC<HoroscopePageProps> = ({ setPage }) => {
   
   const renderSignFinder = () => (
     <Card className="w-full max-w-md mt-6 p-6 text-center animate-fade-in">
-      <h3 className="text-2xl font-bold mb-4 text-amber-200">اكتشف برجك</h3>
-      <p className="mb-4 text-amber-100/80">أدخل تاريخ ميلادك لمعرفة برجك الشمسي.</p>
+      <h3 className="text-2xl font-bold mb-4 text-amber-800 dark:text-amber-200">{t('discoverYourSignTitle')}</h3>
+      <p className="mb-4 text-slate-700 dark:text-amber-100/80">{t('discoverYourSignBody')}</p>
       <input
         type="date"
         value={birthDate}
@@ -91,14 +93,14 @@ const HoroscopePage: React.FC<HoroscopePageProps> = ({ setPage }) => {
           setBirthDate(e.target.value);
           setFoundSign(null); // Reset on change
         }}
-        className="w-full p-3 bg-[#221E1F]/50 text-white border border-amber-500/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-400 mb-4"
+        className="w-full p-3 bg-white/50 dark:bg-[#221E1F]/50 text-slate-800 dark:text-white border border-amber-500/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-400 mb-4 dark:[color-scheme:dark]"
       />
-      <Button onClick={handleFindSign} disabled={!birthDate}>اعرف برجي</Button>
+      <Button onClick={handleFindSign} disabled={!birthDate}>{t('findMySign')}</Button>
       {foundSign && (
         <div className="mt-6 p-4 bg-amber-500/10 border border-amber-500/30 rounded-lg">
-          <p className="text-lg">برجك هو:</p>
-          <p className="text-3xl font-bold text-amber-300 my-2">{foundSign.icon} {foundSign.name}</p>
-          <p className="text-amber-100/80">يمكنك الآن اختيار برجك من القائمة أعلاه لقراءة طالعك.</p>
+          <p className="text-lg">{t('yourSignIs')}</p>
+          <p className="text-3xl font-bold text-amber-700 dark:text-amber-300 my-2">{foundSign.icon} {t(foundSign.translationKey)}</p>
+          <p className="text-slate-700 dark:text-amber-100/80">{t('youCanNowSelect')}</p>
         </div>
       )}
     </Card>
@@ -106,17 +108,17 @@ const HoroscopePage: React.FC<HoroscopePageProps> = ({ setPage }) => {
 
   const renderSignSelection = () => (
     <div className="text-center w-full max-w-3xl">
-        <h2 className="text-4xl font-bold my-8 text-center text-amber-300">اختر برجك</h2>
+        <h2 className="text-4xl font-bold my-8 text-center text-amber-700 dark:text-amber-300">{t('horoscopePageTitle')}</h2>
         <Card>
             <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-4 p-4">
                 {ZODIAC_SIGNS.map((sign) => (
                     <button
                         key={sign.value}
                         onClick={() => handleSignSelect(sign)}
-                        className="flex flex-col items-center p-2 text-center bg-black/10 rounded-lg border border-transparent hover:border-amber-500/50 hover:bg-amber-500/10 transition-all duration-300 transform hover:scale-105"
+                        className="flex flex-col items-center p-2 text-center bg-black/5 dark:bg-black/10 rounded-lg border border-transparent hover:border-amber-500/50 hover:bg-amber-500/10 transition-all duration-300 transform hover:scale-105"
                     >
                         <span className="text-4xl md:text-5xl">{sign.icon}</span>
-                        <span className="mt-2 text-xs sm:text-sm font-semibold text-amber-200">{sign.name}</span>
+                        <span className="mt-2 text-xs sm:text-sm font-semibold text-amber-800 dark:text-amber-200">{t(sign.translationKey)}</span>
                     </button>
                 ))}
             </div>
@@ -125,9 +127,9 @@ const HoroscopePage: React.FC<HoroscopePageProps> = ({ setPage }) => {
             {!showSignFinder ? (
                  <button 
                     onClick={() => setShowSignFinder(true)} 
-                    className="text-amber-200 hover:text-white font-semibold py-2 px-4 rounded-full transition-colors duration-300 hover:bg-white/10"
+                    className="text-amber-700 dark:text-amber-200 hover:text-amber-900 dark:hover:text-white font-semibold py-2 px-4 rounded-full transition-colors duration-300 hover:bg-black/5 dark:hover:bg-white/10"
                 >
-                    لا تعرف برجك؟ اكتشفه الآن
+                    {t('discoverYourSignPrompt')}
                  </button>
             ) : (
                 renderSignFinder()
@@ -140,17 +142,17 @@ const HoroscopePage: React.FC<HoroscopePageProps> = ({ setPage }) => {
      <div className="w-full max-w-2xl animate-fade-in">
         <Card>
             <div className="text-center mb-6">
-                <button onClick={() => setSelectedSign(null)} className="text-amber-300 hover:text-amber-100 mb-4 text-sm">
-                    &larr; العودة لاختيار برج آخر
+                <button onClick={() => setSelectedSign(null)} className="text-amber-600 dark:text-amber-300 hover:text-amber-800 dark:hover:text-amber-100 mb-4 text-sm">
+                    &larr; {t('backToSignSelection')}
                 </button>
                 <div className="flex items-center justify-center gap-4">
                      <span className="text-5xl">{selectedSign?.icon}</span>
-                     <h2 className="text-3xl font-bold text-amber-300">{selectedSign?.name}</h2>
+                     <h2 className="text-3xl font-bold text-amber-800 dark:text-amber-300">{selectedSign ? t(selectedSign.translationKey) : ''}</h2>
                 </div>
-                <div className="flex justify-center border border-amber-500/30 rounded-full p-1 mt-4 max-w-xs mx-auto bg-black/20">
-                    <button onClick={() => handlePeriodChange('daily')} className={`w-1/3 p-2 rounded-full font-semibold transition-colors ${period === 'daily' ? 'bg-amber-400 text-[#221E1F]' : 'text-amber-200'}`}>اليومي</button>
-                    <button onClick={() => handlePeriodChange('weekly')} className={`w-1/3 p-2 rounded-full font-semibold transition-colors ${period === 'weekly' ? 'bg-amber-400 text-[#221E1F]' : 'text-amber-200'}`}>الأسبوعي</button>
-                    <button onClick={() => handlePeriodChange('monthly')} className={`w-1/3 p-2 rounded-full font-semibold transition-colors ${period === 'monthly' ? 'bg-amber-400 text-[#221E1F]' : 'text-amber-200'}`}>الشهري</button>
+                <div className="flex justify-center border border-amber-500/30 rounded-full p-1 mt-4 max-w-xs mx-auto bg-black/10 dark:bg-black/20">
+                    <button onClick={() => handlePeriodChange('daily')} className={`w-1/3 p-2 rounded-full font-semibold transition-colors ${period === 'daily' ? 'bg-amber-400 text-[#221E1F]' : 'text-amber-800 dark:text-amber-200'}`}>{t('daily')}</button>
+                    <button onClick={() => handlePeriodChange('weekly')} className={`w-1/3 p-2 rounded-full font-semibold transition-colors ${period === 'weekly' ? 'bg-amber-400 text-[#221E1F]' : 'text-amber-800 dark:text-amber-200'}`}>{t('weekly')}</button>
+                    <button onClick={() => handlePeriodChange('monthly')} className={`w-1/3 p-2 rounded-full font-semibold transition-colors ${period === 'monthly' ? 'bg-amber-400 text-[#221E1F]' : 'text-amber-800 dark:text-amber-200'}`}>{t('monthly')}</button>
                 </div>
             </div>
             {isLoading ? (
@@ -158,7 +160,7 @@ const HoroscopePage: React.FC<HoroscopePageProps> = ({ setPage }) => {
             ) : error ? (
                 <p className="text-red-400 text-center">{error}</p>
             ) : (
-                <p className="text-lg whitespace-pre-wrap leading-relaxed text-right p-4">{horoscope}</p>
+                <p className={`text-lg whitespace-pre-wrap leading-relaxed p-4 ${language === 'ar' ? 'text-right' : 'text-left'}`}>{horoscope}</p>
             )}
         </Card>
      </div>
@@ -170,7 +172,7 @@ const HoroscopePage: React.FC<HoroscopePageProps> = ({ setPage }) => {
         {!selectedSign ? renderSignSelection() : renderHoroscopeDisplay()}
       </div>
       <Button onClick={() => setPage(Page.HOME)} variant="secondary" className="mt-12">
-          العودة إلى الرئيسية
+          {t('goHome')}
       </Button>
     </div>
   );

@@ -53,7 +53,8 @@ const GematriaPage: React.FC<GematriaPageProps> = ({ setPage }) => {
     try {
       // FIX: Replaced non-existent `getGematriaInterpretation` with `getNumerologyReport`.
       // Passing an empty string for `dob` as this component does not collect it.
-      const result = await getNumerologyReport(name, '', value);
+      // FIX: Added 'ar' for the missing language parameter.
+      const result = await getNumerologyReport(name, '', value, 'ar');
       setInterpretation(result);
     } catch (err) {
       setError('حدث خطأ أثناء جلب التحليل. يرجى المحاولة مرة أخرى.');

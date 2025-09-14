@@ -1,19 +1,19 @@
 import { ZodiacSign, TarotCardInfo } from './types';
 
-// Zodiac signs data including name, value for API calls, and an SVG icon for display
+// Zodiac signs data now uses translation keys for names to support multiple languages
 export const ZODIAC_SIGNS: ZodiacSign[] = [
-    { name: 'الحمل', value: 'aries', icon: '♈' },
-    { name: 'الثور', value: 'taurus', icon: '♉' },
-    { name: 'الجوزاء', value: 'gemini', icon: '♊' },
-    { name: 'السرطان', value: 'cancer', icon: '♋' },
-    { name: 'الأسد', value: 'leo', icon: '♌' },
-    { name: 'العذراء', value: 'virgo', icon: '♍' },
-    { name: 'الميزان', value: 'libra', icon: '♎' },
-    { name: 'العقرب', value: 'scorpio', icon: '♏' },
-    { name: 'القوس', value: 'sagittarius', icon: '♐' },
-    { name: 'الجدي', value: 'capricorn', icon: '♑' },
-    { name: 'الدلو', value: 'aquarius', icon: '♒' },
-    { name: 'الحوت', value: 'pisces', icon: '♓' },
+    { value: 'aries', icon: '♈', translationKey: 'aries' },
+    { value: 'taurus', icon: '♉', translationKey: 'taurus' },
+    { value: 'gemini', icon: '♊', translationKey: 'gemini' },
+    { value: 'cancer', icon: '♋', translationKey: 'cancer' },
+    { value: 'leo', icon: '♌', translationKey: 'leo' },
+    { value: 'virgo', icon: '♍', translationKey: 'virgo' },
+    { value: 'libra', icon: '♎', translationKey: 'libra' },
+    { value: 'scorpio', icon: '♏', translationKey: 'scorpio' },
+    { value: 'sagittarius', icon: '♐', translationKey: 'sagittarius' },
+    { value: 'capricorn', icon: '♑', translationKey: 'capricorn' },
+    { value: 'aquarius', icon: '♒', translationKey: 'aquarius' },
+    { value: 'pisces', icon: '♓', translationKey: 'pisces' },
 ];
 
 // List of Tarot cards for the Tarot Reading feature

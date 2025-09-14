@@ -6,12 +6,14 @@ import Button from './common/Button';
 import Spinner from './common/Spinner';
 import TarotCard from './common/TarotCard';
 import Card from './common/Card';
+import { useSettings } from '../hooks/useSettings';
 
 interface TarotReadingPageProps {
   setPage: (page: Page) => void;
 }
 
 const TarotReadingPage: React.FC<TarotReadingPageProps> = ({ setPage }) => {
+  const { language, t } = useSettings();
   const [drawnCard, setDrawnCard] = useState<TarotCardInfo | null>(null);
   const [interpretation, setInterpretation] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -44,7 +46,7 @@ const TarotReadingPage: React.FC<TarotReadingPageProps> = ({ setPage }) => {
     setInterpretation('');
 
     try {
-      const stream = await getTarotInterpretationStream(drawnCard.english);
+      const stream = await getTarotInterpretationStream(drawnCard.english, language);
       setIsLoading(false);
       setIsStreaming(true);
 
@@ -52,7 +54,7 @@ const TarotReadingPage: React.FC<TarotReadingPageProps> = ({ setPage }) => {
         setInterpretation((prev) => prev + chunk.text);
       }
     } catch (err) {
-      setError('حدث خطأ أثناء جلب التفسير. يرجى المحاولة مرة أخرى.');
+      setError(t('errorTarot'));
       setIsLoading(false);
     } finally {
       setIsStreaming(false);
@@ -66,12 +68,12 @@ const TarotReadingPage: React.FC<TarotReadingPageProps> = ({ setPage }) => {
 
   return (
     <div className="container mx-auto p-4 flex flex-col items-center min-h-screen animate-fade-in">
-      <h2 className="text-4xl font-bold my-8 text-center text-amber-300">
-        اسحب بطاقة التاروت
+      <h2 className="text-4xl font-bold my-8 text-center text-amber-700 dark:text-amber-300">
+        {t('tarotPageTitle')}
       </h2>
 
-      <p className="text-xl text-center mb-8 text-amber-200/80 max-w-lg">
-        خذ نفساً عميقاً، ركز على سؤالك أو طاقتك لهذا اليوم، ثم انقر على البطاقة للكشف عن رسالتك.
+      <p className="text-xl text-center mb-8 text-slate-700 dark:text-amber-200/80 max-w-lg">
+        {t('tarotPageInstruction')}
       </p>
 
       {/* Tarot Card Display */}
@@ -91,18 +93,18 @@ const TarotReadingPage: React.FC<TarotReadingPageProps> = ({ setPage }) => {
           {isLoading ? (
             <Spinner />
           ) : error ? (
-            <p className="text-red-400 text-center">{error}</p>
+            <p className="text-red-600 dark:text-red-400 text-center">{error}</p>
           ) : (
             <Card className="animate-fade-in">
-              <h3 className="text-2xl font-bold text-amber-300 mb-4 text-center">
+              <h3 className="text-2xl font-bold text-amber-800 dark:text-amber-300 mb-4 text-center">
                 {drawnCard?.arabic} ({drawnCard?.english})
               </h3>
-              <p className="text-lg whitespace-pre-wrap leading-relaxed text-right">
+              <p className={`text-lg whitespace-pre-wrap leading-relaxed text-slate-800 dark:text-[#F5EFE6] ${language === 'ar' ? 'text-right' : 'text-left'}`}>
                 {interpretation}
-                {isStreaming && <span className="inline-block w-1 h-5 bg-amber-300 animate-pulse ml-1 align-bottom"></span>}
+                {isStreaming && <span className="inline-block w-1 h-5 bg-amber-700 dark:bg-amber-300 animate-pulse ml-1 align-bottom"></span>}
               </p>
               <div className="text-center mt-6">
-                <Button onClick={drawNewCard} disabled={isStreaming}>إسحب بطاقة أخرى</Button>
+                <Button onClick={drawNewCard} disabled={isStreaming}>{t('drawAnotherCard')}</Button>
               </div>
             </Card>
           )}
@@ -110,7 +112,7 @@ const TarotReadingPage: React.FC<TarotReadingPageProps> = ({ setPage }) => {
       )}
 
       <Button onClick={() => setPage(Page.HOME)} variant="secondary" className="mt-12">
-        العودة إلى الرئيسية
+        {t('goHome')}
       </Button>
     </div>
   );

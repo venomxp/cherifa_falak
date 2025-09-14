@@ -11,7 +11,7 @@ const Button: React.FC<ButtonProps> = ({ children, className = '', variant = 'pr
 
   const variantClasses = {
     primary: "text-[#221E1F] bg-gradient-to-br from-amber-200 to-yellow-500 hover:from-amber-300 hover:to-yellow-600 shadow-yellow-500/30 focus:ring-amber-400/50",
-    secondary: "text-[#F5EFE6] bg-black/20 border-2 border-amber-500/50 hover:bg-amber-500/20 hover:border-amber-500 focus:ring-amber-500/50",
+    secondary: "text-amber-700 dark:text-[#F5EFE6] bg-black/10 dark:bg-black/20 border-2 border-amber-500/30 dark:border-amber-500/50 hover:bg-amber-500/20 hover:border-amber-500 focus:ring-amber-500/50",
   };
 
   return (
