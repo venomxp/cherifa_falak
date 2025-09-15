@@ -1,5 +1,6 @@
 import { GoogleGenAI, GenerateContentResponse } from "@google/genai";
 
+// FIX: Updated API key sourcing to align with Gemini API guidelines.
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY! });
 
 // A robust helper function to call the Gemini API with automatic retries on failure
@@ -95,29 +96,6 @@ Discuss their potential for friendship, love, and partnership. Highlight both th
     }
 };
 
-// A robust helper function to call the Gemini streaming API with automatic retries on failure
-const generateContentStreamWithRetry = async (prompt: string) => {
-  let retries = 3;
-  while (retries > 0) {
-    try {
-      const response = await ai.models.generateContentStream({
-        model: "gemini-2.5-flash",
-        contents: prompt,
-        config: { thinkingConfig: { thinkingBudget: 0 } },
-      });
-      return response;
-    } catch (error) {
-      console.error("Gemini streaming API call failed, retrying...", error);
-      retries--;
-      if (retries === 0) {
-        throw error;
-      }
-      await new Promise(res => setTimeout(res, 1000 * (3 - retries))); // Exponential backoff
-    }
-  }
-  throw new Error("Gemini streaming API call failed after multiple retries.");
-};
-
 // Provides an interpretation for a drawn Tarot card using a stream for better UX
 export const getTarotInterpretationStream = async (cardName: string, language: 'ar' | 'en') => {
     const prompt = language === 'ar'
@@ -126,7 +104,12 @@ Explain its core meaning, its upright significance, and what message it might ho
     : `Act as a wise and intuitive tarot reader. Provide a mystical and insightful interpretation in English for the Tarot card: "${cardName}".
 Explain its core meaning, its upright significance, and what message it might hold for someone who has drawn it today. The tone should be supportive and empowering.`;
     try {
-        return await generateContentStreamWithRetry(prompt);
+        const response = await ai.models.generateContentStream({
+           model: "gemini-2.5-flash",
+           contents: prompt,
+           config: { thinkingConfig: { thinkingBudget: 0 } },
+        });
+        return response;
     } catch (error) {
         console.error("Error getting tarot interpretation stream:", error);
         throw new Error("Failed to get tarot interpretation stream.");

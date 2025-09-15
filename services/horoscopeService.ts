@@ -1,3 +1,6 @@
+// FIX: Add reference to vite client types to resolve import.meta.env error
+/// <reference types="vite/client" />
+
 import { translateHoroscopeToArabic } from './geminiService';
 
 const API_BASE_URL = 'https://api.api-ninjas.com/v1/horoscope';
@@ -22,7 +25,7 @@ export const getHoroscope = async (sign: string, period: 'daily' | 'weekly' | 'm
     const response = await fetch(`${API_BASE_URL}?zodiac=${sign}`, {
       method: 'GET',
       headers: {
-        'X-Api-Key': process.env.API_KEY!,
+        'X-Api-Key': import.meta.env.VITE_NINJA_API_KEY!,
       },
     });
 
