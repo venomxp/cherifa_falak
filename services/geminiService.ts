@@ -115,3 +115,38 @@ Explain its core meaning, its upright significance, and what message it might ho
         throw new Error("Failed to get tarot interpretation stream.");
     }
 };
+
+// Generates a fortune for the "Falk Lyom" feature
+export const getFalkLyomInterpretation = async (cardName: string, category: string, gender: string, skinTone: string): Promise<string> => {
+  const prompt = `أنتِ شوافة مغربية حكيمة و كلامك موزون. شخص (${gender}، لونه ${skinTone}) سحب كارطة "${cardName}" وهو يسأل عن "${category}".
+قدمي له قراءة قصيرة (جملتين أو ثلاث) وغامضة ومشجعة باللهجة المغربية (الدارجة). يجب أن تكون النبرة تقليدية وأصيلة، ومليئة بالأمل. لا تستخدمي أي مقدمات مثل "أرى في الكارطة" أو "الكارطة تقول". ابدئي الإجابة مباشرةً.`;
+
+  try {
+    const response = await generateContentWithRetry(prompt);
+    return response.text.trim();
+  } catch (error) {
+    console.error("Error getting Falk Lyom interpretation:", error);
+    throw new Error("Failed to get Falk Lyom interpretation.");
+  }
+};
+
+// Generates a weekly or monthly horoscope
+export const getGeneratedHoroscope = async (sign: string, period: 'weekly' | 'monthly', language: 'ar' | 'en'): Promise<string> => {
+  const periodArabic = period === 'weekly' ? 'الأسبوعي' : 'الشهري';
+  const periodEnglish = period;
+
+  const prompt = language === 'ar'
+    ? `أنت عالم فلك خبير. اكتب طالعًا ${periodArabic} غامضًا وثاقبًا لبرج ${sign}. يجب أن تكون النبرة مشجعة ومتوافقة مع علم التنجيم التقليدي. لا تستخدم أي مقدمات. يجب أن تكون الإجابة باللغة العربية.`
+    : `Act as an expert astrologer. Write a mystical and insightful ${periodEnglish} horoscope for the zodiac sign ${sign}. The tone should be encouraging and aligned with traditional astrology. Do not add any introductory phrases. The response must be in English.`;
+
+  try {
+    const response = await generateContentWithRetry(prompt);
+    return response.text.trim();
+  } catch (error) {
+    console.error(`Error generating ${period} horoscope:`, error);
+    const errorPeriod = language === 'ar' ? periodArabic : periodEnglish;
+    return language === 'ar'
+      ? `عذراً، حدث خطأ أثناء إنشاء الطالع ${errorPeriod}.`
+      : `Sorry, an error occurred while generating the ${errorPeriod} horoscope.`;
+  }
+};

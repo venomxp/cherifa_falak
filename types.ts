@@ -10,6 +10,11 @@ export enum Page {
   MORE,
   PRIVATE_READING,
   SETTINGS,
+  FALK_LYOM_WELCOME,
+  FALK_LYOM_GENDER,
+  FALK_LYOM_SKIN_TONE,
+  FALK_LYOM_CATEGORY,
+  FALK_LYOM_RESULT,
 }
 
 // Redefine TranslationKey to be derived from one of the translation objects
@@ -25,4 +30,9 @@ export interface ZodiacSign {
 export interface TarotCardInfo {
   english: string;
   arabic: string;
+}
+
+export interface MoroccanTarotCard {
+  name: string;
+  key: string;
 }

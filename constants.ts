@@ -1,4 +1,4 @@
-import { ZodiacSign, TarotCardInfo } from './types';
+import { ZodiacSign, TarotCardInfo, MoroccanTarotCard } from './types';
 
 // Zodiac signs data now uses translation keys for names to support multiple languages
 export const ZODIAC_SIGNS: ZodiacSign[] = [
@@ -40,4 +40,20 @@ export const TAROT_CARDS: TarotCardInfo[] = [
   { english: 'The Sun', arabic: 'الشمس' },
   { english: 'Judgement', arabic: 'الحكم' },
   { english: 'The World', arabic: 'العالم' }
+];
+
+// New list of Moroccan Tarot cards for Falk Lyom feature
+export const MOROCCAN_TAROT_CARDS: MoroccanTarotCard[] = [
+  { name: 'الصاحبة البيضة', key: 'sahiba_bayda' },
+  { name: 'الحنطية', key: 'hantiya' },
+  { name: 'السمرا', key: 'samra' },
+  { name: 'الفقيه', key: 'fqih' },
+  { name: 'الفلوس', key: 'flouss' },
+  { name: 'البحر', key: 'bahr' },
+  { name: 'الطريق', key: 'triq' },
+  { name: 'الدار', key: 'dar' },
+  { name: 'العدو', key: 'adou' },
+  { name: 'العتبة', key: 'atba' },
+  { name: 'سيد الرجال', key: 'sid_rjal' },
+  { name: 'لالة عايشة', key: 'lalla_aicha' },
 ];

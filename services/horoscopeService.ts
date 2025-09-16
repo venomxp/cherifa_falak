@@ -1,31 +1,22 @@
-// FIX: Add reference to vite client types to resolve import.meta.env error
-/// <reference types="vite/client" />
-
-import { translateHoroscopeToArabic } from './geminiService';
+// FIX: Use process.env for API key to align with execution environment
+import { translateHoroscopeToArabic, getGeneratedHoroscope } from './geminiService';
 
 const API_BASE_URL = 'https://api.api-ninjas.com/v1/horoscope';
 
 // Fetches the horoscope for a given sign and time period (daily, weekly, monthly)
-export const getHoroscope = async (sign: string, period: 'daily' | 'weekly' | 'monthly', language: 'ar' | 'en'): Promise<string> => {
-  const url = `${API_BASE_URL}?zodiac=${sign}${period !== 'daily' ? '&day=' + period : ''}`;
+export const getHoroscope = async (signName: string, signValue: string, period: 'daily' | 'weekly' | 'monthly', language: 'ar' | 'en'): Promise<string> => {
   
-  // The API seems to only support 'today', 'yesterday', 'tomorrow'. We will use Gemini for weekly/monthly generation.
-  // For this implementation, we will fetch daily and use Gemini to expand.
   if (period !== 'daily') {
-      const periodText = language === 'ar' 
-        ? (period === 'weekly' ? 'الأسبوعي' : 'الشهري')
-        : (period === 'weekly' ? 'weekly' : 'monthly');
-      const message = language === 'ar'
-        ? `ميزة الطالع ال${periodText} قيد التطوير.`
-        : `The ${periodText} horoscope feature is under development.`;
-      return message;
+    // For weekly/monthly, we call Gemini directly to generate the horoscope
+    return await getGeneratedHoroscope(signName, period, language);
   }
 
+  // Daily horoscope logic remains the same, using Ninja API
   try {
-    const response = await fetch(`${API_BASE_URL}?zodiac=${sign}`, {
+    const response = await fetch(`${API_BASE_URL}?zodiac=${signValue}`, {
       method: 'GET',
       headers: {
-        'X-Api-Key': import.meta.env.VITE_NINJA_API_KEY!,
+        'X-Api-Key': process.env.VITE_NINJA_API_KEY!,
       },
     });
 

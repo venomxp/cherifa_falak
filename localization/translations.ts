@@ -2,19 +2,47 @@ export const translations = {
   ar: {
     // General
     goHome: 'العودة إلى الرئيسية',
+    goBack: 'العودة',
     loading: 'جاري التحميل',
     analyzing: 'جاري التحليل...',
     newAnalysis: 'تحليل جديد',
 
     // Home Page
-    appName: 'الشريفة الصويرية للفلك',
+    appName: 'Falkom - فالكم',
     tarotReading: 'قراءة التاروت',
     horoscopes: 'الأبراج',
     numerology: 'علم الأعداد',
     compatibility: 'التوافق',
     privateReading: 'للقراءة الخاصة',
     more: 'المزيد',
+    falkLyom: 'فالك اليوم',
     
+    // Falk Lyom Feature
+    falkLyomWelcomeTitle: 'فالك اليوم',
+    falkLyomWelcomeSubtitle: 'إكتشف حظك اليوم بالكارطة المغربية',
+    startReading: 'بدا القراءة',
+    falkGenderPageTitle: 'ختار الجنس ديالك',
+    male: 'ذكر 👨‍🦱',
+    female: 'أنثى 👩‍🦱',
+    falkSkinTonePageTitle: 'ختار لون البشرة ديالك',
+    white_female: 'بيضة',
+    wheatish_female: 'حنطية',
+    dark_female: 'سمرة',
+    white_male: 'أبيض',
+    wheatish_male: 'حنطي',
+    dark_male: 'أسمر',
+    falkLyomCategoryTitle: 'اختار فاش بغيتي تشوف فالك',
+    loveCategory: 'الحب 💖',
+    workCategory: 'الخدمة 💼',
+    luckCategory: 'الحظ 🍀',
+    yourCardIs: 'الكارطة ديالك هي:',
+    readingAgain: 'قراءة أخرى',
+    falkLove: 'الحب',
+    falkWork: 'الخدمة',
+    falkLuck: 'الحظ',
+    falkMale: 'ذكر',
+    falkFemale: 'أنثى',
+
     // Settings Page
     settings: 'الإعدادات',
     language: 'اللغة',
@@ -24,11 +52,11 @@ export const translations = {
     dark: 'داكن',
     light: 'فاتح',
     shareApp: 'مشاركة التطبيق',
-    shareMessage: 'اكتشف أسرار الفلك مع تطبيق الشريفة الصويرية!',
+    shareMessage: 'اكتشف أسرار مستقبلك مع تطبيق Falkom - فالكم!',
 
     // More Page
     aboutAppTitle: 'عن التطبيق',
-    aboutAppBody: 'تطبيق "الشريفة الصويرية للفلك" هو بوابتك لاستكشاف عوالم الفلك، التاروت، وعلم الأعداد بأسلوب عصري وموثوق. نحن نجمع بين المعرفة القديمة والتقنيات الحديثة لنقدم لك بصيرة وإلهامًا في رحلتك.',
+    aboutAppBody: 'تطبيق "فالكم" هو بوابتك لاستكشاف عوالم الفلك، التاروت، وعلم الأعداد بأسلوب عصري وموثوق. نحن نجمع بين المعرفة القديمة والتقنيات الحديثة لنقدم لك بصيرة وإلهامًا في رحلتك.',
     contactUs: 'تواصل معنا',
     contactEmail: 'contact@cherifa-falak.com',
 
@@ -97,6 +125,7 @@ export const translations = {
     errorEnterNameAndDob: 'الرجاء إدخال الاسم وتاريخ الميلاد.',
     errorSelectTwoSigns: 'الرجاء اختيار برجين.',
     errorEnterBothNames: 'الرجاء إدخال الاسمين.',
+    errorFalkLyom: 'حدث خطأ. حاول مرة أخرى.',
 
     // ARIA Labels
     goBackToHomeAria: 'العودة إلى الصفحة الرئيسية',
@@ -105,18 +134,46 @@ export const translations = {
   en: {
     // General
     goHome: 'Back to Home',
+    goBack: 'Back',
     loading: 'Loading...',
     analyzing: 'Analyzing...',
     newAnalysis: 'New Analysis',
 
     // Home Page
-    appName: 'Cherifa of Essaouira Astrology',
+    appName: 'Falkom - فالكم',
     tarotReading: 'Tarot Reading',
     horoscopes: 'Horoscopes',
     numerology: 'Numerology',
     compatibility: 'Compatibility',
     privateReading: 'Private Reading',
     more: 'More',
+    falkLyom: "Today's Fortune",
+
+    // Falk Lyom Feature
+    falkLyomWelcomeTitle: "Today's Fortune",
+    falkLyomWelcomeSubtitle: 'Discover your luck today with the Moroccan card',
+    startReading: 'Start Reading',
+    falkGenderPageTitle: 'Choose your gender',
+    male: 'Male 👨‍🦱',
+    female: 'Female 👩‍🦱',
+    falkSkinTonePageTitle: 'Choose your skin tone',
+    white_female: 'White',
+    wheatish_female: 'Wheatish',
+    dark_female: 'Dark',
+    white_male: 'White',
+    wheatish_male: 'Wheatish',
+    dark_male: 'Dark',
+    falkLyomCategoryTitle: 'Choose what to focus on',
+    loveCategory: 'Love 💖',
+    workCategory: 'Work 💼',
+    luckCategory: 'Luck 🍀',
+    yourCardIs: 'Your card is:',
+    readingAgain: 'Read Again',
+    falkLove: 'Love',
+    falkWork: 'Work',
+    falkLuck: 'Luck',
+    falkMale: 'Male',
+    falkFemale: 'Female',
 
     // Settings Page
     settings: 'Settings',
@@ -127,11 +184,11 @@ export const translations = {
     dark: 'Dark',
     light: 'Light',
     shareApp: 'Share App',
-    shareMessage: 'Discover the secrets of astrology with the Cherifa of Essaouira app!',
+    shareMessage: 'Discover the secrets of your future with the Falkom - فالكم app!',
 
     // More Page
     aboutAppTitle: 'About The App',
-    aboutAppBody: 'The "Cherifa of Essaouira Astrology" app is your gateway to exploring the worlds of astrology, Tarot, and numerology in a modern and reliable way. We combine ancient knowledge with modern technology to offer you insight and inspiration on your journey.',
+    aboutAppBody: 'The "Falkom" app is your gateway to exploring the worlds of astrology, Tarot, and numerology in a modern and reliable way. We combine ancient knowledge with modern technology to offer you insight and inspiration on your journey.',
     contactUs: 'Contact Us',
     contactEmail: 'contact@cherifa-falak.com',
 
@@ -200,6 +257,7 @@ export const translations = {
     errorEnterNameAndDob: 'Please enter the name and date of birth.',
     errorSelectTwoSigns: 'Please select two zodiac signs.',
     errorEnterBothNames: 'Please enter both names.',
+    errorFalkLyom: 'An error occurred. Please try again.',
 
     // ARIA Labels
     goBackToHomeAria: 'Return to Home Page',

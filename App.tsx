@@ -9,10 +9,18 @@ import TarotReadingPage from './components/TarotReadingPage';
 import MorePage from './components/MorePage';
 import PrivateReadingPage from './components/PrivateReadingPage';
 import SettingsPage from './components/SettingsPage';
+import FalkLyomWelcomePage from './components/FalkLyomWelcomePage';
+import FalkLyomGenderPage from './components/FalkLyomGenderPage';
+import FalkLyomSkinTonePage from './components/FalkLyomSkinTonePage';
+import FalkLyomCategoryPage from './components/FalkLyomCategoryPage';
+import FalkLyomResultPage from './components/FalkLyomResultPage';
 
 const App: React.FC = () => {
   // Use a state for the current page, starting with the splash screen
   const [page, setPage] = useState<Page>(Page.SPLASH);
+  const [falkGender, setFalkGender] = useState<string | null>(null);
+  const [falkSkinTone, setFalkSkinTone] = useState<string | null>(null);
+  const [falkCategory, setFalkCategory] = useState<string | null>(null);
 
   // Effect to automatically transition from splash to home screen after a delay
   useEffect(() => {
@@ -44,6 +52,16 @@ const App: React.FC = () => {
         return <PrivateReadingPage setPage={setPage} />;
       case Page.SETTINGS:
         return <SettingsPage setPage={setPage} />;
+      case Page.FALK_LYOM_WELCOME:
+        return <FalkLyomWelcomePage setPage={setPage} />;
+      case Page.FALK_LYOM_GENDER:
+        return <FalkLyomGenderPage setPage={setPage} setFalkGender={setFalkGender} />;
+      case Page.FALK_LYOM_SKIN_TONE:
+        return <FalkLyomSkinTonePage setPage={setPage} setFalkSkinTone={setFalkSkinTone} gender={falkGender!} />;
+      case Page.FALK_LYOM_CATEGORY:
+        return <FalkLyomCategoryPage setPage={setPage} setFalkCategory={setFalkCategory} />;
+      case Page.FALK_LYOM_RESULT:
+        return <FalkLyomResultPage setPage={setPage} gender={falkGender!} skinTone={falkSkinTone!} category={falkCategory!} />;
       default:
         return <HomePage setPage={setPage} />;
     }

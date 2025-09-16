@@ -33,7 +33,7 @@ const HoroscopePage: React.FC<HoroscopePageProps> = ({ setPage }) => {
     setHoroscope('');
     setPeriod(selectedPeriod);
     try {
-      const result = await getHoroscope(sign.value, selectedPeriod, language);
+      const result = await getHoroscope(t(sign.translationKey), sign.value, selectedPeriod, language);
       setHoroscope(result);
     } catch (err) {
       setError(t('errorFetchHoroscope'));
@@ -49,7 +49,7 @@ const HoroscopePage: React.FC<HoroscopePageProps> = ({ setPage }) => {
         setError('');
         setHoroscope('');
         try {
-          const result = await getHoroscope(selectedSign.value, newPeriod, language);
+          const result = await getHoroscope(t(selectedSign.translationKey), selectedSign.value, newPeriod, language);
           setHoroscope(result);
         } catch (err) {
           setError(t('errorFetchHoroscope'));

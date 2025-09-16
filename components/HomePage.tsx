@@ -13,11 +13,16 @@ const HomePage: React.FC<HomePageProps> = ({ setPage }) => {
   const { t } = useSettings();
 
   return (
-    <div className="container mx-auto p-4 flex flex-col items-center min-h-screen justify-center animate-fade-in space-y-10 relative">
+    <div className="container mx-auto p-4 flex flex-col items-center min-h-screen justify-center animate-fade-in space-y-6 relative">
       <SettingsIcon setPage={setPage} />
       <Logo />
       <nav>
-        <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <ul className="flex flex-wrap justify-center gap-6">
+          <li>
+            <Button onClick={() => setPage(Page.FALK_LYOM_WELCOME)} className="w-64 text-lg">
+              {t('falkLyom')}
+            </Button>
+          </li>
           <li>
             <Button onClick={() => setPage(Page.TAROT)} className="w-64 text-lg">
               {t('tarotReading')}
