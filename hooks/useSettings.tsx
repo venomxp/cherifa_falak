@@ -4,7 +4,7 @@ import { TranslationKey } from '../types';
 
 
 type Theme = 'light' | 'dark';
-type Language = 'ar' | 'en';
+type Language = 'ar' | 'en' | 'fr';
 
 interface SettingsContextType {
   theme: Theme;
@@ -12,17 +12,27 @@ interface SettingsContextType {
   language: Language;
   setLanguage: (language: Language) => void;
   t: (key: TranslationKey, replacements?: { [key: string]: string | number }) => string;
+  userName: string;
+  setUserName: (name: string) => void;
+  userDob: string;
+  setUserDob: (dob: string) => void;
+  profilePic: string | null;
+  setProfilePic: (pic: string | null) => void;
 }
 
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
 
 export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [theme, setThemeState] = useState<Theme>(() => {
-    return (localStorage.getItem('theme') as Theme) || 'dark';
+    return (localStorage.getItem('theme') as Theme) || 'light';
   });
   const [language, setLanguageState] = useState<Language>(() => {
     return (localStorage.getItem('language') as Language) || 'ar';
   });
+  const [userName, setUserNameState] = useState<string>(() => localStorage.getItem('userName') || '');
+  const [userDob, setUserDobState] = useState<string>(() => localStorage.getItem('userDob') || '');
+  const [profilePic, setProfilePicState] = useState<string | null>(() => localStorage.getItem('profilePic') || null);
+
 
   useEffect(() => {
     const root = window.document.documentElement;
@@ -38,6 +48,14 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     localStorage.setItem('language', language);
   }, [language]);
   
+  useEffect(() => {
+    localStorage.setItem('userName', userName);
+  }, [userName]);
+
+  useEffect(() => {
+    localStorage.setItem('userDob', userDob);
+  }, [userDob]);
+
   const t = useMemo(() => {
     return (key: TranslationKey, replacements?: { [key: string]: string | number }): string => {
         let translation = translations[language][key] || translations['en'][key] || key;
@@ -53,9 +71,19 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   const setTheme = (newTheme: Theme) => setThemeState(newTheme);
   const setLanguage = (newLanguage: Language) => setLanguageState(newLanguage);
+  const setUserName = (newName: string) => setUserNameState(newName);
+  const setUserDob = (newDob: string) => setUserDobState(newDob);
+  const setProfilePic = (newPic: string | null) => {
+    if (newPic) {
+      localStorage.setItem('profilePic', newPic);
+    } else {
+      localStorage.removeItem('profilePic');
+    }
+    setProfilePicState(newPic);
+  };
 
   return (
-    <SettingsContext.Provider value={{ theme, setTheme, language, setLanguage, t }}>
+    <SettingsContext.Provider value={{ theme, setTheme, language, setLanguage, t, userName, setUserName, userDob, setUserDob, profilePic, setProfilePic }}>
       {children}
     </SettingsContext.Provider>
   );

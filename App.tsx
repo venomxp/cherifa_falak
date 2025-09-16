@@ -6,7 +6,7 @@ import HoroscopePage from './components/HoroscopePage';
 import CompatibilityPage from './components/CompatibilityPage';
 import NumerologyPage from './components/NumerologyPage';
 import TarotReadingPage from './components/TarotReadingPage';
-import MorePage from './components/MorePage';
+import AboutPage from './components/AboutPage';
 import PrivateReadingPage from './components/PrivateReadingPage';
 import SettingsPage from './components/SettingsPage';
 import FalkLyomWelcomePage from './components/FalkLyomWelcomePage';
@@ -14,6 +14,8 @@ import FalkLyomGenderPage from './components/FalkLyomGenderPage';
 import FalkLyomSkinTonePage from './components/FalkLyomSkinTonePage';
 import FalkLyomCategoryPage from './components/FalkLyomCategoryPage';
 import FalkLyomResultPage from './components/FalkLyomResultPage';
+import BottomNavBar from './components/common/BottomNavBar';
+import ProfilePage from './components/ProfilePage';
 
 const App: React.FC = () => {
   // Use a state for the current page, starting with the splash screen
@@ -31,6 +33,11 @@ const App: React.FC = () => {
     return () => clearTimeout(timer);
   }, []);
 
+  // Effect to scroll to the top whenever the page changes
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [page]);
+
   // Function to render the correct page based on the current state
   const renderPage = () => {
     switch (page) {
@@ -46,12 +53,14 @@ const App: React.FC = () => {
         return <NumerologyPage setPage={setPage} />;
       case Page.COMPATIBILITY:
         return <CompatibilityPage setPage={setPage} />;
-      case Page.MORE:
-        return <MorePage setPage={setPage} />;
+      case Page.ABOUT:
+        return <AboutPage setPage={setPage} />;
       case Page.PRIVATE_READING:
         return <PrivateReadingPage setPage={setPage} />;
       case Page.SETTINGS:
         return <SettingsPage setPage={setPage} />;
+      case Page.PROFILE:
+        return <ProfilePage setPage={setPage} />;
       case Page.FALK_LYOM_WELCOME:
         return <FalkLyomWelcomePage setPage={setPage} />;
       case Page.FALK_LYOM_GENDER:
@@ -67,9 +76,12 @@ const App: React.FC = () => {
     }
   };
 
+  const showNavBar = page !== Page.SPLASH;
+
   return (
-    <div className="min-h-screen font-sans">
+    <div>
       <main className="w-full">{renderPage()}</main>
+      {showNavBar && <BottomNavBar currentPage={page} setPage={setPage} />}
     </div>
   );
 };

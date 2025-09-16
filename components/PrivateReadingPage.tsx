@@ -2,7 +2,6 @@ import React from 'react';
 import { Page } from '../types';
 import Button from './common/Button';
 import Card from './common/Card';
-import Logo from './common/Logo';
 import { useSettings } from '../hooks/useSettings';
 
 interface PrivateReadingPageProps {
@@ -14,13 +13,12 @@ const PrivateReadingPage: React.FC<PrivateReadingPageProps> = ({ setPage }) => {
   const whatsappLink = "https://wa.me/+212649427892";
 
   return (
-    <div className="container mx-auto p-4 flex flex-col items-center min-h-screen justify-center animate-fade-in">
-      <Logo className="mb-8" setPage={setPage} />
+    <div className="container mx-auto p-4 flex flex-col items-center h-screen justify-center animate-fade-in box-border pb-28">
       <Card className="w-full max-w-lg text-center">
-        <h2 className="text-3xl font-bold mb-4 text-amber-700 dark:text-amber-300">
+        <h2 className="text-3xl font-bold mb-4 text-violet-700 dark:text-violet-300">
           {t('privateReadingTitle')}
         </h2>
-        <p className="text-lg text-slate-700 dark:text-amber-100/80 leading-relaxed">
+        <p className="text-lg text-slate-700 dark:text-slate-300/80 leading-relaxed">
          {t('privateReadingBody')}
         </p>
         <div className="mt-8">
@@ -31,9 +29,6 @@ const PrivateReadingPage: React.FC<PrivateReadingPageProps> = ({ setPage }) => {
             </a>
         </div>
       </Card>
-      <Button onClick={() => setPage(Page.HOME)} variant="secondary" className="mt-12">
-        {t('goHome')}
-      </Button>
     </div>
   );
 };

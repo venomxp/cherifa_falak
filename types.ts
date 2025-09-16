@@ -7,7 +7,7 @@ export enum Page {
   HOROSCOPE,
   NUMEROLOGY,
   COMPATIBILITY,
-  MORE,
+  ABOUT,
   PRIVATE_READING,
   SETTINGS,
   FALK_LYOM_WELCOME,
@@ -15,6 +15,7 @@ export enum Page {
   FALK_LYOM_SKIN_TONE,
   FALK_LYOM_CATEGORY,
   FALK_LYOM_RESULT,
+  PROFILE,
 }
 
 // Redefine TranslationKey to be derived from one of the translation objects

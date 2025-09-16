@@ -10,7 +10,7 @@ const SettingsIcon: React.FC<SettingsIconProps> = ({ setPage, className }) => {
   return (
     <button
       onClick={() => setPage(Page.SETTINGS)}
-      className={`z-30 absolute top-4 right-4 p-2 rounded-full transition-colors duration-300 text-slate-700 hover:bg-black/10 dark:text-amber-200 dark:hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-amber-400 ${className}`}
+      className={`z-30 absolute top-4 right-4 p-2 rounded-full transition-colors duration-300 text-slate-700 hover:bg-black/10 dark:text-violet-300 dark:hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-violet-400 ${className}`}
       aria-label="Settings"
     >
       <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">

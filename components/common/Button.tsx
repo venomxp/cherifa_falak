@@ -10,8 +10,8 @@ const Button: React.FC<ButtonProps> = ({ children, className = '', variant = 'pr
   const baseClasses = "px-6 py-3 font-bold rounded-full transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg focus:outline-none focus:ring-4";
 
   const variantClasses = {
-    primary: "text-[#221E1F] bg-gradient-to-br from-amber-200 to-yellow-500 hover:from-amber-300 hover:to-yellow-600 shadow-yellow-500/30 focus:ring-amber-400/50",
-    secondary: "text-amber-700 dark:text-[#F5EFE6] bg-black/10 dark:bg-black/20 border-2 border-amber-500/30 dark:border-amber-500/50 hover:bg-amber-500/20 hover:border-amber-500 focus:ring-amber-500/50",
+    primary: "text-white bg-gradient-to-br from-violet-500 to-fuchsia-600 hover:from-violet-600 hover:to-fuchsia-700 shadow-lg shadow-violet-500/30 dark:shadow-violet-800/40 focus:ring-violet-400/50",
+    secondary: "text-violet-700 dark:text-violet-300 bg-black/5 dark:bg-white/5 border-2 border-violet-500/30 dark:border-violet-400/50 hover:bg-violet-500/10 hover:border-violet-500 focus:ring-violet-500/50",
   };
 
   return (

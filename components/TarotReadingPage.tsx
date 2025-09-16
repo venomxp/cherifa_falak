@@ -67,53 +67,51 @@ const TarotReadingPage: React.FC<TarotReadingPageProps> = ({ setPage }) => {
   };
 
   return (
-    <div className="container mx-auto p-4 flex flex-col items-center min-h-screen animate-fade-in">
-      <h2 className="text-4xl font-bold my-8 text-center text-amber-700 dark:text-amber-300">
-        {t('tarotPageTitle')}
-      </h2>
+    <div className="container mx-auto p-4 flex flex-col items-center min-h-screen animate-fade-in box-border pb-28">
+      <div className="flex-grow w-full flex flex-col items-center justify-center">
+        <h2 className="text-4xl font-bold my-8 text-center text-violet-700 dark:text-violet-300">
+          {t('tarotPageTitle')}
+        </h2>
 
-      <p className="text-xl text-center mb-8 text-slate-700 dark:text-amber-200/80 max-w-lg">
-        {t('tarotPageInstruction')}
-      </p>
+        <p className="text-xl text-center mb-8 text-slate-700 dark:text-slate-300/80 max-w-lg">
+          {isFlipped ? t('interpretationFor') + ` ${drawnCard?.arabic}` : t('tarotPageInstruction')}
+        </p>
 
-      {/* Tarot Card Display */}
-      <div className="w-64 h-96 mb-8 cursor-pointer" onClick={handleCardFlip} style={{ perspective: '1000px' }}>
-        {drawnCard && (
-          <TarotCard
-            isFlipped={isFlipped}
-            cardNameEnglish={drawnCard.english}
-            cardNameArabic={drawnCard.arabic}
-          />
-        )}
-      </div>
-
-      {/* Result Display */}
-      {isFlipped && (
-        <div className="w-full max-w-2xl">
-          {isLoading ? (
-            <Spinner />
-          ) : error ? (
-            <p className="text-red-600 dark:text-red-400 text-center">{error}</p>
-          ) : (
-            <Card className="animate-fade-in">
-              <h3 className="text-2xl font-bold text-amber-800 dark:text-amber-300 mb-4 text-center">
-                {drawnCard?.arabic} ({drawnCard?.english})
-              </h3>
-              <p className={`text-lg whitespace-pre-wrap leading-relaxed text-slate-800 dark:text-[#F5EFE6] ${language === 'ar' ? 'text-right' : 'text-left'}`}>
-                {interpretation}
-                {isStreaming && <span className="inline-block w-1 h-5 bg-amber-700 dark:bg-amber-300 animate-pulse ml-1 align-bottom"></span>}
-              </p>
-              <div className="text-center mt-6">
-                <Button onClick={drawNewCard} disabled={isStreaming}>{t('drawAnotherCard')}</Button>
-              </div>
-            </Card>
+        {/* Tarot Card Display */}
+        <div className="w-64 h-96 mb-8 cursor-pointer" onClick={handleCardFlip} style={{ perspective: '1000px' }}>
+          {drawnCard && (
+            <TarotCard
+              isFlipped={isFlipped}
+              cardNameEnglish={drawnCard.english}
+              cardNameArabic={drawnCard.arabic}
+            />
           )}
         </div>
-      )}
 
-      <Button onClick={() => setPage(Page.HOME)} variant="secondary" className="mt-12">
-        {t('goHome')}
-      </Button>
+        {/* Result Display */}
+        {isFlipped && (
+          <div className="w-full max-w-2xl">
+            {isLoading ? (
+              <Spinner />
+            ) : error ? (
+              <p className="text-red-600 dark:text-red-400 text-center">{error}</p>
+            ) : (
+              <Card className="animate-fade-in">
+                <h3 className="text-2xl font-bold text-violet-800 dark:text-violet-300 mb-4 text-center">
+                  {drawnCard?.arabic} ({drawnCard?.english})
+                </h3>
+                <p className={`text-lg whitespace-pre-wrap leading-relaxed text-slate-800 dark:text-slate-200 ${language === 'ar' ? 'text-right' : 'text-left'}`}>
+                  {interpretation}
+                  {isStreaming && <span className="inline-block w-1 h-5 bg-violet-700 dark:bg-violet-300 animate-pulse ml-1 align-bottom"></span>}
+                </p>
+                <div className="text-center mt-6">
+                  <Button onClick={drawNewCard} disabled={isStreaming}>{t('drawAnotherCard')}</Button>
+                </div>
+              </Card>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 };

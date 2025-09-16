@@ -1,10 +1,10 @@
 // FIX: Use process.env for API key to align with execution environment
-import { translateHoroscopeToArabic, getGeneratedHoroscope } from './geminiService';
+import { translateHoroscopeToArabic, getGeneratedHoroscope, translateHoroscopeToFrench } from './geminiService';
 
 const API_BASE_URL = 'https://api.api-ninjas.com/v1/horoscope';
 
 // Fetches the horoscope for a given sign and time period (daily, weekly, monthly)
-export const getHoroscope = async (signName: string, signValue: string, period: 'daily' | 'weekly' | 'monthly', language: 'ar' | 'en'): Promise<string> => {
+export const getHoroscope = async (signName: string, signValue: string, period: 'daily' | 'weekly' | 'monthly', language: 'ar' | 'en' | 'fr'): Promise<string> => {
   
   if (period !== 'daily') {
     // For weekly/monthly, we call Gemini directly to generate the horoscope
@@ -29,11 +29,17 @@ export const getHoroscope = async (signName: string, signValue: string, period: 
     const englishHoroscope = data.horoscope;
     
     if (!englishHoroscope) {
-        return language === 'ar' ? "لم يتم العثور على الطالع لهذا اليوم." : "Horoscope for today not found.";
+        if (language === 'ar') return "لم يتم العثور على الطالع لهذا اليوم.";
+        if (language === 'fr') return "Horoscope du jour non trouvé.";
+        return "Horoscope for today not found.";
     }
 
     if (language === 'en') {
         return englishHoroscope;
+    }
+
+    if (language === 'fr') {
+        return await translateHoroscopeToFrench(englishHoroscope, period);
     }
 
     const arabicHoroscope = await translateHoroscopeToArabic(englishHoroscope, period);
@@ -42,8 +48,8 @@ export const getHoroscope = async (signName: string, signValue: string, period: 
   } catch (error) {
     console.error("Error fetching horoscope:", error);
     const specificError = error instanceof Error ? error.message : "يرجى التأكد من صلاحية مفتاح الـ API.";
-    return language === 'ar' 
-        ? `عذراً، حدث خطأ أثناء جلب الطالع. (${specificError})`
-        : `Sorry, an error occurred while fetching the horoscope. (${specificError})`;
+    if (language === 'ar') return `عذراً، حدث خطأ أثناء جلب الطالع. (${specificError})`;
+    if (language === 'fr') return `Désolé, une erreur s'est produite lors de la récupération de l'horoscope. (${specificError})`;
+    return `Sorry, an error occurred while fetching the horoscope. (${specificError})`;
   }
 };

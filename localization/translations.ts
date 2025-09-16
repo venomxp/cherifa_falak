@@ -2,6 +2,8 @@ export const translations = {
   ar: {
     // General
     goHome: 'العودة إلى الرئيسية',
+    home: 'الرئيسية',
+    profile: 'ملفي الشخصي',
     goBack: 'العودة',
     loading: 'جاري التحميل',
     analyzing: 'جاري التحليل...',
@@ -9,13 +11,19 @@ export const translations = {
 
     // Home Page
     appName: 'Falkom - فالكم',
+    appSlogan: 'دليلك إلى العوالم الخفية. تاروت، أبراج، وأسرار الأرقام بين يديك.',
     tarotReading: 'قراءة التاروت',
     horoscopes: 'الأبراج',
     numerology: 'علم الأعداد',
     compatibility: 'التوافق',
     privateReading: 'للقراءة الخاصة',
-    more: 'المزيد',
     falkLyom: 'فالك اليوم',
+    falkLyomDesc: 'قراءة الكارطة المغربية اليومية.',
+    tarotReadingDesc: 'اكشف عن طريقك ببطاقات التاروت.',
+    horoscopesDesc: 'اقرأ ما تقوله النجوم عنك.',
+    numerologyDesc: 'اكتشف أسرار أرقامك.',
+    compatibilityDesc: 'تحقق من توافق الحب والصداقة.',
+    privateReadingDesc: 'احجز جلسة خاصة لرؤى عميقة.',
     
     // Falk Lyom Feature
     falkLyomWelcomeTitle: 'فالك اليوم',
@@ -47,7 +55,8 @@ export const translations = {
     settings: 'الإعدادات',
     language: 'اللغة',
     arabic: 'العربية',
-    english: 'English',
+    english: 'الإنجليزية',
+    french: 'الفرنسية',
     theme: 'المظهر',
     dark: 'داكن',
     light: 'فاتح',
@@ -88,6 +97,7 @@ export const translations = {
     numerologyPageTitle: 'علم الأعداد',
     enterYourName: 'أدخل اسمك',
     firstName: 'الاسم الأول',
+    yourName: 'اسمك',
     enterYourDob: 'أدخل تاريخ ميلادك',
     analyzeYourNumbers: 'اكشف أسرار أرقامك',
     yourNumerologyReport: 'تقريرك في علم الأعداد',
@@ -102,6 +112,17 @@ export const translations = {
     analyzeCompatibility: 'تحليل التوافق',
     compatibilityResultTitleNames: 'نسبة التوافق بين {name1} و {name2}',
     compatibilityResultTitleZodiac: 'توافق {sign1} و {sign2}',
+    
+    // Profile Page
+    userName: 'الاسم',
+    userDob: 'تاريخ الميلاد',
+    readingHistoryTitle: 'رحلتك الروحية',
+    readingHistoryBody: 'قراءاتك وتقاريرك المحفوظة ستظهر هنا قريباً.',
+    logout: 'تسجيل الخروج',
+    editProfile: 'تعديل',
+    saveProfile: 'حفظ',
+    profileSaved: 'تم الحفظ بنجاح!',
+    chooseYourSymbol: 'اختر رمزك',
 
     // Zodiac Signs
     aries: 'الحمل',
@@ -134,6 +155,8 @@ export const translations = {
   en: {
     // General
     goHome: 'Back to Home',
+    home: 'Home',
+    profile: 'Profile',
     goBack: 'Back',
     loading: 'Loading...',
     analyzing: 'Analyzing...',
@@ -141,13 +164,19 @@ export const translations = {
 
     // Home Page
     appName: 'Falkom - فالكم',
+    appSlogan: 'Your guide to the hidden worlds. Tarot, horoscopes, and the secrets of numbers in your hands.',
     tarotReading: 'Tarot Reading',
     horoscopes: 'Horoscopes',
     numerology: 'Numerology',
     compatibility: 'Compatibility',
     privateReading: 'Private Reading',
-    more: 'More',
     falkLyom: "Today's Fortune",
+    falkLyomDesc: 'Your daily Moroccan card reading.',
+    tarotReadingDesc: 'Unveil your path with tarot cards.',
+    horoscopesDesc: 'Read what the stars say about you.',
+    numerologyDesc: 'Discover the secrets of your numbers.',
+    compatibilityDesc: 'Check your love & friendship compatibility.',
+    privateReadingDesc: 'Book a private session for deep insights.',
 
     // Falk Lyom Feature
     falkLyomWelcomeTitle: "Today's Fortune",
@@ -178,8 +207,9 @@ export const translations = {
     // Settings Page
     settings: 'Settings',
     language: 'Language',
-    arabic: 'العربية',
+    arabic: 'Arabic',
     english: 'English',
+    french: 'French',
     theme: 'Theme',
     dark: 'Dark',
     light: 'Light',
@@ -220,6 +250,7 @@ export const translations = {
     numerologyPageTitle: 'Numerology',
     enterYourName: 'Enter your name',
     firstName: 'First Name',
+    yourName: 'Your Name',
     enterYourDob: 'Enter your date of birth',
     analyzeYourNumbers: 'Reveal the secrets of your numbers',
     yourNumerologyReport: 'Your Numerology Report',
@@ -234,6 +265,17 @@ export const translations = {
     analyzeCompatibility: 'Analyze Compatibility',
     compatibilityResultTitleNames: 'Compatibility between {name1} and {name2}',
     compatibilityResultTitleZodiac: 'Compatibility of {sign1} and {sign2}',
+
+    // Profile Page
+    userName: 'Name',
+    userDob: 'Date of Birth',
+    readingHistoryTitle: 'Your Spiritual Journey',
+    readingHistoryBody: 'Your saved readings and reports will appear here soon.',
+    logout: 'Log Out',
+    editProfile: 'Edit',
+    saveProfile: 'Save',
+    profileSaved: 'Saved Successfully!',
+    chooseYourSymbol: 'Choose Your Symbol',
 
     // Zodiac Signs
     aries: 'Aries',
@@ -262,5 +304,158 @@ export const translations = {
     // ARIA Labels
     goBackToHomeAria: 'Return to Home Page',
     loadingAria: 'Loading',
+  },
+  fr: {
+    // General
+    goHome: 'Retour à l\'accueil',
+    home: 'Accueil',
+    profile: 'Profil',
+    goBack: 'Retour',
+    loading: 'Chargement...',
+    analyzing: 'Analyse en cours...',
+    newAnalysis: 'Nouvelle analyse',
+
+    // Home Page
+    appName: 'Falkom - فالكم',
+    appSlogan: 'Votre guide vers les mondes cachés. Tarot, horoscopes et secrets des nombres à portée de main.',
+    tarotReading: 'Lecture de Tarot',
+    horoscopes: 'Horoscopes',
+    numerology: 'Numérologie',
+    compatibility: 'Compatibilité',
+    privateReading: 'Lecture privée',
+    falkLyom: 'Votre Fal du Jour',
+    falkLyomDesc: 'Lecture quotidienne des cartes marocaines.',
+    tarotReadingDesc: 'Dévoilez votre chemin avec les cartes de tarot.',
+    horoscopesDesc: 'Lisez ce que les étoiles disent de vous.',
+    numerologyDesc: 'Découvrez les secrets de vos numéros.',
+    compatibilityDesc: 'Vérifiez votre compatibilité amoureuse et amicale.',
+    privateReadingDesc: 'Réservez une séance privée pour des visions profondes.',
+    
+    // Falk Lyom Feature
+    falkLyomWelcomeTitle: 'Votre Fal du Jour',
+    falkLyomWelcomeSubtitle: 'Découvrez votre chance aujourd\'hui avec la carte marocaine',
+    startReading: 'Commencer la lecture',
+    falkGenderPageTitle: 'Choisissez votre genre',
+    male: 'Homme 👨‍🦱',
+    female: 'Femme 👩‍🦱',
+    falkSkinTonePageTitle: 'Choisissez votre teint',
+    white_female: 'Blanche',
+    wheatish_female: 'Hâlée',
+    dark_female: 'Brune',
+    white_male: 'Blanc',
+    wheatish_male: 'Hâlé',
+    dark_male: 'Brun',
+    falkLyomCategoryTitle: 'Choisissez sur quoi vous concentrer',
+    loveCategory: 'Amour 💖',
+    workCategory: 'Travail 💼',
+    luckCategory: 'Chance 🍀',
+    yourCardIs: 'Votre carte est :',
+    readingAgain: 'Nouvelle lecture',
+    falkLove: 'Amour',
+    falkWork: 'Travail',
+    falkLuck: 'Chance',
+    falkMale: 'Homme',
+    falkFemale: 'Femme',
+
+    // Settings Page
+    settings: 'Paramètres',
+    language: 'Langue',
+    arabic: 'Arabe',
+    english: 'Anglais',
+    french: 'Français',
+    theme: 'Thème',
+    dark: 'Sombre',
+    light: 'Clair',
+    shareApp: 'Partager l\'application',
+    shareMessage: 'Découvrez les secrets de votre avenir avec l\'application Falkom - فالكم !',
+
+    // More Page
+    aboutAppTitle: 'À propos',
+    aboutAppBody: 'L\'application "Falkom" est votre portail pour explorer les mondes de l\'astrologie, du Tarot et de la numérologie de manière moderne et fiable. Nous combinons les connaissances anciennes avec la technologie moderne pour vous offrir perspicacité et inspiration dans votre voyage.',
+    contactUs: 'Contactez-nous',
+    contactEmail: 'contact@cherifa-falak.com',
+
+    // Private Reading Page
+    privateReadingTitle: 'Lecture privée de Tarot Marocain',
+    privateReadingBody: 'Découvrez votre avenir et obtenez des réponses à vos questions avec une lecture privée et détaillée utilisant d\'authentiques cartes de Tarot marocain. Cherifa d\'Essaouira propose des sessions individuelles par appel vocal sur WhatsApp, offrant des aperçus profonds et des conseils personnalisés pour vous aider dans divers aspects de votre vie affective, professionnelle et spirituelle. Chaque session est entièrement confidentielle et à un prix abordable.',
+    bookOnWhatsApp: 'Réservez votre lecture maintenant via WhatsApp',
+
+    // Horoscope Page
+    horoscopePageTitle: 'Choisissez votre signe',
+    discoverYourSignPrompt: 'Vous ne connaissez pas votre signe ? Découvrez-le maintenant !',
+    discoverYourSignTitle: 'Découvrez votre signe',
+    discoverYourSignBody: 'Entrez votre date de naissance pour connaître votre signe solaire.',
+    findMySign: 'Trouver mon signe',
+    yourSignIs: 'Votre signe est :',
+    youCanNowSelect: 'Vous pouvez maintenant sélectionner votre signe dans la liste ci-dessus pour lire votre horoscope.',
+    backToSignSelection: 'Retour à la sélection des signes',
+    daily: 'Quotidien',
+    weekly: 'Hebdomadaire',
+    monthly: 'Mensuel',
+
+    // Tarot Page
+    tarotPageTitle: 'Tirez une carte de Tarot',
+    tarotPageInstruction: 'Prenez une profonde inspiration, concentrez-vous sur votre question ou votre énergie du jour, puis cliquez sur la carte pour révéler votre message.',
+    drawAnotherCard: 'Tirer une autre carte',
+    interpretationFor: 'Interprétation pour',
+
+    // Numerology Page
+    numerologyPageTitle: 'Numérologie',
+    enterYourName: 'Entrez votre nom',
+    firstName: 'Prénom',
+    yourName: 'Votre nom',
+    enterYourDob: 'Entrez votre date de naissance',
+    analyzeYourNumbers: 'Révélez les secrets de vos numéros',
+    yourNumerologyReport: 'Votre rapport de numérologie',
+    
+    // Compatibility Page
+    compatibilityPageTitle: 'Secrets de compatibilité',
+    byZodiac: 'Par signe du zodiaque',
+    byNames: 'Par noms',
+    selectFirstSign: 'Sélectionnez le premier signe',
+    selectSecondSign: 'Sélectionnez le deuxième signe',
+    secondName: 'Deuxième nom',
+    analyzeCompatibility: 'Analyser la compatibilité',
+    compatibilityResultTitleNames: 'Compatibilité entre {name1} et {name2}',
+    compatibilityResultTitleZodiac: 'Compatibilité de {sign1} et {sign2}',
+    
+    // Profile Page
+    userName: 'Nom',
+    userDob: 'Date de naissance',
+    readingHistoryTitle: 'Votre parcours spirituel',
+    readingHistoryBody: 'Vos lectures et rapports enregistrés apparaîtront bientôt ici.',
+    logout: 'Déconnexion',
+    editProfile: 'Modifier',
+    saveProfile: 'Enregistrer',
+    profileSaved: 'Enregistré avec succès !',
+    chooseYourSymbol: 'Choisissez votre symbole',
+
+    // Zodiac Signs
+    aries: 'Bélier',
+    taurus: 'Taureau',
+    gemini: 'Gémeaux',
+    cancer: 'Cancer',
+    leo: 'Lion',
+    virgo: 'Vierge',
+    libra: 'Balance',
+    scorpio: 'Scorpion',
+    sagittarius: 'Sagittaire',
+    capricorn: 'Capricorne',
+    aquarius: 'Verseau',
+    pisces: 'Poissons',
+
+    // Errors
+    errorFetchHoroscope: 'Erreur lors de la récupération de l\'horoscope. Veuillez réessayer.',
+    errorGenerateReport: 'Une erreur s\'est produite lors de la génération du rapport. Veuillez réessayer.',
+    errorCompatibility: 'Une erreur s\'est produite lors de l\'analyse. Veuillez réessayer.',
+    errorTarot: 'Erreur lors de la récupération de l\'interprétation. Veuillez réessayer.',
+    errorEnterNameAndDob: 'Veuillez entrer le nom et la date de naissance.',
+    errorSelectTwoSigns: 'Veuillez sélectionner deux signes du zodiaque.',
+    errorEnterBothNames: 'Veuillez entrer les deux noms.',
+    errorFalkLyom: 'Une erreur est survenue. Veuillez réessayer.',
+
+    // ARIA Labels
+    goBackToHomeAria: 'Retour à la page d\'accueil',
+    loadingAria: 'Chargement',
   },
 };

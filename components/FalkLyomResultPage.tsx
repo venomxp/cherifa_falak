@@ -15,7 +15,7 @@ interface FalkLyomResultPageProps {
 }
 
 const FalkLyomResultPage: React.FC<FalkLyomResultPageProps> = ({ setPage, gender, skinTone, category }) => {
-  const { t } = useSettings();
+  const { t, language } = useSettings();
   const [drawnCard, setDrawnCard] = useState<MoroccanTarotCard | null>(null);
   const [interpretation, setInterpretation] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -33,7 +33,7 @@ const FalkLyomResultPage: React.FC<FalkLyomResultPageProps> = ({ setPage, gender
       setDrawnCard(card);
 
       try {
-        const result = await getFalkLyomInterpretation(card.name, category, gender, skinTone);
+        const result = await getFalkLyomInterpretation(card.name, category, gender, skinTone, language);
         setInterpretation(result);
       } catch (err) {
         setError(t('errorFalkLyom'));
@@ -45,10 +45,10 @@ const FalkLyomResultPage: React.FC<FalkLyomResultPageProps> = ({ setPage, gender
     if (category && gender && skinTone) {
         fetchInterpretation();
     }
-  }, [category, gender, skinTone, t]);
+  }, [category, gender, skinTone, t, language]);
 
   return (
-    <div className="container mx-auto p-4 flex flex-col items-center min-h-screen justify-center animate-fade-in">
+    <div className="container mx-auto p-4 flex flex-col items-center h-screen justify-center animate-fade-in box-border pb-28">
       <Card className="w-full max-w-lg text-center">
         {isLoading ? (
           <div className="p-8">
@@ -58,14 +58,14 @@ const FalkLyomResultPage: React.FC<FalkLyomResultPageProps> = ({ setPage, gender
           <p className="text-red-500 p-8">{error}</p>
         ) : (
           <div className="p-6 animate-fade-in">
-            <h3 className="text-lg font-semibold text-slate-600 dark:text-amber-200/80">
+            <h3 className="text-lg font-semibold text-slate-600 dark:text-violet-200/80">
               {t('yourCardIs')}
             </h3>
-            <h2 className="text-4xl font-bold my-3 text-amber-700 dark:text-amber-300">
+            <h2 className="text-4xl font-bold my-3 text-violet-700 dark:text-violet-300">
               {drawnCard?.name}
             </h2>
-            <div className="w-1/2 h-px bg-amber-500/50 my-4 mx-auto"></div>
-            <p className="text-xl whitespace-pre-wrap leading-relaxed text-slate-800 dark:text-[#F5EFE6]" dir="rtl">
+            <div className="w-1/2 h-px bg-violet-500/50 my-4 mx-auto"></div>
+            <p className={`text-xl whitespace-pre-wrap leading-relaxed text-slate-800 dark:text-slate-200 ${language === 'ar' ? 'text-right' : 'text-left'}`}>
               {interpretation}
             </p>
           </div>
@@ -75,9 +75,6 @@ const FalkLyomResultPage: React.FC<FalkLyomResultPageProps> = ({ setPage, gender
       <div className="mt-8 flex flex-col sm:flex-row gap-4">
         <Button onClick={() => setPage(Page.FALK_LYOM_CATEGORY)} disabled={isLoading}>
           {t('readingAgain')}
-        </Button>
-        <Button onClick={() => setPage(Page.HOME)} variant="secondary">
-          {t('goHome')}
         </Button>
       </div>
     </div>

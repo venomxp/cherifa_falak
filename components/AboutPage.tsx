@@ -2,19 +2,17 @@ import React from 'react';
 import { Page } from '../types';
 import Button from './common/Button';
 import Card from './common/Card';
-import Logo from './common/Logo';
 import { useSettings } from '../hooks/useSettings';
 
-interface MorePageProps {
+interface AboutPageProps {
   setPage: (page: Page) => void;
 }
 
-const MorePage: React.FC<MorePageProps> = ({ setPage }) => {
+const AboutPage: React.FC<AboutPageProps> = ({ setPage }) => {
   const { t } = useSettings();
 
   return (
-    <div className="container mx-auto p-4 flex flex-col items-center min-h-screen justify-center animate-fade-in">
-      <Logo className="mb-8" setPage={setPage} />
+    <div className="container mx-auto p-4 flex flex-col items-center h-screen justify-center animate-fade-in box-border pb-28">
       <Card className="w-full max-w-lg text-center">
         <h2 className="text-3xl font-bold mb-4 text-violet-700 dark:text-violet-300">
           {t('aboutAppTitle')}
@@ -27,11 +25,11 @@ const MorePage: React.FC<MorePageProps> = ({ setPage }) => {
             <p className="mt-2 text-lg text-slate-700 dark:text-slate-300/80">{t('contactEmail')}</p>
         </div>
       </Card>
-      <Button onClick={() => setPage(Page.HOME)} variant="secondary" className="mt-12">
-        {t('goHome')}
+      <Button onClick={() => setPage(Page.SETTINGS)} variant="secondary" className="mt-8">
+        &larr; {t('settings')}
       </Button>
     </div>
   );
 };
 
-export default MorePage;
+export default AboutPage;

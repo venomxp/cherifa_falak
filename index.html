@@ -12,26 +12,27 @@
         theme: {
           extend: {
             fontFamily: {
-              'marhey': ['Marhey', 'sans-serif'],
-              'cinzel': ['"Cinzel Decorative"', 'serif'],
+              'logo-en': ['"Playfair Display"', 'serif'],
+              'logo-ar': ['Amiri', 'serif'],
             },
             keyframes: {
-              'deal': {
-                '0%, 50%': {
-                  transform: 'translate(-50%, -50%) rotate(0deg) scale(0.9)',
-                  opacity: '0',
-                },
-                '70%': {
-                  opacity: '1',
-                },
-                '100%': {
-                  transform: 'translate(calc(-50% + var(--tx)), calc(-50% - 10px)) rotate(var(--rot)) scale(1)',
-                  opacity: '1',
-                },
+              'fan-out-left': {
+                '0%, 100%': { transform: 'rotate(5deg) translateX(0)' },
+                '50%': { transform: 'rotate(-20deg) translateX(-50%)' }
+              },
+              'fan-out-center': {
+                '0%, 100%': { transform: 'translateY(5%)' },
+                '50%': { transform: 'translateY(-15%)' }
+              },
+              'fan-out-right': {
+                '0%, 100%': { transform: 'rotate(-5deg) translateX(0)' },
+                '50%': { transform: 'rotate(20deg) translateX(50%)' }
               }
             },
             animation: {
-              'deal': 'deal 1.8s infinite ease-out',
+              'fan-left': 'fan-out-left 1.8s ease-in-out infinite',
+              'fan-center': 'fan-out-center 1.8s ease-in-out infinite',
+              'fan-right': 'fan-out-right 1.8s ease-in-out infinite',
             }
           }
         }
@@ -40,7 +41,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Marhey:wght@500&family=Cinzel+Decorative:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <style>
       body {
         font-family: 'Tajawal', sans-serif;
@@ -63,7 +64,7 @@
 }
 </script>
 </head>
-  <body class="bg-amber-50 dark:bg-[#221E1F] text-slate-800 dark:text-[#F5EFE6] transition-colors duration-300">
+  <body class="bg-slate-100 dark:bg-slate-900 text-slate-800 dark:text-slate-200 transition-colors duration-300">
     <div id="root"></div>
     <script type="module" src="/index.tsx"></script>
   </body>
