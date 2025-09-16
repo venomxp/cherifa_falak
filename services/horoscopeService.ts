@@ -16,7 +16,7 @@ export const getHoroscope = async (signName: string, signValue: string, period: 
     const response = await fetch(`${API_BASE_URL}?zodiac=${signValue}`, {
       method: 'GET',
       headers: {
-        'X-Api-Key': process.env.VITE_NINJA_API_KEY!,
+        'X-Api-Key': import.meta.env.VITE_NINJA_API_KEY!,
       },
     });
 
