@@ -11,7 +11,7 @@ interface NumerologyPageProps {
 }
 
 const NumerologyPage: React.FC<NumerologyPageProps> = ({ setPage }) => {
-  const { language, t, userName, userDob } = useSettings();
+  const { language, t, userName, userDob, addReadingToHistory } = useSettings();
   const [name, setName] = useState<string>('');
   const [dob, setDob] = useState<string>('');
   const [report, setReport] = useState<string>('');
@@ -45,22 +45,29 @@ const NumerologyPage: React.FC<NumerologyPageProps> = ({ setPage }) => {
     setError('');
     setReport('');
     setIsStreaming(false);
+    let fullReport = '';
 
     try {
       const gematriaValue = calculateGematria(name);
       const stream = await getNumerologyReport(name, dob, gematriaValue, language);
       setIsLoading(false);
       setIsStreaming(true);
-      let text = '';
+      
       for await (const chunk of stream) {
-        text += chunk.text;
-        setReport(text);
+        const textChunk = chunk.text;
+        fullReport += textChunk;
+        setReport(prev => prev + textChunk);
       }
     } catch (err) {
       setError(t('errorGenerateReport'));
     } finally {
       setIsLoading(false);
       setIsStreaming(false);
+      if (fullReport) {
+        const title = t('yourNumerologyReport');
+        const content = `**${t('userName')}:** ${name}\n**${t('userDob')}:** ${dob}\n\n---\n\n${fullReport}`;
+        addReadingToHistory({ type: 'Numerology', title, content });
+      }
     }
   };
 
@@ -116,7 +123,7 @@ const NumerologyPage: React.FC<NumerologyPageProps> = ({ setPage }) => {
             <Card>
               <div className="p-4">
                   <h3 className="text-2xl font-bold text-brand-accent mb-4 text-center">{t('yourNumerologyReport')}</h3>
-                  <p className={`text-lg whitespace-pre-wrap leading-relaxed text-brand-text-light ${language === 'ar' ? 'text-right' : 'text-left'}`}>
+                  <p className={`text-lg whitespace-pre-wrap leading-relaxed text-brand-light-text dark:text-brand-text-light ${language === 'ar' ? 'text-right' : 'text-left'}`}>
                     {report}
                     {isStreaming && <span className="inline-block w-1 h-5 bg-brand-accent animate-pulse ml-1 align-bottom"></span>}
                   </p>

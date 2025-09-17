@@ -15,7 +15,7 @@ interface HoroscopePageProps {
 type Period = 'daily' | 'weekly' | 'monthly';
 
 const HoroscopePage: React.FC<HoroscopePageProps> = ({ setPage }) => {
-  const { language, t } = useSettings();
+  const { language, t, addReadingToHistory } = useSettings();
   const [selectedSign, setSelectedSign] = useState<ZodiacSign | null>(null);
   const [period, setPeriod] = useState<Period>('daily');
   const [horoscope, setHoroscope] = useState<string>('');
@@ -33,10 +33,12 @@ const HoroscopePage: React.FC<HoroscopePageProps> = ({ setPage }) => {
     setError('');
     setHoroscope('');
     setIsStreaming(false);
+    let fullHoroscope = '';
 
     try {
       if (selectedPeriod === 'daily') {
         const result = await getHoroscope(sign.value, language);
+        fullHoroscope = result;
         setHoroscope(result);
       } else { // weekly or monthly use streaming
         const stream = await getGeneratedHoroscope(t(sign.translationKey), selectedPeriod, language);
@@ -47,6 +49,7 @@ const HoroscopePage: React.FC<HoroscopePageProps> = ({ setPage }) => {
           text += chunk.text;
           setHoroscope(text);
         }
+        fullHoroscope = text;
       }
     } catch (err) {
       const message = err instanceof Error ? err.message : t('errorFetchHoroscope');
@@ -54,6 +57,10 @@ const HoroscopePage: React.FC<HoroscopePageProps> = ({ setPage }) => {
     } finally {
       setIsLoading(false);
       setIsStreaming(false);
+      if (fullHoroscope && !fullHoroscope.includes('عذراً') && !fullHoroscope.includes('Sorry')) {
+        const title = `${t(sign.translationKey)} - ${t(selectedPeriod)}`;
+        addReadingToHistory({ type: 'Horoscope', title, content: fullHoroscope });
+      }
     }
   };
 
@@ -96,7 +103,7 @@ const HoroscopePage: React.FC<HoroscopePageProps> = ({ setPage }) => {
   const renderSignFinder = () => (
     <Card className="w-full max-w-md mt-6 p-6 text-center animate-fade-in">
       <h3 className="text-2xl font-bold mb-4 text-brand-accent">{t('discoverYourSignTitle')}</h3>
-      <p className="mb-4 text-brand-text-light/80">{t('discoverYourSignBody')}</p>
+      <p className="mb-4 text-brand-light-text/80 dark:text-brand-text-light/80">{t('discoverYourSignBody')}</p>
       <input
         type="date"
         value={birthDate}
@@ -104,14 +111,14 @@ const HoroscopePage: React.FC<HoroscopePageProps> = ({ setPage }) => {
           setBirthDate(e.target.value);
           setFoundSign(null); // Reset on change
         }}
-        className="w-full p-3 bg-brand-dark text-brand-text-light border border-brand-border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-accent mb-4"
+        className="w-full p-3 bg-brand-light dark:bg-brand-dark text-brand-light-text dark:text-brand-text-light border border-brand-light-border dark:border-brand-border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-accent mb-4"
       />
       <Button onClick={handleFindSign} disabled={!birthDate}>{t('findMySign')}</Button>
       {foundSign && (
         <div className="mt-6 p-4 bg-brand-accent/10 border border-brand-accent/20 rounded-lg">
           <p className="text-lg">{t('yourSignIs')}</p>
           <p className="text-3xl font-bold text-brand-accent my-2">{foundSign.icon} {t(foundSign.translationKey)}</p>
-          <p className="text-brand-text-light/80">{t('youCanNowSelect')}</p>
+          <p className="text-brand-light-text/80 dark:text-brand-text-light/80">{t('youCanNowSelect')}</p>
         </div>
       )}
     </Card>
@@ -171,7 +178,7 @@ const HoroscopePage: React.FC<HoroscopePageProps> = ({ setPage }) => {
             ) : error ? (
                 <p className="text-red-400 text-center">{error}</p>
             ) : (
-                <p className={`text-lg whitespace-pre-wrap leading-relaxed p-4 ${language === 'ar' ? 'text-right' : 'text-left'}`}>
+                <p className={`text-lg whitespace-pre-wrap leading-relaxed p-4 text-brand-light-text dark:text-brand-text-light ${language === 'ar' ? 'text-right' : 'text-left'}`}>
                   {horoscope}
                   {isStreaming && <span className="inline-block w-1 h-5 bg-brand-accent animate-pulse ml-1 align-bottom"></span>}
                 </p>

@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Page } from '../types';
+import { Page, ReadingHistoryItem, ReadingType } from '../types';
 import { useSettings } from '../hooks/useSettings';
 import Button from './common/Button';
 import Card from './common/Card';
 import { getAvatarById } from '../assets/avatars';
 import AvatarPickerModal from './common/AvatarPickerModal';
+import ReadingViewerModal from './common/ReadingViewerModal';
 
 
 interface ProfilePageProps {
@@ -38,10 +39,10 @@ const EditIcon = ({ className = 'w-6 h-6' }: { className?: string }) => (
     </svg>
 );
 
-
 const ProfilePage: React.FC<ProfilePageProps> = ({ setPage }) => {
-    const { t, userName, setUserName, userDob, setUserDob, profilePic, setProfilePic } = useSettings();
+    const { t, userName, setUserName, userDob, setUserDob, profilePic, setProfilePic, readingHistory, clearReadingHistory } = useSettings();
     const [isAvatarPickerOpen, setAvatarPickerOpen] = useState(false);
+    const [viewingReading, setViewingReading] = useState<ReadingHistoryItem | null>(null);
 
     // Local state for editing fields, initialized from global context
     const [localName, setLocalName] = useState(userName);
@@ -58,6 +59,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ setPage }) => {
         setUserName('');
         setUserDob('');
         setProfilePic(null);
+        clearReadingHistory();
     };
 
     const handleSave = () => {
@@ -66,6 +68,14 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ setPage }) => {
         setIsSaved(true);
         setTimeout(() => setIsSaved(false), 2000); // Show feedback for 2 seconds
     };
+
+    const formatDate = (isoDate: string) => {
+        return new Date(isoDate).toLocaleDateString(undefined, {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+    }
 
     const hasChanges = localName !== userName || localDob !== userDob;
     const AvatarComponent = getAvatarById(profilePic);
@@ -95,7 +105,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ setPage }) => {
                         </button>
                     </div>
                     {userName && (
-                        <h2 className="text-3xl font-bold mt-4 text-brand-text-light">{userName}</h2>
+                        <h2 className="text-3xl font-bold mt-4 text-brand-light-text dark:text-brand-text-light">{userName}</h2>
                     )}
                 </div>
 
@@ -113,13 +123,13 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ setPage }) => {
                                       type="text"
                                       value={localName}
                                       onChange={(e) => setLocalName(e.target.value)}
-                                      placeholder="..."
-                                      className="w-full text-lg bg-transparent text-white focus:outline-none p-1 -m-1 rounded focus:bg-brand-dark/50 transition-colors"
+                                      placeholder={t('firstName')}
+                                      className="w-full text-lg bg-transparent text-brand-light-text dark:text-white focus:outline-none p-1 -m-1 rounded focus:bg-black/10 dark:focus:bg-brand-dark/50 transition-colors"
                                   />
                               </div>
                           </div>
 
-                          <div className="w-full h-px bg-brand-border"></div>
+                          <div className="w-full h-px bg-brand-light-border dark:bg-brand-border"></div>
 
                           {/* DOB Field */}
                            <div className="flex items-center gap-4">
@@ -131,7 +141,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ setPage }) => {
                                       type="date"
                                       value={localDob}
                                       onChange={(e) => setLocalDob(e.target.value)}
-                                      className="w-full text-lg bg-transparent text-white focus:outline-none p-1 -m-1 rounded focus:bg-brand-dark/50 transition-colors"
+                                      className="w-full text-lg bg-transparent text-brand-light-text dark:text-white focus:outline-none p-1 -m-1 rounded focus:bg-black/10 dark:focus:bg-brand-dark/50 transition-colors"
                                   />
                               </div>
                           </div>
@@ -143,11 +153,34 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ setPage }) => {
                   </Button>
                 </div>
                 
-                {/* Reading History Card */}
-                <Card className="text-center flex flex-col items-center p-6 w-full">
-                     <HistoryIcon className="w-8 h-8 text-brand-accent mb-2"/>
-                     <h3 className="text-lg font-bold text-brand-text-light">{t('readingHistoryTitle')}</h3>
-                     <p className="text-sm text-brand-text-light/70">{t('readingHistoryBody')}</p>
+                 {/* Reading History Card */}
+                <Card className="w-full">
+                    <div className="p-4">
+                        <div className="flex items-center gap-3 mb-4">
+                            <HistoryIcon className="w-8 h-8 text-brand-accent"/>
+                            <h3 className="text-xl font-bold text-brand-light-text dark:text-brand-text-light">{t('readingHistoryTitle')}</h3>
+                        </div>
+                        {readingHistory.length === 0 ? (
+                            <p className="text-center text-sm text-brand-light-text/70 dark:text-brand-text-light/70 py-4">{t('readingHistoryBody')}</p>
+                        ) : (
+                            <div className="space-y-2 max-h-48 overflow-y-auto pr-2">
+                                {readingHistory.map(reading => (
+                                    <button 
+                                        key={reading.id}
+                                        onClick={() => setViewingReading(reading)}
+                                        className="w-full text-left rtl:text-right p-3 rounded-lg bg-brand-light dark:bg-brand-dark/50 hover:bg-brand-accent/10 transition-colors"
+                                    >
+                                        <div className="flex items-center gap-3">
+                                            <div className="flex-grow">
+                                                <p className="font-semibold text-brand-accent">{reading.title}</p>
+                                                <p className="text-xs text-brand-light-text/70 dark:text-brand-text-light/70">{formatDate(reading.date)}</p>
+                                            </div>
+                                        </div>
+                                    </button>
+                                ))}
+                            </div>
+                        )}
+                    </div>
                 </Card>
                 
                 {/* Logout Button */}
@@ -164,6 +197,11 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ setPage }) => {
                     setProfilePic(id);
                     setAvatarPickerOpen(false);
                 }}
+            />
+            <ReadingViewerModal
+                isOpen={!!viewingReading}
+                onClose={() => setViewingReading(null)}
+                reading={viewingReading}
             />
         </div>
     );

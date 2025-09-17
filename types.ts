@@ -39,3 +39,13 @@ export interface MoroccanTarotCard {
   name: string;
   key: string;
 }
+
+export type ReadingType = 'Tarot' | 'Numerology' | 'Compatibility' | 'Horoscope' | 'Falk Lyom';
+
+export interface ReadingHistoryItem {
+  id: number; // Using timestamp as a unique ID
+  type: ReadingType;
+  title: string;
+  content: string;
+  date: string; // ISO string date
+}

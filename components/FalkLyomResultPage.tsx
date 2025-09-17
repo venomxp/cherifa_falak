@@ -15,7 +15,7 @@ interface FalkLyomResultPageProps {
 }
 
 const FalkLyomResultPage: React.FC<FalkLyomResultPageProps> = ({ setPage, gender, skinTone, category }) => {
-  const { t, language } = useSettings();
+  const { t, language, addReadingToHistory } = useSettings();
   const [drawnCard, setDrawnCard] = useState<MoroccanTarotCard | null>(null);
   const [interpretation, setInterpretation] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -35,6 +35,13 @@ const FalkLyomResultPage: React.FC<FalkLyomResultPageProps> = ({ setPage, gender
       try {
         const result = await getFalkLyomInterpretation(card.name, category, gender, skinTone, language);
         setInterpretation(result);
+        if (result) {
+            addReadingToHistory({
+                type: 'Falk Lyom',
+                title: `${card.name} - ${category}`,
+                content: result,
+            });
+        }
       } catch (err) {
         setError(t('errorFalkLyom'));
       } finally {
@@ -45,7 +52,8 @@ const FalkLyomResultPage: React.FC<FalkLyomResultPageProps> = ({ setPage, gender
     if (category && gender && skinTone) {
         fetchInterpretation();
     }
-  }, [category, gender, skinTone, t, language]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [category, gender, skinTone, language, t]);
 
   return (
     <div className="container mx-auto p-4 flex flex-col items-center h-screen justify-center animate-fade-in box-border pb-28">
@@ -65,7 +73,7 @@ const FalkLyomResultPage: React.FC<FalkLyomResultPageProps> = ({ setPage, gender
               {drawnCard?.name}
             </h2>
             <div className="w-1/2 h-px bg-brand-accent/50 my-4 mx-auto"></div>
-            <p className={`text-xl whitespace-pre-wrap leading-relaxed text-brand-text-light ${language === 'ar' ? 'text-right' : 'text-left'}`}>
+            <p className={`text-xl whitespace-pre-wrap leading-relaxed text-brand-light-text dark:text-brand-text-light ${language === 'ar' ? 'text-right' : 'text-left'}`}>
               {interpretation}
             </p>
           </div>

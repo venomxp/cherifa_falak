@@ -14,7 +14,7 @@ interface CompatibilityPageProps {
 type Mode = 'zodiac' | 'names';
 
 const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ setPage }) => {
-  const { language, t, userName } = useSettings();
+  const { language, t, userName, addReadingToHistory } = useSettings();
   const [mode, setMode] = useState<Mode>('zodiac');
   const [analysis, setAnalysis] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -52,6 +52,8 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ setPage }) => {
     setAnalysis('');
     setPercentage(null);
     setIsStreaming(false);
+    let fullAnalysis = '';
+    let title = '';
 
     try {
       let stream;
@@ -61,6 +63,7 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ setPage }) => {
           setIsLoading(false);
           return;
         }
+        title = t('compatibilityResultTitleZodiac', { sign1: t(sign1.translationKey), sign2: t(sign2.translationKey) });
         stream = await getZodiacCompatibilityAnalysis(t(sign1.translationKey), t(sign2.translationKey), language);
       } else {
         if (!name1.trim() || !name2.trim()) {
@@ -70,20 +73,25 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ setPage }) => {
         }
         const compatPercentage = calculateNameCompatibility(name1, name2);
         setPercentage(compatPercentage);
+        title = t('compatibilityResultTitleNames', { name1, name2 });
         stream = await getLoveCompatibilityAnalysis(name1, name2, compatPercentage, language);
       }
       setIsLoading(false);
       setIsStreaming(true);
-      let text = '';
+      
       for await (const chunk of stream) {
-        text += chunk.text;
-        setAnalysis(text);
+        const textChunk = chunk.text;
+        fullAnalysis += textChunk;
+        setAnalysis(prev => prev + textChunk);
       }
     } catch (err) {
       setError(t('errorCompatibility'));
     } finally {
       setIsLoading(false);
       setIsStreaming(false);
+      if (fullAnalysis) {
+        addReadingToHistory({ type: 'Compatibility', title, content: fullAnalysis });
+      }
     }
   };
 
@@ -148,7 +156,7 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ setPage }) => {
             {mode === 'zodiac' && sign1 && sign2 && (
                 <h3 className="text-2xl font-bold text-center text-brand-accent mb-4">{t('compatibilityResultTitleZodiac', { sign1: t(sign1.translationKey), sign2: t(sign2.translationKey) })}</h3>
             )}
-            <p className={`text-lg whitespace-pre-wrap leading-relaxed text-brand-text-light ${language === 'ar' ? 'text-right' : 'text-left'}`}>
+            <p className={`text-lg whitespace-pre-wrap leading-relaxed text-brand-light-text dark:text-brand-text-light ${language === 'ar' ? 'text-right' : 'text-left'}`}>
               {analysis}
               {isStreaming && <span className="inline-block w-1 h-5 bg-brand-accent animate-pulse ml-1 align-bottom"></span>}
             </p>

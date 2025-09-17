@@ -18,7 +18,7 @@ const PrivateReadingPage: React.FC<PrivateReadingPageProps> = ({ setPage }) => {
         <h2 className="text-3xl font-logo-en font-bold mb-4 text-brand-accent tracking-wider">
           {t('privateReading')}
         </h2>
-        <p className="text-lg text-brand-text-light/80 leading-relaxed">
+        <p className="text-lg text-brand-light-text/80 dark:text-brand-text-light/80 leading-relaxed">
          {t('privateReadingBody')}
         </p>
         <div className="mt-8">

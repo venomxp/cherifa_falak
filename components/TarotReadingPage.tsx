@@ -14,7 +14,7 @@ interface TarotReadingPageProps {
 }
 
 const TarotReadingPage: React.FC<TarotReadingPageProps> = ({ setPage }) => {
-  const { language, t } = useSettings();
+  const { language, t, addReadingToHistory } = useSettings();
   const [view, setView] = useState<'selection' | 'reading'>('selection');
   const [drawnCard, setDrawnCard] = useState<TarotCardInfo | null>(null);
   const [interpretation, setInterpretation] = useState<string>('');
@@ -28,6 +28,7 @@ const TarotReadingPage: React.FC<TarotReadingPageProps> = ({ setPage }) => {
     setIsStreaming(false);
     setError('');
     setInterpretation('');
+    let fullInterpretation = '';
 
     try {
       const stream = await getTarotInterpretationStream(card.english, language);
@@ -35,13 +36,22 @@ const TarotReadingPage: React.FC<TarotReadingPageProps> = ({ setPage }) => {
       setIsStreaming(true);
 
       for await (const chunk of stream) {
-        setInterpretation((prev) => prev + chunk.text);
+        const textChunk = chunk.text;
+        fullInterpretation += textChunk;
+        setInterpretation((prev) => prev + textChunk);
       }
     } catch (err) {
       setError(t('errorTarot'));
       setIsLoading(false);
     } finally {
       setIsStreaming(false);
+      if (fullInterpretation) {
+        addReadingToHistory({
+          type: 'Tarot',
+          title: card.english,
+          content: fullInterpretation,
+        });
+      }
     }
   };
   
@@ -75,7 +85,7 @@ const TarotReadingPage: React.FC<TarotReadingPageProps> = ({ setPage }) => {
         <h2 className="text-4xl font-logo-en font-bold my-8 text-center text-brand-accent tracking-wider">
           {t('tarotReading')}
         </h2>
-        <p className="text-xl text-center mb-8 text-brand-text-light/80 max-w-lg">
+        <p className="text-xl text-center mb-8 text-brand-light-text/80 dark:text-brand-text-light/80 max-w-lg">
           {t('tarotPageInstruction')}
         </p>
         <TarotSpread onCardSelect={handleCardSelect} />
@@ -104,7 +114,7 @@ const TarotReadingPage: React.FC<TarotReadingPageProps> = ({ setPage }) => {
               <h3 className="text-2xl font-logo-en font-bold text-brand-accent mb-4 text-center">
                 {drawnCard?.english}
               </h3>
-              <p className={`text-lg whitespace-pre-wrap leading-relaxed text-brand-text-light ${language === 'ar' ? 'text-right' : 'text-left'}`}>
+              <p className={`text-lg whitespace-pre-wrap leading-relaxed text-brand-light-text dark:text-brand-text-light ${language === 'ar' ? 'text-right' : 'text-left'}`}>
                 {interpretation}
                 {isStreaming && <span className="inline-block w-1 h-5 bg-brand-accent animate-pulse ml-1 align-bottom"></span>}
               </p>

@@ -19,7 +19,7 @@ const TermsConditionsPage: React.FC<TermsConditionsPageProps> = ({ setPage }) =>
             <h2 className="text-3xl font-bold mb-4 text-center text-brand-accent">
               {t('termsAndConditionsTitle')}
             </h2>
-            <p className={`text-lg whitespace-pre-wrap leading-relaxed text-brand-text-light ${language === 'ar' ? 'text-right' : 'text-left'}`}>
+            <p className={`text-lg whitespace-pre-wrap leading-relaxed ${language === 'ar' ? 'text-right' : 'text-left'}`}>
               {t('termsAndConditionsBody')}
             </p>
           </div>

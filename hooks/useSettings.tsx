@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useMemo } from 'react';
 import { translations } from '../localization/translations';
-import { TranslationKey } from '../types';
+import { TranslationKey, ReadingHistoryItem } from '../types';
 import { scheduleDailyNotification, cancelAllNotifications } from '../services/notificationService';
 
 
@@ -21,6 +21,9 @@ interface SettingsContextType {
   setProfilePic: (pic: string | null) => void;
   notificationsEnabled: boolean;
   setNotificationsEnabled: (enabled: boolean) => Promise<void>;
+  readingHistory: ReadingHistoryItem[];
+  addReadingToHistory: (reading: Omit<ReadingHistoryItem, 'id' | 'date'>) => void;
+  clearReadingHistory: () => void;
 }
 
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
@@ -37,6 +40,15 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [profilePic, setProfilePicState] = useState<string | null>(() => localStorage.getItem('profilePic') || null);
   const [notificationsEnabled, setNotificationsEnabledState] = useState<boolean>(() => {
     return localStorage.getItem('notificationsEnabled') === 'true';
+  });
+  const [readingHistory, setReadingHistory] = useState<ReadingHistoryItem[]>(() => {
+    try {
+      const savedHistory = localStorage.getItem('readingHistory');
+      return savedHistory ? JSON.parse(savedHistory) : [];
+    } catch (error) {
+      console.error("Failed to parse reading history from localStorage", error);
+      return [];
+    }
   });
 
 
@@ -73,6 +85,24 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         return translation;
     };
   }, [language]);
+
+  const addReadingToHistory = useMemo(() => (reading: Omit<ReadingHistoryItem, 'id' | 'date'>) => {
+    const newReading: ReadingHistoryItem = {
+      ...reading,
+      id: Date.now(),
+      date: new Date().toISOString(),
+    };
+    setReadingHistory(prevHistory => {
+      const updatedHistory = [newReading, ...prevHistory].slice(0, 50); // Keep latest 50 readings
+      localStorage.setItem('readingHistory', JSON.stringify(updatedHistory));
+      return updatedHistory;
+    });
+  }, []);
+
+  const clearReadingHistory = () => {
+    setReadingHistory([]);
+    localStorage.removeItem('readingHistory');
+  };
 
 
   const setTheme = (newTheme: Theme) => setThemeState(newTheme);
@@ -118,7 +148,7 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
 
   return (
-    <SettingsContext.Provider value={{ theme, setTheme, language, setLanguage, t, userName, setUserName, userDob, setUserDob, profilePic, setProfilePic, notificationsEnabled, setNotificationsEnabled }}>
+    <SettingsContext.Provider value={{ theme, setTheme, language, setLanguage, t, userName, setUserName, userDob, setUserDob, profilePic, setProfilePic, notificationsEnabled, setNotificationsEnabled, readingHistory, addReadingToHistory, clearReadingHistory }}>
       {children}
     </SettingsContext.Provider>
   );
