@@ -1,7 +1,7 @@
 import { GoogleGenAI, GenerateContentResponse } from "@google/genai";
 
 // FIX: Updated API key sourcing to align with Gemini API guidelines.
-const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY! });
+const ai = new GoogleGenAI({ apiKey: process.env.API_KEY! });
 
 // A robust helper function to call the Gemini API with automatic retries on failure
 const generateContentWithRetry = async (prompt: string): Promise<GenerateContentResponse> => {
@@ -53,7 +53,7 @@ export const translateHoroscopeToFrench = async (horoscope: string, period: 'dai
 };
 
 // Provides a mystical analysis based on a name and date of birth for the Numerology feature
-export const getNumerologyReport = async (name: string, dob: string, gematriaValue: number, language: 'ar' | 'en' | 'fr'): Promise<string> => {
+export const getNumerologyReport = async (name: string, dob: string, gematriaValue: number, language: 'ar' | 'en' | 'fr') => {
   const prompt = language === 'ar'
     ? `Provide a mystical and insightful personality analysis in Arabic based on Numerology and Gematria (حساب الجُمَّل).
 Name: "${name}" (Gematria Value: ${gematriaValue})
@@ -70,16 +70,19 @@ Date of Birth: ${dob}
 Calculate their Life Path Number from the date of birth and combine it with the Gematria analysis of the name to create a complete, insightful, and positive spiritual profile. The tone should be spiritual and encouraging. The response must be in English.`;
 
   try {
-    const response = await generateContentWithRetry(prompt);
-    return response.text.trim();
+    return await ai.models.generateContentStream({
+        model: "gemini-2.5-flash",
+        contents: prompt,
+        config: { thinkingConfig: { thinkingBudget: 0 } },
+    });
   } catch (error) {
-    console.error("Error getting numerology report:", error);
+    console.error("Error getting numerology report stream:", error);
     throw new Error("Failed to get numerology report.");
   }
 };
 
 // Provides a romantic compatibility analysis based on two names
-export const getLoveCompatibilityAnalysis = async (name1: string, name2: string, percentage: number, language: 'ar' | 'en' | 'fr'): Promise<string> => {
+export const getLoveCompatibilityAnalysis = async (name1: string, name2: string, percentage: number, language: 'ar' | 'en' | 'fr') => {
     const prompt = language === 'ar'
     ? `Provide a romantic compatibility analysis for two people, ${name1} and ${name2}.
 Their calculated compatibility score is ${percentage}%.
@@ -93,16 +96,19 @@ Their calculated compatibility score is ${percentage}%.
 Write a warm, insightful, and encouraging analysis in English. Discuss their potential strengths as a couple and areas for growth. The tone should be positive and suitable for a love compatibility reading.`;
 
     try {
-        const response = await generateContentWithRetry(prompt);
-        return response.text.trim();
+        return await ai.models.generateContentStream({
+           model: "gemini-2.5-flash",
+           contents: prompt,
+           config: { thinkingConfig: { thinkingBudget: 0 } },
+        });
     } catch (error) {
-        console.error("Error getting love compatibility analysis:", error);
+        console.error("Error getting love compatibility analysis stream:", error);
         throw new Error("Failed to get love compatibility analysis.");
     }
 };
 
 // Provides a detailed compatibility analysis between two zodiac signs
-export const getZodiacCompatibilityAnalysis = async (sign1: string, sign2: string, language: 'ar' | 'en' | 'fr'): Promise<string> => {
+export const getZodiacCompatibilityAnalysis = async (sign1: string, sign2: string, language: 'ar' | 'en' | 'fr') => {
     const prompt = language === 'ar'
     ? `Provide a detailed zodiac compatibility analysis in Arabic between ${sign1} and ${sign2}.
 Discuss their potential for friendship, love, and partnership. Highlight both the harmonious aspects and potential challenges in their relationship. The tone should be that of an experienced astrologer.`
@@ -113,10 +119,13 @@ Discutez de leur potentiel d'amitié, d'amour et de partenariat. Mettez en évid
 Discuss their potential for friendship, love, and partnership. Highlight both the harmonious aspects and potential challenges in their relationship. The tone should be that of an experienced astrologer.`;
 
     try {
-        const response = await generateContentWithRetry(prompt);
-        return response.text.trim();
+        return await ai.models.generateContentStream({
+           model: "gemini-2.5-flash",
+           contents: prompt,
+           config: { thinkingConfig: { thinkingBudget: 0 } },
+        });
     } catch (error) {
-        console.error("Error getting zodiac compatibility analysis:", error);
+        console.error("Error getting zodiac compatibility analysis stream:", error);
         throw new Error("Failed to get zodiac compatibility analysis.");
     }
 };
@@ -174,7 +183,7 @@ Provide a short (two or three sentences), mystical, and encouraging reading in E
 };
 
 // Generates a weekly or monthly horoscope
-export const getGeneratedHoroscope = async (sign: string, period: 'weekly' | 'monthly', language: 'ar' | 'en' | 'fr'): Promise<string> => {
+export const getGeneratedHoroscope = async (sign: string, period: 'weekly' | 'monthly', language: 'ar' | 'en' | 'fr') => {
   const periodArabic = period === 'weekly' ? 'الأسبوعي' : 'الشهري';
   const periodEnglish = period;
   const periodFrench = period === 'weekly' ? 'hebdomadaire' : 'mensuel';
@@ -186,12 +195,13 @@ export const getGeneratedHoroscope = async (sign: string, period: 'weekly' | 'mo
     : `Act as an expert astrologer. Write a mystical and insightful ${periodEnglish} horoscope for the zodiac sign ${sign}. The tone should be encouraging and aligned with traditional astrology. Do not add any introductory phrases. The response must be in English.`;
 
   try {
-    const response = await generateContentWithRetry(prompt);
-    return response.text.trim();
+     return await ai.models.generateContentStream({
+       model: "gemini-2.5-flash",
+       contents: prompt,
+       config: { thinkingConfig: { thinkingBudget: 0 } },
+    });
   } catch (error) {
-    console.error(`Error generating ${period} horoscope:`, error);
-    if (language === 'ar') return `عذراً، حدث خطأ أثناء إنشاء الطالع ${periodArabic}.`;
-    if (language === 'fr') return `Désolé, une erreur s'est produite lors de la génération de l'horoscope ${periodFrench}.`;
-    return `Sorry, an error occurred while generating the ${periodEnglish} horoscope.`;
+    console.error(`Error generating ${period} horoscope stream:`, error);
+    throw new Error(`Failed to get ${period} horoscope.`);
   }
 };

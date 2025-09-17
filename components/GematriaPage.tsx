@@ -54,8 +54,13 @@ const GematriaPage: React.FC<GematriaPageProps> = ({ setPage }) => {
       // FIX: Replaced non-existent `getGematriaInterpretation` with `getNumerologyReport`.
       // Passing an empty string for `dob` as this component does not collect it.
       // FIX: Added 'ar' for the missing language parameter.
-      const result = await getNumerologyReport(name, '', value, 'ar');
-      setInterpretation(result);
+      const stream = await getNumerologyReport(name, '', value, 'ar');
+      // FIX: The API returns a stream. Iterate over it to get the full text.
+      let fullText = '';
+      for await (const chunk of stream) {
+        fullText += chunk.text;
+      }
+      setInterpretation(fullText);
     } catch (err) {
       setError('حدث خطأ أثناء جلب التحليل. يرجى المحاولة مرة أخرى.');
     } finally {

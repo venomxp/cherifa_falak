@@ -45,8 +45,13 @@ const LoveCompatibilityPage: React.FC<LoveCompatibilityPageProps> = ({ setPage }
 
     try {
       // FIX: Added 'ar' for the missing language parameter.
-      const result = await getLoveCompatibilityAnalysis(name1, name2, compatibilityPercentage, 'ar');
-      setAnalysis(result);
+      const stream = await getLoveCompatibilityAnalysis(name1, name2, compatibilityPercentage, 'ar');
+      // FIX: The API returns a stream. Iterate over it to get the full text.
+      let fullText = '';
+      for await (const chunk of stream) {
+        fullText += chunk.text;
+      }
+      setAnalysis(fullText);
     } catch (err) {
       setError('حدث خطأ أثناء تحليل التوافق. يرجى المحاولة مرة أخرى.');
     } finally {

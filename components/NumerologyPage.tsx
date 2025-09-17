@@ -16,6 +16,7 @@ const NumerologyPage: React.FC<NumerologyPageProps> = ({ setPage }) => {
   const [dob, setDob] = useState<string>('');
   const [report, setReport] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isStreaming, setIsStreaming] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
 
   useEffect(() => {
@@ -43,30 +44,38 @@ const NumerologyPage: React.FC<NumerologyPageProps> = ({ setPage }) => {
     setIsLoading(true);
     setError('');
     setReport('');
+    setIsStreaming(false);
 
     try {
       const gematriaValue = calculateGematria(name);
-      const result = await getNumerologyReport(name, dob, gematriaValue, language);
-      setReport(result);
+      const stream = await getNumerologyReport(name, dob, gematriaValue, language);
+      setIsLoading(false);
+      setIsStreaming(true);
+      let text = '';
+      for await (const chunk of stream) {
+        text += chunk.text;
+        setReport(text);
+      }
     } catch (err) {
       setError(t('errorGenerateReport'));
     } finally {
       setIsLoading(false);
+      setIsStreaming(false);
     }
   };
 
   return (
     <div className="container mx-auto p-4 flex flex-col items-center min-h-screen animate-fade-in box-border pb-28">
       <div className="flex-grow w-full flex flex-col items-center justify-center">
-        <h2 className="text-4xl font-bold my-8 text-center text-violet-800 dark:text-violet-300">
-          {t('numerologyPageTitle')}
+        <h2 className="text-4xl font-logo-en font-bold my-8 text-center text-brand-accent tracking-wider">
+          {t('numerology')}
         </h2>
 
-        {!report && (
+        {!report && !isStreaming && (
           <Card className="w-full max-w-md mb-8">
               <div className="space-y-4">
                   <div>
-                      <label htmlFor="name" className="block text-lg font-semibold mb-2 text-slate-700 dark:text-violet-200">
+                      <label htmlFor="name" className="block text-lg font-semibold mb-2 text-brand-accent">
                       {t('enterYourName')}
                       </label>
                       <input
@@ -75,12 +84,12 @@ const NumerologyPage: React.FC<NumerologyPageProps> = ({ setPage }) => {
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       placeholder={t('firstName')}
-                      className="w-full p-3 bg-white/50 dark:bg-slate-900/50 text-slate-800 dark:text-white border border-violet-500/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-400"
+                      className="w-full p-3 bg-brand-dark text-white border border-brand-border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-accent"
                       dir={language === 'ar' ? 'rtl' : 'ltr'}
                       />
                   </div>
                   <div>
-                      <label htmlFor="dob" className="block text-lg font-semibold mb-2 text-slate-700 dark:text-violet-200">
+                      <label htmlFor="dob" className="block text-lg font-semibold mb-2 text-brand-accent">
                       {t('enterYourDob')}
                       </label>
                       <input
@@ -88,7 +97,7 @@ const NumerologyPage: React.FC<NumerologyPageProps> = ({ setPage }) => {
                       type="date"
                       value={dob}
                       onChange={(e) => setDob(e.target.value)}
-                      className="w-full p-3 bg-white/50 dark:bg-slate-900/50 text-slate-800 dark:text-white border border-violet-500/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-400 dark:[color-scheme:dark]"
+                      className="w-full p-3 bg-brand-dark text-white border border-brand-border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-accent"
                       />
                   </div>
               </div>
@@ -102,14 +111,17 @@ const NumerologyPage: React.FC<NumerologyPageProps> = ({ setPage }) => {
         
         {error && !isLoading && <p className="text-red-400 mt-4 text-center">{error}</p>}
 
-        {report && !isLoading && (
+        {(report || isStreaming) && !isLoading && (
           <div className="mt-8 w-full max-w-2xl animate-fade-in">
             <Card>
               <div className="p-4">
-                  <h3 className="text-2xl font-bold text-violet-800 dark:text-violet-300 mb-4 text-center">{t('yourNumerologyReport')}</h3>
-                  <p className={`text-lg whitespace-pre-wrap leading-relaxed text-slate-800 dark:text-slate-200 ${language === 'ar' ? 'text-right' : 'text-left'}`}>{report}</p>
+                  <h3 className="text-2xl font-bold text-brand-accent mb-4 text-center">{t('yourNumerologyReport')}</h3>
+                  <p className={`text-lg whitespace-pre-wrap leading-relaxed text-brand-text-light ${language === 'ar' ? 'text-right' : 'text-left'}`}>
+                    {report}
+                    {isStreaming && <span className="inline-block w-1 h-5 bg-brand-accent animate-pulse ml-1 align-bottom"></span>}
+                  </p>
                   <div className="text-center">
-                      <Button onClick={() => setReport('')} className="mt-6">{t('newAnalysis')}</Button>
+                      <Button onClick={() => setReport('')} className="mt-6" disabled={isStreaming}>{t('newAnalysis')}</Button>
                   </div>
               </div>
             </Card>

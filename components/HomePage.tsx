@@ -101,7 +101,6 @@ const PrivateReadingIcon = () => (
     </svg>
 );
 
-
 interface HomePageProps {
   setPage: (page: Page) => void;
 }
@@ -109,28 +108,26 @@ interface HomePageProps {
 const HomePage: React.FC<HomePageProps> = ({ setPage }) => {
   const { t } = useSettings();
   
-  const uniformGradient = 'bg-gradient-to-tl from-violet-500 to-fuchsia-600';
-
   const categories = [
-    { page: Page.FALK_LYOM_WELCOME, title: t('falkLyom'), description: t('falkLyomDesc'), icon: <FalkLyomIcon />, gradient: uniformGradient },
-    { page: Page.TAROT, title: t('tarotReading'), description: t('tarotReadingDesc'), icon: <TarotIcon />, gradient: uniformGradient },
-    { page: Page.HOROSCOPE, title: t('horoscopes'), description: t('horoscopesDesc'), icon: <HoroscopeIcon />, gradient: uniformGradient },
-    { page: Page.NUMEROLOGY, title: t('numerology'), description: t('numerologyDesc'), icon: <NumerologyIcon />, gradient: uniformGradient },
-    { page: Page.COMPATIBILITY, title: t('compatibility'), description: t('compatibilityDesc'), icon: <CompatibilityIcon />, gradient: uniformGradient },
-    { page: Page.PRIVATE_READING, title: t('privateReading'), description: t('privateReadingDesc'), icon: <PrivateReadingIcon />, gradient: uniformGradient },
+    { page: Page.FALK_LYOM_WELCOME, title: t('falkLyom'), description: t('falkLyomDesc'), icon: <FalkLyomIcon /> },
+    { page: Page.TAROT, title: t('tarotReading'), description: t('tarotReadingDesc'), icon: <TarotIcon /> },
+    { page: Page.HOROSCOPE, title: t('horoscopes'), description: t('horoscopesDesc'), icon: <HoroscopeIcon /> },
+    { page: Page.NUMEROLOGY, title: t('numerology'), description: t('numerologyDesc'), icon: <NumerologyIcon /> },
+    { page: Page.COMPATIBILITY, title: t('compatibility'), description: t('compatibilityDesc'), icon: <CompatibilityIcon /> },
+    { page: Page.PRIVATE_READING, title: t('privateReading'), description: t('privateReadingDesc'), icon: <PrivateReadingIcon /> },
   ];
 
   return (
-    <div className="container mx-auto px-4 pt-2 min-h-screen animate-fade-in pb-28 box-border">
-      <main className="w-full max-w-md mx-auto">
-        <div className="mb-2 flex flex-col items-center">
+    <div className="container mx-auto px-4 flex flex-col h-screen animate-fade-in box-border overflow-hidden">
+      <main className="w-full max-w-md mx-auto flex flex-col flex-grow pt-4 pb-24">
+        <header className="flex flex-col items-center">
           <Logo />
-          <p className="mt-1 text-sm text-slate-600 dark:text-slate-400 max-w-xs mx-auto text-center">
+          <p className="mt-2 text-sm text-brand-light-text/70 dark:text-brand-text-light/70 max-w-xs mx-auto text-center">
             {t('appSlogan')}
           </p>
-        </div>
+        </header>
         
-        <div className="flex flex-col gap-3">
+        <div className="flex-grow flex flex-col justify-center gap-2 py-2">
           {categories.map((cat) => (
             <CategoryButton
               key={cat.title}
@@ -138,7 +135,6 @@ const HomePage: React.FC<HomePageProps> = ({ setPage }) => {
               title={cat.title}
               description={cat.description}
               icon={cat.icon}
-              gradientClass={cat.gradient}
             />
           ))}
         </div>

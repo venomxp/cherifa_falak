@@ -47,7 +47,7 @@ const SplashScreen: React.FC = () => {
         style={{ perspective: '1000px', transformStyle: 'preserve-3d' }}
       >
         <div
-            className="absolute inset-0 rounded-full bg-violet-500/50 blur-3xl animate-pulse"
+            className="absolute inset-0 rounded-full bg-brand-accent/30 blur-3xl animate-pulse"
             style={{ animationDuration: '3s' }}
         ></div>
         {cards.map((_, index) => (

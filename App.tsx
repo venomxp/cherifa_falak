@@ -6,7 +6,6 @@ import HoroscopePage from './components/HoroscopePage';
 import CompatibilityPage from './components/CompatibilityPage';
 import NumerologyPage from './components/NumerologyPage';
 import TarotReadingPage from './components/TarotReadingPage';
-import AboutPage from './components/AboutPage';
 import PrivateReadingPage from './components/PrivateReadingPage';
 import SettingsPage from './components/SettingsPage';
 import FalkLyomWelcomePage from './components/FalkLyomWelcomePage';
@@ -16,6 +15,11 @@ import FalkLyomCategoryPage from './components/FalkLyomCategoryPage';
 import FalkLyomResultPage from './components/FalkLyomResultPage';
 import BottomNavBar from './components/common/BottomNavBar';
 import ProfilePage from './components/ProfilePage';
+import PrivacyPolicyPage from './components/PrivacyPolicyPage';
+import TermsConditionsPage from './components/TermsConditionsPage';
+import HelpFAQPage from './components/HelpFAQPage';
+import { useSettings } from './hooks/useSettings';
+import { scheduleDailyNotification } from './services/notificationService';
 
 const App: React.FC = () => {
   // Use a state for the current page, starting with the splash screen
@@ -23,6 +27,7 @@ const App: React.FC = () => {
   const [falkGender, setFalkGender] = useState<string | null>(null);
   const [falkSkinTone, setFalkSkinTone] = useState<string | null>(null);
   const [falkCategory, setFalkCategory] = useState<string | null>(null);
+  const { language } = useSettings();
 
   // Effect to automatically transition from splash to home screen after a delay
   useEffect(() => {
@@ -32,6 +37,17 @@ const App: React.FC = () => {
 
     return () => clearTimeout(timer);
   }, []);
+
+  // Effect to ensure daily notification is scheduled on app load if enabled
+  useEffect(() => {
+    const notificationsEnabled = localStorage.getItem('notificationsEnabled') === 'true';
+    if (notificationsEnabled) {
+      // We schedule on every load to ensure the timer is active.
+      // The scheduler function itself prevents duplicates.
+      scheduleDailyNotification();
+    }
+  }, []); // Runs once on app mount
+
 
   // Effect to scroll to the top whenever the page changes
   useEffect(() => {
@@ -53,8 +69,6 @@ const App: React.FC = () => {
         return <NumerologyPage setPage={setPage} />;
       case Page.COMPATIBILITY:
         return <CompatibilityPage setPage={setPage} />;
-      case Page.ABOUT:
-        return <AboutPage setPage={setPage} />;
       case Page.PRIVATE_READING:
         return <PrivateReadingPage setPage={setPage} />;
       case Page.SETTINGS:
@@ -71,6 +85,12 @@ const App: React.FC = () => {
         return <FalkLyomCategoryPage setPage={setPage} setFalkCategory={setFalkCategory} />;
       case Page.FALK_LYOM_RESULT:
         return <FalkLyomResultPage setPage={setPage} gender={falkGender!} skinTone={falkSkinTone!} category={falkCategory!} />;
+      case Page.PRIVACY_POLICY:
+        return <PrivacyPolicyPage setPage={setPage} />;
+      case Page.TERMS_CONDITIONS:
+        return <TermsConditionsPage setPage={setPage} />;
+      case Page.HELP_FAQ:
+        return <HelpFAQPage setPage={setPage} />;
       default:
         return <HomePage setPage={setPage} />;
     }

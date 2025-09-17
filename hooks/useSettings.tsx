@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, useMemo } from 'react';
 import { translations } from '../localization/translations';
 import { TranslationKey } from '../types';
+import { scheduleDailyNotification, cancelAllNotifications } from '../services/notificationService';
 
 
 type Theme = 'light' | 'dark';
@@ -18,13 +19,15 @@ interface SettingsContextType {
   setUserDob: (dob: string) => void;
   profilePic: string | null;
   setProfilePic: (pic: string | null) => void;
+  notificationsEnabled: boolean;
+  setNotificationsEnabled: (enabled: boolean) => Promise<void>;
 }
 
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
 
 export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [theme, setThemeState] = useState<Theme>(() => {
-    return (localStorage.getItem('theme') as Theme) || 'light';
+    return (localStorage.getItem('theme') as Theme) || 'dark';
   });
   const [language, setLanguageState] = useState<Language>(() => {
     return (localStorage.getItem('language') as Language) || 'ar';
@@ -32,6 +35,9 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [userName, setUserNameState] = useState<string>(() => localStorage.getItem('userName') || '');
   const [userDob, setUserDobState] = useState<string>(() => localStorage.getItem('userDob') || '');
   const [profilePic, setProfilePicState] = useState<string | null>(() => localStorage.getItem('profilePic') || null);
+  const [notificationsEnabled, setNotificationsEnabledState] = useState<boolean>(() => {
+    return localStorage.getItem('notificationsEnabled') === 'true';
+  });
 
 
   useEffect(() => {
@@ -81,9 +87,38 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     }
     setProfilePicState(newPic);
   };
+  
+  const setNotificationsEnabled = async (enabled: boolean) => {
+      if (enabled) {
+          if (!('serviceWorker' in navigator) || !('Notification' in window)) {
+              alert('This browser does not support notifications.');
+              return;
+          }
+
+          if (Notification.permission === 'granted') {
+              localStorage.setItem('notificationsEnabled', 'true');
+              setNotificationsEnabledState(true);
+              scheduleDailyNotification();
+          } else if (Notification.permission !== 'denied') {
+              const permission = await Notification.requestPermission();
+              if (permission === 'granted') {
+                  localStorage.setItem('notificationsEnabled', 'true');
+                  setNotificationsEnabledState(true);
+                  scheduleDailyNotification();
+              }
+          } else {
+              alert(t('notificationsPermissionDenied'));
+          }
+      } else {
+          localStorage.setItem('notificationsEnabled', 'false');
+          setNotificationsEnabledState(false);
+          cancelAllNotifications();
+      }
+  };
+
 
   return (
-    <SettingsContext.Provider value={{ theme, setTheme, language, setLanguage, t, userName, setUserName, userDob, setUserDob, profilePic, setProfilePic }}>
+    <SettingsContext.Provider value={{ theme, setTheme, language, setLanguage, t, userName, setUserName, userDob, setUserDob, profilePic, setProfilePic, notificationsEnabled, setNotificationsEnabled }}>
       {children}
     </SettingsContext.Provider>
   );

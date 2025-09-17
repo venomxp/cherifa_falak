@@ -1,22 +1,17 @@
 // FIX: Use process.env for API key to align with execution environment
-import { translateHoroscopeToArabic, getGeneratedHoroscope, translateHoroscopeToFrench } from './geminiService';
+import { translateHoroscopeToArabic, translateHoroscopeToFrench } from './geminiService';
 
 const API_BASE_URL = 'https://api.api-ninjas.com/v1/horoscope';
 
-// Fetches the horoscope for a given sign and time period (daily, weekly, monthly)
-export const getHoroscope = async (signName: string, signValue: string, period: 'daily' | 'weekly' | 'monthly', language: 'ar' | 'en' | 'fr'): Promise<string> => {
+// Fetches the horoscope for a given sign for the 'daily' period.
+export const getHoroscope = async (signValue: string, language: 'ar' | 'en' | 'fr'): Promise<string> => {
   
-  if (period !== 'daily') {
-    // For weekly/monthly, we call Gemini directly to generate the horoscope
-    return await getGeneratedHoroscope(signName, period, language);
-  }
-
-  // Daily horoscope logic remains the same, using Ninja API
+  // Daily horoscope logic using Ninja API
   try {
     const response = await fetch(`${API_BASE_URL}?zodiac=${signValue}`, {
       method: 'GET',
       headers: {
-        'X-Api-Key': import.meta.env.VITE_NINJA_API_KEY!,
+        'X-Api-Key': process.env.VITE_NINJA_API_KEY!,
       },
     });
 
@@ -39,10 +34,10 @@ export const getHoroscope = async (signName: string, signValue: string, period: 
     }
 
     if (language === 'fr') {
-        return await translateHoroscopeToFrench(englishHoroscope, period);
+        return await translateHoroscopeToFrench(englishHoroscope, 'daily');
     }
 
-    const arabicHoroscope = await translateHoroscopeToArabic(englishHoroscope, period);
+    const arabicHoroscope = await translateHoroscopeToArabic(englishHoroscope, 'daily');
     return arabicHoroscope;
 
   } catch (error) {

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Page, ZodiacSign } from '../types';
 import { ZODIAC_SIGNS } from '../constants';
 import { getHoroscope } from '../services/horoscopeService';
+import { getGeneratedHoroscope } from '../services/geminiService';
 import Button from './common/Button';
 import Card from './common/Card';
 import Spinner from './common/Spinner';
@@ -19,6 +20,7 @@ const HoroscopePage: React.FC<HoroscopePageProps> = ({ setPage }) => {
   const [period, setPeriod] = useState<Period>('daily');
   const [horoscope, setHoroscope] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isStreaming, setIsStreaming] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
   
   // State for the sign finder tool
@@ -26,36 +28,45 @@ const HoroscopePage: React.FC<HoroscopePageProps> = ({ setPage }) => {
   const [birthDate, setBirthDate] = useState<string>('');
   const [foundSign, setFoundSign] = useState<ZodiacSign | null>(null);
 
-  const handleSignSelect = async (sign: ZodiacSign, selectedPeriod: Period = 'daily') => {
-    setSelectedSign(sign);
+  const fetchHoroscope = async (sign: ZodiacSign, selectedPeriod: Period) => {
     setIsLoading(true);
     setError('');
     setHoroscope('');
-    setPeriod(selectedPeriod);
+    setIsStreaming(false);
+
     try {
-      const result = await getHoroscope(t(sign.translationKey), sign.value, selectedPeriod, language);
-      setHoroscope(result);
+      if (selectedPeriod === 'daily') {
+        const result = await getHoroscope(sign.value, language);
+        setHoroscope(result);
+      } else { // weekly or monthly use streaming
+        const stream = await getGeneratedHoroscope(t(sign.translationKey), selectedPeriod, language);
+        setIsLoading(false);
+        setIsStreaming(true);
+        let text = '';
+        for await (const chunk of stream) {
+          text += chunk.text;
+          setHoroscope(text);
+        }
+      }
     } catch (err) {
-      setError(t('errorFetchHoroscope'));
+      const message = err instanceof Error ? err.message : t('errorFetchHoroscope');
+      setError(message);
     } finally {
       setIsLoading(false);
+      setIsStreaming(false);
     }
   };
+
+  const handleSignSelect = (sign: ZodiacSign) => {
+    setSelectedSign(sign);
+    // When a new sign is selected, default to showing the current period's horoscope
+    fetchHoroscope(sign, period);
+  };
   
-  const handlePeriodChange = async (newPeriod: Period) => {
+  const handlePeriodChange = (newPeriod: Period) => {
     if (selectedSign && newPeriod !== period) {
-        setPeriod(newPeriod);
-        setIsLoading(true);
-        setError('');
-        setHoroscope('');
-        try {
-          const result = await getHoroscope(t(selectedSign.translationKey), selectedSign.value, newPeriod, language);
-          setHoroscope(result);
-        } catch (err) {
-          setError(t('errorFetchHoroscope'));
-        } finally {
-          setIsLoading(false);
-        }
+      setPeriod(newPeriod);
+      fetchHoroscope(selectedSign, newPeriod);
     }
   };
 
@@ -84,8 +95,8 @@ const HoroscopePage: React.FC<HoroscopePageProps> = ({ setPage }) => {
   
   const renderSignFinder = () => (
     <Card className="w-full max-w-md mt-6 p-6 text-center animate-fade-in">
-      <h3 className="text-2xl font-bold mb-4 text-violet-800 dark:text-violet-200">{t('discoverYourSignTitle')}</h3>
-      <p className="mb-4 text-slate-700 dark:text-slate-300/80">{t('discoverYourSignBody')}</p>
+      <h3 className="text-2xl font-bold mb-4 text-brand-accent">{t('discoverYourSignTitle')}</h3>
+      <p className="mb-4 text-brand-text-light/80">{t('discoverYourSignBody')}</p>
       <input
         type="date"
         value={birthDate}
@@ -93,14 +104,14 @@ const HoroscopePage: React.FC<HoroscopePageProps> = ({ setPage }) => {
           setBirthDate(e.target.value);
           setFoundSign(null); // Reset on change
         }}
-        className="w-full p-3 bg-white/50 dark:bg-slate-900/50 text-slate-800 dark:text-white border border-violet-500/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-400 mb-4 dark:[color-scheme:dark]"
+        className="w-full p-3 bg-brand-dark text-brand-text-light border border-brand-border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-accent mb-4"
       />
       <Button onClick={handleFindSign} disabled={!birthDate}>{t('findMySign')}</Button>
       {foundSign && (
-        <div className="mt-6 p-4 bg-violet-500/10 border border-violet-500/30 rounded-lg">
+        <div className="mt-6 p-4 bg-brand-accent/10 border border-brand-accent/20 rounded-lg">
           <p className="text-lg">{t('yourSignIs')}</p>
-          <p className="text-3xl font-bold text-violet-700 dark:text-violet-300 my-2">{foundSign.icon} {t(foundSign.translationKey)}</p>
-          <p className="text-slate-700 dark:text-slate-300/80">{t('youCanNowSelect')}</p>
+          <p className="text-3xl font-bold text-brand-accent my-2">{foundSign.icon} {t(foundSign.translationKey)}</p>
+          <p className="text-brand-text-light/80">{t('youCanNowSelect')}</p>
         </div>
       )}
     </Card>
@@ -108,17 +119,17 @@ const HoroscopePage: React.FC<HoroscopePageProps> = ({ setPage }) => {
 
   const renderSignSelection = () => (
     <div className="text-center w-full max-w-3xl">
-        <h2 className="text-4xl font-bold my-8 text-center text-violet-700 dark:text-violet-300">{t('horoscopePageTitle')}</h2>
+        <h2 className="text-4xl font-logo-en font-bold my-8 text-center text-brand-accent tracking-wider">{t('horoscopes')}</h2>
         <Card>
             <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-4 p-4">
                 {ZODIAC_SIGNS.map((sign) => (
                     <button
                         key={sign.value}
                         onClick={() => handleSignSelect(sign)}
-                        className="flex flex-col items-center p-2 text-center bg-black/5 dark:bg-white/5 rounded-lg border border-transparent hover:border-violet-500/50 hover:bg-violet-500/10 transition-all duration-300 transform hover:scale-105"
+                        className="flex flex-col items-center p-2 text-center bg-brand-dark/50 rounded-lg border border-transparent hover:border-brand-accent/50 hover:bg-brand-accent/10 transition-all duration-300 transform hover:scale-105"
                     >
                         <span className="text-4xl md:text-5xl">{sign.icon}</span>
-                        <span className="mt-2 text-xs sm:text-sm font-semibold text-violet-800 dark:text-violet-200">{t(sign.translationKey)}</span>
+                        <span className="mt-2 text-xs sm:text-sm font-semibold text-brand-text-light">{t(sign.translationKey)}</span>
                     </button>
                 ))}
             </div>
@@ -127,7 +138,7 @@ const HoroscopePage: React.FC<HoroscopePageProps> = ({ setPage }) => {
             {!showSignFinder ? (
                  <button 
                     onClick={() => setShowSignFinder(true)} 
-                    className="text-violet-700 dark:text-violet-300 hover:text-violet-900 dark:hover:text-white font-semibold py-2 px-4 rounded-full transition-colors duration-300 hover:bg-black/5 dark:hover:bg-white/10"
+                    className="text-brand-accent hover:text-white font-semibold py-2 px-4 rounded-full transition-colors duration-300 hover:bg-brand-accent/10"
                 >
                     {t('discoverYourSignPrompt')}
                  </button>
@@ -142,17 +153,17 @@ const HoroscopePage: React.FC<HoroscopePageProps> = ({ setPage }) => {
      <div className="w-full max-w-2xl animate-fade-in">
         <Card>
             <div className="text-center mb-6">
-                <button onClick={() => setSelectedSign(null)} className="text-violet-600 dark:text-violet-300 hover:text-violet-800 dark:hover:text-violet-100 mb-4 text-sm">
+                <button onClick={() => setSelectedSign(null)} className="text-brand-accent hover:text-white mb-4 text-sm">
                     &larr; {t('backToSignSelection')}
                 </button>
                 <div className="flex items-center justify-center gap-4">
                      <span className="text-5xl">{selectedSign?.icon}</span>
-                     <h2 className="text-3xl font-bold text-violet-800 dark:text-violet-300">{selectedSign ? t(selectedSign.translationKey) : ''}</h2>
+                     <h2 className="text-3xl font-bold text-brand-accent">{selectedSign ? t(selectedSign.translationKey) : ''}</h2>
                 </div>
-                <div className="flex justify-center border border-violet-500/30 rounded-full p-1 mt-4 max-w-xs mx-auto bg-black/10 dark:bg-white/5">
-                    <button onClick={() => handlePeriodChange('daily')} className={`w-1/3 p-2 rounded-full font-semibold transition-colors ${period === 'daily' ? 'bg-violet-500 text-white' : 'text-violet-800 dark:text-violet-200'}`}>{t('daily')}</button>
-                    <button onClick={() => handlePeriodChange('weekly')} className={`w-1/3 p-2 rounded-full font-semibold transition-colors ${period === 'weekly' ? 'bg-violet-500 text-white' : 'text-violet-800 dark:text-violet-200'}`}>{t('weekly')}</button>
-                    <button onClick={() => handlePeriodChange('monthly')} className={`w-1/3 p-2 rounded-full font-semibold transition-colors ${period === 'monthly' ? 'bg-violet-500 text-white' : 'text-violet-800 dark:text-violet-200'}`}>{t('monthly')}</button>
+                <div className="flex justify-center border border-brand-border rounded-full p-1 mt-4 max-w-xs mx-auto bg-brand-dark">
+                    <button onClick={() => handlePeriodChange('daily')} className={`w-1/3 p-2 rounded-full font-semibold transition-colors ${period === 'daily' ? 'bg-brand-accent text-brand-dark' : 'text-brand-accent'}`}>{t('daily')}</button>
+                    <button onClick={() => handlePeriodChange('weekly')} className={`w-1/3 p-2 rounded-full font-semibold transition-colors ${period === 'weekly' ? 'bg-brand-accent text-brand-dark' : 'text-brand-accent'}`}>{t('weekly')}</button>
+                    <button onClick={() => handlePeriodChange('monthly')} className={`w-1/3 p-2 rounded-full font-semibold transition-colors ${period === 'monthly' ? 'bg-brand-accent text-brand-dark' : 'text-brand-accent'}`}>{t('monthly')}</button>
                 </div>
             </div>
             {isLoading ? (
@@ -160,7 +171,10 @@ const HoroscopePage: React.FC<HoroscopePageProps> = ({ setPage }) => {
             ) : error ? (
                 <p className="text-red-400 text-center">{error}</p>
             ) : (
-                <p className={`text-lg whitespace-pre-wrap leading-relaxed p-4 ${language === 'ar' ? 'text-right' : 'text-left'}`}>{horoscope}</p>
+                <p className={`text-lg whitespace-pre-wrap leading-relaxed p-4 ${language === 'ar' ? 'text-right' : 'text-left'}`}>
+                  {horoscope}
+                  {isStreaming && <span className="inline-block w-1 h-5 bg-brand-accent animate-pulse ml-1 align-bottom"></span>}
+                </p>
             )}
         </Card>
      </div>

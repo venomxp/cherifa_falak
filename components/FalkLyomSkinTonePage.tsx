@@ -34,7 +34,7 @@ const FalkLyomSkinTonePage: React.FC<FalkLyomSkinTonePageProps> = ({ setPage, se
 
   return (
     <div className="container mx-auto p-4 flex flex-col items-center h-screen justify-center animate-fade-in space-y-8 text-center box-border pb-28">
-      <h2 className="text-4xl font-bold text-violet-700 dark:text-violet-300">
+      <h2 className="text-4xl font-bold text-brand-accent">
         {t('falkSkinTonePageTitle')}
       </h2>
 

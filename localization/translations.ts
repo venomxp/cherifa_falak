@@ -54,6 +54,7 @@ export const translations = {
     // Settings Page
     settings: 'الإعدادات',
     language: 'اللغة',
+    chooseLanguage: 'اختر اللغة',
     arabic: 'العربية',
     english: 'الإنجليزية',
     french: 'الفرنسية',
@@ -62,12 +63,36 @@ export const translations = {
     light: 'فاتح',
     shareApp: 'مشاركة التطبيق',
     shareMessage: 'اكتشف أسرار مستقبلك مع تطبيق Falkom - فالكم!',
+    notifications: "الإشعارات",
+    privacyPolicy: "سياسة الخصوصية",
+    termsAndConditions: "الشروط والأحكام",
+    rateApp: "تقييم التطبيق",
+    helpFAQ: "المساعدة والأسئلة الشائعة",
+    contactUs: "اتصل بنا",
+    versionInfo: "الإصدار",
 
-    // More Page
-    aboutAppTitle: 'عن التطبيق',
-    aboutAppBody: 'تطبيق "فالكم" هو بوابتك لاستكشاف عوالم الفلك، التاروت، وعلم الأعداد بأسلوب عصري وموثوق. نحن نجمع بين المعرفة القديمة والتقنيات الحديثة لنقدم لك بصيرة وإلهامًا في رحلتك.',
-    contactUs: 'تواصل معنا',
-    contactEmail: 'contact@cherifa-falak.com',
+    // FIX: Add missing translation keys
+    // About Page
+    aboutAppTitle: 'حول فالكم',
+    aboutAppBody: 'تطبيق "فالكم" هو دليلك إلى العوالم الخفية. استكشف التاروت والأبراج وعلم الأعداد لاكتشاف رؤى حول حياتك ومستقبلك.',
+    contactEmail: 'contact@falkom.app',
+
+    // Privacy Policy Page
+    privacyPolicyTitle: "سياسة الخصوصية",
+    privacyPolicyBody: `تطبيق "فالكم" يحترم خصوصيتك. نحن لا نجمع أو نخزن أو نشارك أي بيانات شخصية من جهازك.\n\nجميع القراءات والتحليلات تتم إما محلياً على جهازك أو عبر واجهات برمجية مجهولة الهوية. اسمك وتاريخ ميلادك، في حال تقديمهما، يُستخدمان فقط للجلسة الحالية ولا يتم حفظهما أو مشاركتهما مع أي طرف ثالث.`,
+
+    // Terms & Conditions Page
+    termsAndConditionsTitle: "الشروط والأحكام",
+    termsAndConditionsBody: `باستخدامك لتطبيق "فالكم"، فإنك توافق على الشروط التالية:\n\n1.  **للترفيه فقط**: هذا التطبيق مخصص لأغراض الترفيه والإرشاد الشخصي فقط. القراءات والتفسيرات المقدمة ليست بديلاً عن المشورة المهنية في المجالات القانونية، الطبية، أو المالية.\n\n2.  **عدم تحمل المسؤولية**: نحن لا نتحمل أي مسؤولية عن أي قرارات شخصية أو أفعال تتخذها بناءً على المعلومات الواردة في هذا التطبيق.\n\n3.  **دقة المعلومات**: بينما نسعى لتقديم محتوى دقيق، لا نضمن أن تكون جميع التفسيرات والتوقعات صحيحة بنسبة 100%.`,
+
+    // Help / FAQ Page
+    helpFAQTitle: "المساعدة والأسئلة الشائعة",
+    faqQuestion1: "كيف أستخدم قراءة التاروت؟",
+    faqAnswer1: "خذ نفسًا عميقًا، ركز على سؤالك أو طاقتك لليوم، ثم انقر على البطاقة للكشف عن رسالتها لك.",
+    faqQuestion2: "هل التطبيق مجاني؟",
+    faqAnswer2: "نعم، جميع الميزات الرئيسية في التطبيق مجانية تمامًا. خدمة القراءات الخاصة هي خدمة منفصلة مدفوعة الأجر.",
+    faqQuestion3: "كيف يتم استخدام بياناتي؟",
+    faqAnswer3: "نحن نحترم خصوصيتك. التطبيق لا يخزن أو يشارك بياناتك الشخصية. يمكنك مراجعة سياسة الخصوصية الخاصة بنا لمزيد من التفاصيل.",
 
     // Private Reading Page
     privateReadingTitle: 'قراءة خاصة بالتاروت المغربي',
@@ -89,7 +114,7 @@ export const translations = {
 
     // Tarot Page
     tarotPageTitle: 'اسحب بطاقة التاروت',
-    tarotPageInstruction: 'خذ نفساً عميقاً، ركز على سؤالك أو طاقتك لهذا اليوم، ثم انقر على البطاقة للكشف عن رسالتك.',
+    tarotPageInstruction: 'خذ نفساً عميقاً، ركز على سؤالك، ثم اختر بطاقة من المجموعة للكشف عن رسالتك.',
     drawAnotherCard: 'إسحب بطاقة أخرى',
     interpretationFor: 'تفسير بطاقة',
 
@@ -147,6 +172,14 @@ export const translations = {
     errorSelectTwoSigns: 'الرجاء اختيار برجين.',
     errorEnterBothNames: 'الرجاء إدخال الاسمين.',
     errorFalkLyom: 'حدث خطأ. حاول مرة أخرى.',
+
+    // Notifications
+    notificationsPermissionDenied: "تم رفض إذن الإشعارات. يرجى تفعيله من إعدادات المتصفح.",
+    notificationTitle: "فالك اليوم ينتظرك!",
+    notificationBody1: "شنو مخبي ليك الفال اليوم؟ ادخل واكتشف.",
+    notificationBody2: "الكارطة ديالك كاتسناك... شوف شنو بغات تقول ليك.",
+    notificationBody3: "رسالة من عالم الغيب ليك... افتحها الآن!",
+    notificationBody4: "طاقتك اليومية في انتظارك. اضغط لتعرف المزيد.",
 
     // ARIA Labels
     goBackToHomeAria: 'العودة إلى الصفحة الرئيسية',
@@ -207,6 +240,7 @@ export const translations = {
     // Settings Page
     settings: 'Settings',
     language: 'Language',
+    chooseLanguage: 'Choose Language',
     arabic: 'Arabic',
     english: 'English',
     french: 'French',
@@ -215,12 +249,36 @@ export const translations = {
     light: 'Light',
     shareApp: 'Share App',
     shareMessage: 'Discover the secrets of your future with the Falkom - فالكم app!',
+    notifications: "Notifications",
+    privacyPolicy: "Privacy Policy",
+    termsAndConditions: "Terms & Conditions",
+    rateApp: "Rate the App",
+    helpFAQ: "Help / FAQ",
+    contactUs: "Contact Us",
+    versionInfo: "Version",
 
-    // More Page
-    aboutAppTitle: 'About The App',
-    aboutAppBody: 'The "Falkom" app is your gateway to exploring the worlds of astrology, Tarot, and numerology in a modern and reliable way. We combine ancient knowledge with modern technology to offer you insight and inspiration on your journey.',
-    contactUs: 'Contact Us',
-    contactEmail: 'contact@cherifa-falak.com',
+    // FIX: Add missing translation keys
+    // About Page
+    aboutAppTitle: 'About Falkom',
+    aboutAppBody: 'The "Falkom" app is your guide to the hidden worlds. Explore Tarot, horoscopes, and numerology to discover insights about your life and future.',
+    contactEmail: 'contact@falkom.app',
+
+    // Privacy Policy Page
+    privacyPolicyTitle: "Privacy Policy",
+    privacyPolicyBody: `The "Falkom" app respects your privacy. We do not collect, store, or share any personal data from your device.\n\nAll readings and analyses are performed either locally on your device or through anonymous API calls. Your name and date of birth, if provided, are used only for the current session and are not saved or shared with any third party.`,
+
+    // Terms & Conditions Page
+    termsAndConditionsTitle: "Terms & Conditions",
+    termsAndConditionsBody: `By using the "Falkom" application, you agree to the following terms:\n\n1.  **For Entertainment Purposes Only**: This application is intended for entertainment and personal guidance purposes only. The readings and interpretations provided are not a substitute for professional advice in legal, medical, or financial matters.\n\n2.  **No Liability**: We assume no responsibility for any personal decisions or actions you take based on the information provided in this app.\n\n3.  **Accuracy**: While we strive to provide accurate content, we do not guarantee that all interpretations and predictions will be 100% correct.`,
+
+    // Help / FAQ Page
+    helpFAQTitle: "Help / FAQ",
+    faqQuestion1: "How do I use the Tarot reading?",
+    faqAnswer1: "Take a deep breath, focus on your question or your energy for the day, then tap the card to reveal its message for you.",
+    faqQuestion2: "Is the app free?",
+    faqAnswer2: "Yes, all main features of the app are completely free to use. The private reading service is a separate, paid service.",
+    faqQuestion3: "How is my data used?",
+    faqAnswer3: "We respect your privacy. The app does not store or share your personal data. Please review our Privacy Policy for more details.",
 
     // Private Reading Page
     privateReadingTitle: 'Private Moroccan Tarot Reading',
@@ -242,7 +300,7 @@ export const translations = {
     
     // Tarot Page
     tarotPageTitle: 'Draw a Tarot Card',
-    tarotPageInstruction: 'Take a deep breath, focus on your question or your energy for the day, then click the card to reveal your message.',
+    tarotPageInstruction: 'Take a deep breath, focus on your question, then pick a card from the spread to reveal your message.',
     drawAnotherCard: 'Draw Another Card',
     interpretationFor: 'Interpretation for',
 
@@ -300,6 +358,14 @@ export const translations = {
     errorSelectTwoSigns: 'Please select two zodiac signs.',
     errorEnterBothNames: 'Please enter both names.',
     errorFalkLyom: 'An error occurred. Please try again.',
+
+    // Notifications
+    notificationsPermissionDenied: "Notification permission was denied. Please enable it in your browser settings.",
+    notificationTitle: "Your daily fortune awaits!",
+    notificationBody1: "What is your fortune hiding today? Enter and discover.",
+    notificationBody2: "Your card is waiting... see what it wants to tell you.",
+    notificationBody3: "A message from the unseen world for you... open it now!",
+    notificationBody4: "Your daily energy is waiting. Click to know more.",
 
     // ARIA Labels
     goBackToHomeAria: 'Return to Home Page',
@@ -360,6 +426,7 @@ export const translations = {
     // Settings Page
     settings: 'Paramètres',
     language: 'Langue',
+    chooseLanguage: 'Choisir la langue',
     arabic: 'Arabe',
     english: 'Anglais',
     french: 'Français',
@@ -368,12 +435,36 @@ export const translations = {
     light: 'Clair',
     shareApp: 'Partager l\'application',
     shareMessage: 'Découvrez les secrets de votre avenir avec l\'application Falkom - فالكم !',
+    notifications: "Notifications",
+    privacyPolicy: "Politique de confidentialité",
+    termsAndConditions: "Termes et Conditions",
+    rateApp: "Évaluer l'application",
+    helpFAQ: "Aide / FAQ",
+    contactUs: "Contactez-nous",
+    versionInfo: "Version",
 
-    // More Page
-    aboutAppTitle: 'À propos',
-    aboutAppBody: 'L\'application "Falkom" est votre portail pour explorer les mondes de l\'astrologie, du Tarot et de la numérologie de manière moderne et fiable. Nous combinons les connaissances anciennes avec la technologie moderne pour vous offrir perspicacité et inspiration dans votre voyage.',
-    contactUs: 'Contactez-nous',
-    contactEmail: 'contact@cherifa-falak.com',
+    // FIX: Add missing translation keys
+    // About Page
+    aboutAppTitle: 'À propos de Falkom',
+    aboutAppBody: 'L\'application "Falkom" est votre guide vers les mondes cachés. Explorez le tarot, les horoscopes et la numérologie pour découvrir des aperçus sur votre vie et votre avenir.',
+    contactEmail: 'contact@falkom.app',
+
+    // Privacy Policy Page
+    privacyPolicyTitle: "Politique de confidentialité",
+    privacyPolicyBody: `L'application "Falkom" respecte votre vie privée. Nous ne collectons, ne stockons ni ne partageons aucune donnée personnelle de votre appareil.\n\nToutes les lectures et analyses sont effectuées soit localement sur votre appareil, soit via des appels API anonymes. Votre nom et votre date de naissance, s'ils sont fournis, ne sont utilisés que pour la session en cours et ne sont ni enregistrés ni partagés avec des tiers.`,
+
+    // Terms & Conditions Page
+    termsAndConditionsTitle: "Termes et Conditions",
+    termsAndConditionsBody: `En utilisant l'application "Falkom", vous acceptez les conditions suivantes :\n\n1.  **À des fins de divertissement uniquement**: Cette application est destinée uniquement à des fins de divertissement et d'orientation personnelle. Les lectures et interprétations fournies ne remplacent pas les conseils professionnels en matière juridique, médicale ou financière.\n\n2.  **Aucune responsabilité**: Nous n'assumons aucune responsabilité pour les décisions ou actions personnelles que vous entreprenez sur la base des informations fournies dans cette application.\n\n3.  **Précision**: Bien que nous nous efforçons de fournir un contenu précis, nous ne garantissons pas que toutes les interprétations et prédictions seront correctes à 100%.`,
+
+    // Help / FAQ Page
+    helpFAQTitle: "Aide / FAQ",
+    faqQuestion1: "Comment utiliser la lecture de Tarot ?",
+    faqAnswer1: "Prenez une profonde inspiration, concentrez-vous sur votre question ou votre énergie du jour, puis appuyez sur la carte pour révéler son message pour vous.",
+    faqQuestion2: "L'application est-elle gratuite ?",
+    faqAnswer2: "Oui, toutes les fonctionnalités principales de l'application sont entièrement gratuites. Le service de lectures privées est un service payant distinct.",
+    faqQuestion3: "Comment mes données sont-elles utilisées ?",
+    faqAnswer3: "Nous respectons votre vie privée. L'application ne stocke ni ne partage vos données personnelles. Veuillez consulter notre Politique de confidentialité pour plus de détails.",
 
     // Private Reading Page
     privateReadingTitle: 'Lecture privée de Tarot Marocain',
@@ -395,7 +486,7 @@ export const translations = {
 
     // Tarot Page
     tarotPageTitle: 'Tirez une carte de Tarot',
-    tarotPageInstruction: 'Prenez une profonde inspiration, concentrez-vous sur votre question ou votre énergie du jour, puis cliquez sur la carte pour révéler votre message.',
+    tarotPageInstruction: 'Prenez une profonde inspiration, concentrez-vous sur votre question, puis choisissez une carte pour révéler votre message.',
     drawAnotherCard: 'Tirer une autre carte',
     interpretationFor: 'Interprétation pour',
 
@@ -453,6 +544,14 @@ export const translations = {
     errorSelectTwoSigns: 'Veuillez sélectionner deux signes du zodiaque.',
     errorEnterBothNames: 'Veuillez entrer les deux noms.',
     errorFalkLyom: 'Une erreur est survenue. Veuillez réessayer.',
+
+    // Notifications
+    notificationsPermissionDenied: "L'autorisation de notification a été refusée. Veuillez l'activer dans les paramètres de votre navigateur.",
+    notificationTitle: "Votre fal du jour vous attend !",
+    notificationBody1: "Qu'est-ce que votre fortune vous réserve aujourd'hui ? Entrez et découvrez.",
+    notificationBody2: "Votre carte vous attend... voyez ce qu'elle veut vous dire.",
+    notificationBody3: "Un message du monde invisible pour vous... ouvrez-le maintenant !",
+    notificationBody4: "Votre énergie quotidienne vous attend. Cliquez pour en savoir plus.",
 
     // ARIA Labels
     goBackToHomeAria: 'Retour à la page d\'accueil',

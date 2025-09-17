@@ -20,8 +20,8 @@ const NavButton: React.FC<{
       disabled={disabled}
       className={`flex items-center justify-center gap-2 rounded-full transition-all duration-300 h-11 ${
         isActive
-          ? 'bg-gradient-to-br from-violet-500 to-fuchsia-600 text-white shadow-lg shadow-violet-500/30 px-4 w-auto'
-          : `text-slate-700 dark:text-slate-300 w-11 ${disabled ? '' : 'hover:bg-black/5 dark:hover:bg-white/5'}`
+          ? 'bg-brand-accent text-brand-dark shadow-lg shadow-brand-accent/20 px-4 w-auto'
+          : `text-brand-light-text/70 dark:text-brand-text-light/70 w-11 ${disabled ? '' : 'hover:bg-black/5 dark:hover:bg-white/10'}`
       } ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
       aria-label={label}
       aria-current={isActive ? 'page' : undefined}
@@ -60,7 +60,7 @@ const BottomNavBar: React.FC<BottomNavBarProps> = ({ currentPage, setPage }) => 
 
   return (
     <footer className="fixed bottom-0 left-0 right-0 p-4 flex justify-center z-50 animate-fade-in">
-      <div className="w-full max-w-sm flex items-center justify-around gap-2 bg-slate-200/70 dark:bg-slate-800/70 backdrop-blur-lg rounded-full p-2 shadow-lg ring-1 ring-black/5">
+      <div className="w-full max-w-sm flex items-center justify-around gap-2 bg-white/70 dark:bg-brand-light-dark/70 backdrop-blur-lg rounded-full p-2 shadow-lg ring-1 ring-black/5 dark:ring-white/5">
         
         <NavButton
           onClick={() => setPage(Page.SETTINGS)}

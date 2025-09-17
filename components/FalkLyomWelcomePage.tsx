@@ -28,10 +28,10 @@ const FalkLyomWelcomePage: React.FC<FalkLyomWelcomePageProps> = ({ setPage }) =>
       </div>
 
       <div>
-        <h2 className="text-5xl font-bold text-violet-700 dark:text-violet-300">
+        <h2 className="text-5xl font-bold text-brand-accent">
           {t('falkLyomWelcomeTitle')}
         </h2>
-        <p className="text-xl mt-2 text-slate-600 dark:text-slate-300/80">
+        <p className="text-xl mt-2 text-brand-text-light/70">
           {t('falkLyomWelcomeSubtitle')}
         </p>
       </div>

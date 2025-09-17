@@ -7,6 +7,7 @@ import Spinner from './common/Spinner';
 import TarotCard from './common/TarotCard';
 import Card from './common/Card';
 import { useSettings } from '../hooks/useSettings';
+import TarotSpread from './common/TarotSpread';
 
 interface TarotReadingPageProps {
   setPage: (page: Page) => void;
@@ -14,6 +15,7 @@ interface TarotReadingPageProps {
 
 const TarotReadingPage: React.FC<TarotReadingPageProps> = ({ setPage }) => {
   const { language, t } = useSettings();
+  const [view, setView] = useState<'selection' | 'reading'>('selection');
   const [drawnCard, setDrawnCard] = useState<TarotCardInfo | null>(null);
   const [interpretation, setInterpretation] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -21,32 +23,14 @@ const TarotReadingPage: React.FC<TarotReadingPageProps> = ({ setPage }) => {
   const [isFlipped, setIsFlipped] = useState<boolean>(false);
   const [isStreaming, setIsStreaming] = useState<boolean>(false);
 
-  // Function to draw a random card from the deck
-  const drawCard = () => {
-    const cardIndex = Math.floor(Math.random() * TAROT_CARDS.length);
-    const card = TAROT_CARDS[cardIndex];
-    setDrawnCard(card);
-    setIsFlipped(false);
-    setInterpretation('');
-    setError('');
-  };
-
-  // Draw a card when the component mounts
-  useEffect(() => {
-    drawCard();
-  }, []);
-
-  // Handle flipping the card and fetching its meaning
-  const handleCardFlip = async () => {
-    if (!drawnCard || isFlipped || isStreaming) return;
-
-    setIsFlipped(true);
+  const fetchInterpretation = async (card: TarotCardInfo) => {
     setIsLoading(true);
+    setIsStreaming(false);
     setError('');
     setInterpretation('');
 
     try {
-      const stream = await getTarotInterpretationStream(drawnCard.english, language);
+      const stream = await getTarotInterpretationStream(card.english, language);
       setIsLoading(false);
       setIsStreaming(true);
 
@@ -60,25 +44,47 @@ const TarotReadingPage: React.FC<TarotReadingPageProps> = ({ setPage }) => {
       setIsStreaming(false);
     }
   };
+  
+  const handleCardSelect = (selectedVisualCard: TarotCardInfo) => {
+    // Draw a truly random card from the deck
+    const cardIndex = Math.floor(Math.random() * TAROT_CARDS.length);
+    const actualCard = TAROT_CARDS[cardIndex];
+    setDrawnCard(actualCard);
 
-  const drawNewCard = () => {
-    setIsStreaming(false);
-    drawCard();
+    setView('reading');
+    
+    // Animate the flip after a short delay
+    setTimeout(() => {
+        setIsFlipped(true);
+        fetchInterpretation(actualCard);
+    }, 500);
   };
 
-  return (
-    <div className="container mx-auto p-4 flex flex-col items-center min-h-screen animate-fade-in box-border pb-28">
-      <div className="flex-grow w-full flex flex-col items-center justify-center">
-        <h2 className="text-4xl font-bold my-8 text-center text-violet-700 dark:text-violet-300">
-          {t('tarotPageTitle')}
+  const resetReading = () => {
+    setView('selection');
+    setDrawnCard(null);
+    setInterpretation('');
+    setError('');
+    setIsFlipped(false);
+    setIsLoading(false);
+    setIsStreaming(false);
+  };
+  
+  const renderSelectionView = () => (
+     <div className="flex flex-col items-center justify-center text-center w-full flex-grow">
+        <h2 className="text-4xl font-logo-en font-bold my-8 text-center text-brand-accent tracking-wider">
+          {t('tarotReading')}
         </h2>
-
-        <p className="text-xl text-center mb-8 text-slate-700 dark:text-slate-300/80 max-w-lg">
-          {isFlipped ? t('interpretationFor') + ` ${drawnCard?.arabic}` : t('tarotPageInstruction')}
+        <p className="text-xl text-center mb-8 text-brand-text-light/80 max-w-lg">
+          {t('tarotPageInstruction')}
         </p>
-
-        {/* Tarot Card Display */}
-        <div className="w-64 h-96 mb-8 cursor-pointer" onClick={handleCardFlip} style={{ perspective: '1000px' }}>
+        <TarotSpread onCardSelect={handleCardSelect} />
+     </div>
+  );
+  
+  const renderReadingView = () => (
+     <div className="flex flex-col items-center justify-center text-center w-full flex-grow">
+        <div className="w-64 h-96 mb-8" style={{ perspective: '1000px' }}>
           {drawnCard && (
             <TarotCard
               isFlipped={isFlipped}
@@ -88,30 +94,32 @@ const TarotReadingPage: React.FC<TarotReadingPageProps> = ({ setPage }) => {
           )}
         </div>
 
-        {/* Result Display */}
-        {isFlipped && (
-          <div className="w-full max-w-2xl">
-            {isLoading ? (
-              <Spinner />
-            ) : error ? (
-              <p className="text-red-600 dark:text-red-400 text-center">{error}</p>
-            ) : (
-              <Card className="animate-fade-in">
-                <h3 className="text-2xl font-bold text-violet-800 dark:text-violet-300 mb-4 text-center">
-                  {drawnCard?.arabic} ({drawnCard?.english})
-                </h3>
-                <p className={`text-lg whitespace-pre-wrap leading-relaxed text-slate-800 dark:text-slate-200 ${language === 'ar' ? 'text-right' : 'text-left'}`}>
-                  {interpretation}
-                  {isStreaming && <span className="inline-block w-1 h-5 bg-violet-700 dark:bg-violet-300 animate-pulse ml-1 align-bottom"></span>}
-                </p>
-                <div className="text-center mt-6">
-                  <Button onClick={drawNewCard} disabled={isStreaming}>{t('drawAnotherCard')}</Button>
-                </div>
-              </Card>
-            )}
-          </div>
-        )}
-      </div>
+        <div className="w-full max-w-2xl">
+          {isLoading ? (
+            <Spinner />
+          ) : error ? (
+            <p className="text-red-400 text-center">{error}</p>
+          ) : (
+            <Card className="animate-fade-in">
+              <h3 className="text-2xl font-logo-en font-bold text-brand-accent mb-4 text-center">
+                {drawnCard?.english}
+              </h3>
+              <p className={`text-lg whitespace-pre-wrap leading-relaxed text-brand-text-light ${language === 'ar' ? 'text-right' : 'text-left'}`}>
+                {interpretation}
+                {isStreaming && <span className="inline-block w-1 h-5 bg-brand-accent animate-pulse ml-1 align-bottom"></span>}
+              </p>
+            </Card>
+          )}
+           <div className="text-center mt-6">
+             <Button onClick={resetReading} disabled={isStreaming}>{t('drawAnotherCard')}</Button>
+           </div>
+        </div>
+     </div>
+  );
+
+  return (
+    <div className="container mx-auto p-4 flex flex-col items-center min-h-screen animate-fade-in box-border pb-28">
+      {view === 'selection' ? renderSelectionView() : renderReadingView()}
     </div>
   );
 };

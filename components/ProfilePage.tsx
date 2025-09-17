@@ -79,14 +79,14 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ setPage }) => {
                      <div className="relative">
                         <button 
                             onClick={() => setAvatarPickerOpen(true)} 
-                            className="w-32 h-32 rounded-full bg-gradient-to-br from-violet-500 to-fuchsia-600 p-1 shadow-lg flex items-center justify-center group focus:outline-none focus:ring-4 focus:ring-violet-400/50"
+                            className="w-32 h-32 rounded-full bg-brand-accent p-1 shadow-lg flex items-center justify-center group focus:outline-none focus:ring-4 focus:ring-brand-accent/50"
                             aria-label="Change profile symbol"
                         >
-                            <div className="relative w-full h-full bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center overflow-hidden">
+                            <div className="relative w-full h-full bg-brand-light-dark rounded-full flex items-center justify-center overflow-hidden">
                                 {AvatarComponent ? (
-                                    <AvatarComponent className="w-full h-full p-6 text-violet-600 dark:text-violet-400" />
+                                    <AvatarComponent className="w-full h-full p-6 text-brand-accent" />
                                 ) : (
-                                    <UserIcon className="w-20 h-20 text-violet-500/80 dark:text-violet-400/80" />
+                                    <UserIcon className="w-20 h-20 text-brand-accent/80" />
                                 )}
                                 <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                                     <EditIcon className="w-8 h-8 text-white" />
@@ -95,7 +95,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ setPage }) => {
                         </button>
                     </div>
                     {userName && (
-                        <h2 className="text-3xl font-bold mt-4 text-slate-800 dark:text-violet-200">{userName}</h2>
+                        <h2 className="text-3xl font-bold mt-4 text-brand-text-light">{userName}</h2>
                     )}
                 </div>
 
@@ -105,33 +105,33 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ setPage }) => {
                       <div className="space-y-4">
                           {/* Name Field */}
                           <div className="flex items-center gap-4">
-                              <div className="flex-shrink-0 w-8 text-center"><UserIcon className="w-6 h-6 mx-auto text-violet-500" /></div>
+                              <div className="flex-shrink-0 w-8 text-center"><UserIcon className="w-6 h-6 mx-auto text-brand-accent" /></div>
                               <div className="flex-1">
-                                  <label htmlFor="userNameInput" className="block text-sm font-semibold text-slate-500 dark:text-violet-300/80">{t('userName')}</label>
+                                  <label htmlFor="userNameInput" className="block text-sm font-semibold text-brand-accent/80">{t('userName')}</label>
                                   <input
                                       id="userNameInput"
                                       type="text"
                                       value={localName}
                                       onChange={(e) => setLocalName(e.target.value)}
                                       placeholder="..."
-                                      className="w-full text-lg bg-transparent text-slate-800 dark:text-white focus:outline-none p-1 -m-1 rounded focus:bg-slate-200/50 dark:focus:bg-slate-700/50 transition-colors"
+                                      className="w-full text-lg bg-transparent text-white focus:outline-none p-1 -m-1 rounded focus:bg-brand-dark/50 transition-colors"
                                   />
                               </div>
                           </div>
 
-                          <div className="w-full h-px bg-slate-300/70 dark:bg-slate-700/70"></div>
+                          <div className="w-full h-px bg-brand-border"></div>
 
                           {/* DOB Field */}
                            <div className="flex items-center gap-4">
-                              <div className="flex-shrink-0 w-8 text-center"><CalendarIcon className="w-6 h-6 mx-auto text-violet-500" /></div>
+                              <div className="flex-shrink-0 w-8 text-center"><CalendarIcon className="w-6 h-6 mx-auto text-brand-accent" /></div>
                               <div className="flex-1">
-                                  <label htmlFor="userDobInput" className="block text-sm font-semibold text-slate-500 dark:text-violet-300/80">{t('userDob')}</label>
+                                  <label htmlFor="userDobInput" className="block text-sm font-semibold text-brand-accent/80">{t('userDob')}</label>
                                   <input
                                       id="userDobInput"
                                       type="date"
                                       value={localDob}
                                       onChange={(e) => setLocalDob(e.target.value)}
-                                      className="w-full text-lg bg-transparent text-slate-800 dark:text-white focus:outline-none p-1 -m-1 rounded dark:[color-scheme:dark] focus:bg-slate-200/50 dark:focus:bg-slate-700/50 transition-colors"
+                                      className="w-full text-lg bg-transparent text-white focus:outline-none p-1 -m-1 rounded focus:bg-brand-dark/50 transition-colors"
                                   />
                               </div>
                           </div>
@@ -145,9 +145,9 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ setPage }) => {
                 
                 {/* Reading History Card */}
                 <Card className="text-center flex flex-col items-center p-6 w-full">
-                     <HistoryIcon className="w-8 h-8 text-violet-500 mb-2"/>
-                     <h3 className="text-lg font-bold text-slate-800 dark:text-violet-200">{t('readingHistoryTitle')}</h3>
-                     <p className="text-sm text-slate-600 dark:text-slate-400">{t('readingHistoryBody')}</p>
+                     <HistoryIcon className="w-8 h-8 text-brand-accent mb-2"/>
+                     <h3 className="text-lg font-bold text-brand-text-light">{t('readingHistoryTitle')}</h3>
+                     <p className="text-sm text-brand-text-light/70">{t('readingHistoryBody')}</p>
                 </Card>
                 
                 {/* Logout Button */}

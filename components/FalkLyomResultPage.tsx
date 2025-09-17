@@ -58,14 +58,14 @@ const FalkLyomResultPage: React.FC<FalkLyomResultPageProps> = ({ setPage, gender
           <p className="text-red-500 p-8">{error}</p>
         ) : (
           <div className="p-6 animate-fade-in">
-            <h3 className="text-lg font-semibold text-slate-600 dark:text-violet-200/80">
+            <h3 className="text-lg font-semibold text-brand-accent/80">
               {t('yourCardIs')}
             </h3>
-            <h2 className="text-4xl font-bold my-3 text-violet-700 dark:text-violet-300">
+            <h2 className="text-4xl font-bold my-3 text-brand-accent">
               {drawnCard?.name}
             </h2>
-            <div className="w-1/2 h-px bg-violet-500/50 my-4 mx-auto"></div>
-            <p className={`text-xl whitespace-pre-wrap leading-relaxed text-slate-800 dark:text-slate-200 ${language === 'ar' ? 'text-right' : 'text-left'}`}>
+            <div className="w-1/2 h-px bg-brand-accent/50 my-4 mx-auto"></div>
+            <p className={`text-xl whitespace-pre-wrap leading-relaxed text-brand-text-light ${language === 'ar' ? 'text-right' : 'text-left'}`}>
               {interpretation}
             </p>
           </div>

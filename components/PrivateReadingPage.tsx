@@ -15,10 +15,10 @@ const PrivateReadingPage: React.FC<PrivateReadingPageProps> = ({ setPage }) => {
   return (
     <div className="container mx-auto p-4 flex flex-col items-center h-screen justify-center animate-fade-in box-border pb-28">
       <Card className="w-full max-w-lg text-center">
-        <h2 className="text-3xl font-bold mb-4 text-violet-700 dark:text-violet-300">
-          {t('privateReadingTitle')}
+        <h2 className="text-3xl font-logo-en font-bold mb-4 text-brand-accent tracking-wider">
+          {t('privateReading')}
         </h2>
-        <p className="text-lg text-slate-700 dark:text-slate-300/80 leading-relaxed">
+        <p className="text-lg text-brand-text-light/80 leading-relaxed">
          {t('privateReadingBody')}
         </p>
         <div className="mt-8">
