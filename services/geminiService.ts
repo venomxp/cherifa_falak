@@ -5,7 +5,7 @@ const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY! });
 
 // A robust helper function to call the Gemini API with automatic retries on failure
 const generateContentWithRetry = async (prompt: string): Promise<GenerateContentResponse> => {
-  let retries = 3;
+  let retries = 5;
   while (retries > 0) {
     try {
       const response = await ai.models.generateContent({
@@ -20,7 +20,7 @@ const generateContentWithRetry = async (prompt: string): Promise<GenerateContent
       if (retries === 0) {
         throw error;
       }
-      await new Promise(res => setTimeout(res, 1000 * (3 - retries))); // Exponential backoff
+      await new Promise(res => setTimeout(res, 2000 * (6 - retries))); // Exponential backoff
     }
   }
   throw new Error("Gemini API call failed after multiple retries.");
