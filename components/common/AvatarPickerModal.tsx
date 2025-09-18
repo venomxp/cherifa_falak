@@ -23,7 +23,7 @@ const AvatarPickerModal: React.FC<AvatarPickerModalProps> = ({ isOpen, onClose, 
       <div onClick={(e) => e.stopPropagation()}>
         <Card className="w-full max-w-sm">
             <h3 className="text-2xl font-bold text-center mb-6 text-brand-accent">{t('chooseYourSymbol')}</h3>
-            <div className="grid grid-cols-4 gap-4">
+            <div className="flex justify-center items-center gap-4">
                 {AVATARS.map(({ id, Component }) => (
                     <button 
                         key={id} 

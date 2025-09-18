@@ -33,7 +33,7 @@ const FalkLyomSkinTonePage: React.FC<FalkLyomSkinTonePageProps> = ({ setPage, se
       ];
 
   return (
-    <div className="container mx-auto p-4 flex flex-col items-center h-screen justify-center animate-fade-in space-y-8 text-center box-border pb-28">
+    <div className="container mx-auto p-4 flex flex-col items-center justify-center flex-grow animate-fade-in space-y-8 text-center box-border">
       <h2 className="text-4xl font-bold text-brand-accent">
         {t('falkSkinTonePageTitle')}
       </h2>
@@ -48,9 +48,12 @@ const FalkLyomSkinTonePage: React.FC<FalkLyomSkinTonePageProps> = ({ setPage, se
         </div>
       </Card>
 
-      <Button onClick={() => setPage(Page.FALK_LYOM_GENDER)} variant="secondary" className="mt-4">
-        &larr; {t('goBack')}
-      </Button>
+      <div className="mt-4 flex gap-4">
+        <Button onClick={() => setPage(Page.FALK_LYOM_GENDER)} variant="secondary">
+          &larr; {t('goBack')}
+        </Button>
+        <Button onClick={() => setPage(Page.HOME)} variant="secondary">{t('goHome')}</Button>
+      </div>
     </div>
   );
 };

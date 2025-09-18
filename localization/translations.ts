@@ -61,9 +61,6 @@ export const translations = {
     theme: 'المظهر',
     dark: 'داكن',
     light: 'فاتح',
-    shareApp: 'مشاركة التطبيق',
-    shareMessage: 'اكتشف أسرار مستقبلك مع تطبيق Falkom - فالكم!',
-    notifications: "الإشعارات",
     privacyPolicy: "سياسة الخصوصية",
     termsAndConditions: "الشروط والأحكام",
     rateApp: "تقييم التطبيق",
@@ -173,14 +170,6 @@ export const translations = {
     errorEnterBothNames: 'الرجاء إدخال الاسمين.',
     errorFalkLyom: 'حدث خطأ. حاول مرة أخرى.',
 
-    // Notifications
-    notificationsPermissionDenied: "تم رفض إذن الإشعارات. يرجى تفعيله من إعدادات المتصفح.",
-    notificationTitle: "فالك اليوم ينتظرك!",
-    notificationBody1: "شنو مخبي ليك الفال اليوم؟ ادخل واكتشف.",
-    notificationBody2: "الكارطة ديالك كاتسناك... شوف شنو بغات تقول ليك.",
-    notificationBody3: "رسالة من عالم الغيب ليك... افتحها الآن!",
-    notificationBody4: "طاقتك اليومية في انتظارك. اضغط لتعرف المزيد.",
-
     // ARIA Labels
     goBackToHomeAria: 'العودة إلى الصفحة الرئيسية',
     loadingAria: 'جاري التحميل',
@@ -247,9 +236,6 @@ export const translations = {
     theme: 'Theme',
     dark: 'Dark',
     light: 'Light',
-    shareApp: 'Share App',
-    shareMessage: 'Discover the secrets of your future with the Falkom - فالكم app!',
-    notifications: "Notifications",
     privacyPolicy: "Privacy Policy",
     termsAndConditions: "Terms & Conditions",
     rateApp: "Rate the App",
@@ -359,14 +345,6 @@ export const translations = {
     errorEnterBothNames: 'Please enter both names.',
     errorFalkLyom: 'An error occurred. Please try again.',
 
-    // Notifications
-    notificationsPermissionDenied: "Notification permission was denied. Please enable it in your browser settings.",
-    notificationTitle: "Your daily fortune awaits!",
-    notificationBody1: "What is your fortune hiding today? Enter and discover.",
-    notificationBody2: "Your card is waiting... see what it wants to tell you.",
-    notificationBody3: "A message from the unseen world for you... open it now!",
-    notificationBody4: "Your daily energy is waiting. Click to know more.",
-
     // ARIA Labels
     goBackToHomeAria: 'Return to Home Page',
     loadingAria: 'Loading',
@@ -433,9 +411,6 @@ export const translations = {
     theme: 'Thème',
     dark: 'Sombre',
     light: 'Clair',
-    shareApp: 'Partager l\'application',
-    shareMessage: 'Découvrez les secrets de votre avenir avec l\'application Falkom - فالكم !',
-    notifications: "Notifications",
     privacyPolicy: "Politique de confidentialité",
     termsAndConditions: "Termes et Conditions",
     rateApp: "Évaluer l'application",
@@ -544,14 +519,6 @@ export const translations = {
     errorSelectTwoSigns: 'Veuillez sélectionner deux signes du zodiaque.',
     errorEnterBothNames: 'Veuillez entrer les deux noms.',
     errorFalkLyom: 'Une erreur est survenue. Veuillez réessayer.',
-
-    // Notifications
-    notificationsPermissionDenied: "L'autorisation de notification a été refusée. Veuillez l'activer dans les paramètres de votre navigateur.",
-    notificationTitle: "Votre fal du jour vous attend !",
-    notificationBody1: "Qu'est-ce que votre fortune vous réserve aujourd'hui ? Entrez et découvrez.",
-    notificationBody2: "Votre carte vous attend... voyez ce qu'elle veut vous dire.",
-    notificationBody3: "Un message du monde invisible pour vous... ouvrez-le maintenant !",
-    notificationBody4: "Votre énergie quotidienne vous attend. Cliquez pour en savoir plus.",
 
     // ARIA Labels
     goBackToHomeAria: 'Retour à la page d\'accueil',

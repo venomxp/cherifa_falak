@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Page } from './types';
+import { Page, pageToPath, pathToPage } from './types';
 import SplashScreen from './components/SplashScreen';
 import HomePage from './components/HomePage';
 import HoroscopePage from './components/HoroscopePage';
@@ -13,95 +13,147 @@ import FalkLyomGenderPage from './components/FalkLyomGenderPage';
 import FalkLyomSkinTonePage from './components/FalkLyomSkinTonePage';
 import FalkLyomCategoryPage from './components/FalkLyomCategoryPage';
 import FalkLyomResultPage from './components/FalkLyomResultPage';
-import BottomNavBar from './components/common/BottomNavBar';
+import TopBar from './components/common/TopBar';
+import SideNavMenu from './components/common/SideNavMenu';
 import ProfilePage from './components/ProfilePage';
 import PrivacyPolicyPage from './components/PrivacyPolicyPage';
 import TermsConditionsPage from './components/TermsConditionsPage';
 import HelpFAQPage from './components/HelpFAQPage';
 import { useSettings } from './hooks/useSettings';
-import { scheduleDailyNotification } from './services/notificationService';
+import Spinner from './components/common/Spinner';
 
 const App: React.FC = () => {
-  // Use a state for the current page, starting with the splash screen
-  const [page, setPage] = useState<Page>(Page.SPLASH);
+  const [showSplash, setShowSplash] = useState(true);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  // The current page is now derived from the URL hash.
+  const [page, setPage] = useState<Page>(() => {
+    const path = window.location.hash.slice(1) || '/';
+    return pathToPage[path] ?? Page.HOME;
+  });
+
   const [falkGender, setFalkGender] = useState<string | null>(null);
   const [falkSkinTone, setFalkSkinTone] = useState<string | null>(null);
   const [falkCategory, setFalkCategory] = useState<string | null>(null);
   const { language } = useSettings();
 
-  // Effect to automatically transition from splash to home screen after a delay
+  // Navigation function that updates the URL hash.
+  const navigate = (newPage: Page) => {
+    const newPath = pageToPath[newPage];
+    if (window.location.hash !== '#' + newPath) {
+      window.location.hash = newPath;
+    }
+  };
+
+  // Effect to hide the splash screen after a delay.
   useEffect(() => {
     const timer = setTimeout(() => {
-      setPage(Page.HOME);
-    }, 4000); // Extended splash screen duration for the new animation
+      setShowSplash(false);
+    }, 4000);
 
     return () => clearTimeout(timer);
   }, []);
 
-  // Effect to ensure daily notification is scheduled on app load if enabled
+  // Effect to listen for URL hash changes and update the page state.
   useEffect(() => {
-    const notificationsEnabled = localStorage.getItem('notificationsEnabled') === 'true';
-    if (notificationsEnabled) {
-      // We schedule on every load to ensure the timer is active.
-      // The scheduler function itself prevents duplicates.
-      scheduleDailyNotification();
-    }
-  }, []); // Runs once on app mount
+    const handleHashChange = () => {
+      const path = window.location.hash.slice(1) || '/';
+      const newPage = pathToPage[path] ?? Page.HOME;
+      if (page !== newPage) {
+        setPage(newPage);
+      }
+    };
+    
+    handleHashChange(); // Sync on initial load
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, [page]);
 
-
-  // Effect to scroll to the top whenever the page changes
+  // Effect to scroll to the top whenever the page changes.
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [page]);
 
+  // Effect to prevent scrolling when the splash screen or menu is open.
+  useEffect(() => {
+    if (showSplash || isMenuOpen) {
+      document.body.classList.add('overflow-y-hidden');
+    } else {
+      document.body.classList.remove('overflow-y-hidden');
+    }
+
+    return () => {
+      document.body.classList.remove('overflow-y-hidden');
+    };
+  }, [showSplash, isMenuOpen]);
+
+  // All pages now display the top navigation bar for consistency.
+  const pagesWithoutTopBar: Page[] = [];
+
   // Function to render the correct page based on the current state
   const renderPage = () => {
+    if (showSplash) {
+      return <SplashScreen />;
+    }
+
     switch (page) {
-      case Page.SPLASH:
-        return <SplashScreen />;
       case Page.HOME:
-        return <HomePage setPage={setPage} />;
+        return <HomePage setPage={navigate} />;
       case Page.TAROT:
-        return <TarotReadingPage setPage={setPage} />;
+        return <TarotReadingPage page={page} setPage={navigate} />;
       case Page.HOROSCOPE:
-        return <HoroscopePage setPage={setPage} />;
+        return <HoroscopePage page={page} setPage={navigate} />;
       case Page.NUMEROLOGY:
-        return <NumerologyPage setPage={setPage} />;
+        return <NumerologyPage page={page} setPage={navigate} />;
       case Page.COMPATIBILITY:
-        return <CompatibilityPage setPage={setPage} />;
+        return <CompatibilityPage page={page} setPage={navigate} />;
       case Page.PRIVATE_READING:
-        return <PrivateReadingPage setPage={setPage} />;
+        return <PrivateReadingPage setPage={navigate} />;
       case Page.SETTINGS:
-        return <SettingsPage setPage={setPage} />;
+        return <SettingsPage setPage={navigate} />;
       case Page.PROFILE:
-        return <ProfilePage setPage={setPage} />;
+        return <ProfilePage setPage={navigate} />;
       case Page.FALK_LYOM_WELCOME:
-        return <FalkLyomWelcomePage setPage={setPage} />;
+        return <FalkLyomWelcomePage setPage={navigate} />;
       case Page.FALK_LYOM_GENDER:
-        return <FalkLyomGenderPage setPage={setPage} setFalkGender={setFalkGender} />;
+        return <FalkLyomGenderPage setPage={navigate} setFalkGender={setFalkGender} />;
       case Page.FALK_LYOM_SKIN_TONE:
-        return <FalkLyomSkinTonePage setPage={setPage} setFalkSkinTone={setFalkSkinTone} gender={falkGender!} />;
+        if (!falkGender) {
+          navigate(Page.FALK_LYOM_GENDER);
+          return <Spinner />;
+        }
+        return <FalkLyomSkinTonePage setPage={navigate} setFalkSkinTone={setFalkSkinTone} gender={falkGender} />;
       case Page.FALK_LYOM_CATEGORY:
-        return <FalkLyomCategoryPage setPage={setPage} setFalkCategory={setFalkCategory} />;
+        if (!falkSkinTone) {
+          navigate(Page.FALK_LYOM_SKIN_TONE);
+          return <Spinner />;
+        }
+        return <FalkLyomCategoryPage setPage={navigate} setFalkCategory={setFalkCategory} />;
       case Page.FALK_LYOM_RESULT:
-        return <FalkLyomResultPage setPage={setPage} gender={falkGender!} skinTone={falkSkinTone!} category={falkCategory!} />;
+        if (!falkCategory) {
+          navigate(Page.FALK_LYOM_CATEGORY);
+          return <Spinner />;
+        }
+        return <FalkLyomResultPage page={page} setPage={navigate} gender={falkGender!} skinTone={falkSkinTone!} category={falkCategory!} />;
       case Page.PRIVACY_POLICY:
-        return <PrivacyPolicyPage setPage={setPage} />;
+        return <PrivacyPolicyPage page={page} setPage={navigate} />;
       case Page.TERMS_CONDITIONS:
-        return <TermsConditionsPage setPage={setPage} />;
+        return <TermsConditionsPage page={page} setPage={navigate} />;
       case Page.HELP_FAQ:
-        return <HelpFAQPage setPage={setPage} />;
+        return <HelpFAQPage page={page} setPage={navigate} />;
       default:
-        return <HomePage setPage={setPage} />;
+        navigate(Page.HOME);
+        return <Spinner />;
     }
   };
-
-  const showNavBar = page !== Page.SPLASH;
+  
+  const showTopBar = !showSplash && !pagesWithoutTopBar.includes(page);
 
   return (
-    <div>
-      <main className="w-full">{renderPage()}</main>
-      {showNavBar && <BottomNavBar currentPage={page} setPage={setPage} />}
+    <div className={`${showTopBar ? 'pt-16' : ''} min-h-screen flex flex-col`}>
+      {showTopBar && <TopBar toggleMenu={() => setIsMenuOpen(true)} setPage={navigate} />}
+      <SideNavMenu isOpen={isMenuOpen} closeMenu={() => setIsMenuOpen(false)} currentPage={page} setPage={navigate} />
+      <main className="w-full flex-grow flex flex-col">{renderPage()}</main>
     </div>
   );
 };

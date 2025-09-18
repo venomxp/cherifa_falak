@@ -9,6 +9,14 @@ interface TarotCardProps {
 }
 
 const TarotCard: React.FC<TarotCardProps> = ({ children, className = '', isFlipped = false, cardNameEnglish, cardNameArabic }) => {
+  // --- Define dark theme colors to be used regardless of the app's theme ---
+  // This ensures the card always has its mystical, dark appearance as requested.
+  const darkThemeStyleOverrides = {
+    '--brand-accent': '#c4b5fd',
+    '--glow-color': 'rgba(196, 181, 253, 0.4)',
+    '--glow-color-strong': 'rgba(196, 181, 253, 0.8)',
+  };
+
   const cardBack = (
     <div className="absolute inset-0 w-full h-full bg-brand-light-dark rounded-lg p-3 flex items-center justify-center [backface-visibility:hidden]">
       <div className="w-full h-full border border-brand-accent/50 rounded-md flex items-center justify-center relative overflow-hidden">
@@ -71,9 +79,10 @@ const TarotCard: React.FC<TarotCardProps> = ({ children, className = '', isFlipp
 
   return (
     <div
+      style={darkThemeStyleOverrides as React.CSSProperties}
       className={`relative w-full h-full transition-transform duration-1000 ease-[cubic-bezier(0.4,0,0.2,1)] [transform-style:preserve-3d] ${isFlipped ? '[transform:rotateY(180deg)]' : ''} ${className}`}
     >
-      <div className={`absolute inset-0 bg-brand-dark rounded-lg shadow-2xl shadow-black/50 ${isFlipped ? 'animate-pulse-glow' : '[filter:drop-shadow(0_0_10px_rgba(212,140,94,0.3))]'}`}></div>
+      <div className={`absolute inset-0 bg-brand-dark rounded-lg shadow-2xl shadow-black/50 ${isFlipped ? 'animate-pulse-glow' : 'drop-shadow-glow'}`}></div>
       {cardBack}
       {cardFront}
     </div>

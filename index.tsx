@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import { SettingsProvider } from './hooks/useSettings';
@@ -21,12 +21,29 @@ if ('serviceWorker' in navigator) {
   });
 }
 
+const Main = () => {
+  // Prevent the browser's default "Add to Home Screen" prompt
+  useEffect(() => {
+    const handleBeforeInstallPrompt = (e: Event) => {
+      e.preventDefault();
+      console.log('Default "Add to Home Screen" prompt prevented.');
+    };
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    };
+  }, []);
+
+  return (
+    <React.StrictMode>
+      <SettingsProvider>
+        <App />
+      </SettingsProvider>
+    </React.StrictMode>
+  );
+};
 
 const root = ReactDOM.createRoot(rootElement);
-root.render(
-  <React.StrictMode>
-    <SettingsProvider>
-      <App />
-    </SettingsProvider>
-  </React.StrictMode>
-);
+root.render(<Main />);

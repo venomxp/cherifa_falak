@@ -7,10 +7,11 @@ import Spinner from './common/Spinner';
 import { useSettings } from '../hooks/useSettings';
 
 interface NumerologyPageProps {
+  page: Page;
   setPage: (page: Page) => void;
 }
 
-const NumerologyPage: React.FC<NumerologyPageProps> = ({ setPage }) => {
+const NumerologyPage: React.FC<NumerologyPageProps> = ({ page, setPage }) => {
   const { language, t, userName, userDob, addReadingToHistory } = useSettings();
   const [name, setName] = useState<string>('');
   const [dob, setDob] = useState<string>('');
@@ -72,46 +73,49 @@ const NumerologyPage: React.FC<NumerologyPageProps> = ({ setPage }) => {
   };
 
   return (
-    <div className="container mx-auto p-4 flex flex-col items-center min-h-screen animate-fade-in box-border pb-28">
-      <div className="flex-grow w-full flex flex-col items-center justify-center">
+    <div className="container mx-auto p-4 flex flex-col items-center flex-grow animate-fade-in box-border pb-24">
+      <div className="w-full flex flex-col items-center">
         <h2 className="text-4xl font-logo-en font-bold my-8 text-center text-brand-accent tracking-wider">
           {t('numerology')}
         </h2>
 
         {!report && !isStreaming && (
-          <Card className="w-full max-w-md mb-8">
-              <div className="space-y-4">
-                  <div>
-                      <label htmlFor="name" className="block text-lg font-semibold mb-2 text-brand-accent">
-                      {t('enterYourName')}
-                      </label>
-                      <input
-                      id="name"
-                      type="text"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      placeholder={t('firstName')}
-                      className="w-full p-3 bg-brand-dark text-white border border-brand-border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-accent"
-                      dir={language === 'ar' ? 'rtl' : 'ltr'}
-                      />
-                  </div>
-                  <div>
-                      <label htmlFor="dob" className="block text-lg font-semibold mb-2 text-brand-accent">
-                      {t('enterYourDob')}
-                      </label>
-                      <input
-                      id="dob"
-                      type="date"
-                      value={dob}
-                      onChange={(e) => setDob(e.target.value)}
-                      className="w-full p-3 bg-brand-dark text-white border border-brand-border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-accent"
-                      />
-                  </div>
-              </div>
-              <Button onClick={handleAnalyze} disabled={isLoading} className="w-full mt-6">
-                  {isLoading ? t('analyzing') : t('analyzeYourNumbers')}
-              </Button>
-          </Card>
+          <>
+            <Card className="w-full max-w-md mb-8">
+                <div className="space-y-4">
+                    <div>
+                        <label htmlFor="name" className="block text-lg font-semibold mb-2 text-brand-accent">
+                        {t('enterYourName')}
+                        </label>
+                        <input
+                        id="name"
+                        type="text"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        placeholder={t('firstName')}
+                        className="w-full p-3 bg-brand-light dark:bg-brand-dark text-brand-light-text dark:text-brand-text-light border border-brand-light-border dark:border-brand-border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-accent"
+                        dir={language === 'ar' ? 'rtl' : 'ltr'}
+                        />
+                    </div>
+                    <div>
+                        <label htmlFor="dob" className="block text-lg font-semibold mb-2 text-brand-accent">
+                        {t('enterYourDob')}
+                        </label>
+                        <input
+                        id="dob"
+                        type="date"
+                        value={dob}
+                        onChange={(e) => setDob(e.target.value)}
+                        className="w-full p-3 bg-brand-light dark:bg-brand-dark text-brand-light-text dark:text-brand-text-light border border-brand-light-border dark:border-brand-border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-accent"
+                        />
+                    </div>
+                </div>
+                <Button onClick={handleAnalyze} disabled={isLoading} className="w-full mt-6">
+                    {isLoading ? t('analyzing') : t('analyzeYourNumbers')}
+                </Button>
+            </Card>
+            <Button onClick={() => setPage(Page.HOME)} variant="secondary">{t('goHome')}</Button>
+          </>
         )}
 
         {isLoading && <Spinner />}
@@ -127,11 +131,12 @@ const NumerologyPage: React.FC<NumerologyPageProps> = ({ setPage }) => {
                     {report}
                     {isStreaming && <span className="inline-block w-1 h-5 bg-brand-accent animate-pulse ml-1 align-bottom"></span>}
                   </p>
-                  <div className="text-center">
-                      <Button onClick={() => setReport('')} className="mt-6" disabled={isStreaming}>{t('newAnalysis')}</Button>
-                  </div>
               </div>
             </Card>
+            <div className="text-center mt-6 flex flex-col sm:flex-row gap-4 justify-center">
+                <Button onClick={() => setReport('')} disabled={isStreaming}>{t('newAnalysis')}</Button>
+                <Button onClick={() => setPage(Page.HOME)} variant="secondary">{t('goHome')}</Button>
+            </div>
           </div>
         )}
       </div>

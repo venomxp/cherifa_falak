@@ -12,6 +12,29 @@
         document.documentElement.classList.add('dark');
       }
     </script>
+    <style>
+      /* 
+        CSS Custom Properties for Theming.
+        This allows for a much more robust and readable light theme by defining
+        separate accent colors for light and dark modes.
+      */
+      :root {
+        /* Light Theme (Default) */
+        --brand-accent: #1a1a1a; /* User requested dark color for a modern, high-contrast look */
+        --brand-accent-dark: #000000;
+        --glow-color: rgba(26, 26, 26, 0.25);
+        --glow-color-strong: rgba(26, 26, 26, 0.5);
+        --primary-button-text-color: #ffffff; /* White text for primary buttons in light mode */
+      }
+      .dark {
+        /* Dark Theme Overrides */
+        --brand-accent: #c4b5fd; /* The original light lavender, great on dark backgrounds */
+        --brand-accent-dark: #a78bfa;
+        --glow-color: rgba(196, 181, 253, 0.4);
+        --glow-color-strong: rgba(196, 181, 253, 0.8);
+        --primary-button-text-color: #1A1A1A; /* Dark text for primary buttons in dark mode */
+      }
+    </style>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
@@ -21,8 +44,9 @@
             colors: {
               'brand-dark': '#1A1A1A',
               'brand-light-dark': '#222222',
-              'brand-accent': '#D48C5E',
-              'brand-accent-dark': '#B87850',
+              'brand-accent': 'var(--brand-accent)',
+              'brand-accent-dark': 'var(--brand-accent-dark)',
+              'brand-button-text': 'var(--primary-button-text-color)',
               'brand-text-light': '#EAEAEA',
               'brand-border': '#333333',
               // Light theme colors
@@ -53,8 +77,8 @@
                 '100%': { transform: 'translateY(0)', opacity: '1' },
               },
               'pulse-glow': {
-                '0%, 100%': { filter: 'drop-shadow(0 0 10px rgba(212, 140, 94, 0.4))' },
-                '50%': { filter: 'drop-shadow(0 0 20px rgba(212, 140, 94, 0.8))' }
+                '0%, 100%': { filter: 'drop-shadow(0 0 10px var(--glow-color))' },
+                '50%': { filter: 'drop-shadow(0 0 20px var(--glow-color-strong))' }
               },
             },
             animation: {
@@ -63,6 +87,9 @@
               'fan-right': 'fan-out-right 1.8s ease-in-out infinite',
               'slide-in-up': 'slide-in-up 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both',
               'pulse-glow': 'pulse-glow 2.5s ease-in-out infinite',
+            },
+            dropShadow: {
+              'glow': '0 0 10px var(--glow-color)',
             }
           }
         }
@@ -78,6 +105,8 @@
         -webkit-user-select: none; /* Safari */
         -ms-user-select: none; /* IE 10+ and Edge */
         user-select: none; /* Standard syntax */
+        /* Disable tap highlight color for a native feel */
+        -webkit-tap-highlight-color: transparent;
       }
     </style>
   <script type="importmap">

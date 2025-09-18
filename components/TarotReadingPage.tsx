@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Page, TarotCardInfo } from '../types';
 import { getTarotInterpretationStream } from '../services/geminiService';
 import { TAROT_CARDS } from '../constants';
@@ -8,14 +8,16 @@ import TarotCard from './common/TarotCard';
 import Card from './common/Card';
 import { useSettings } from '../hooks/useSettings';
 import TarotSpread from './common/TarotSpread';
+import { triggerHapticFeedback } from '../utils/haptics';
 
 interface TarotReadingPageProps {
+  page: Page;
   setPage: (page: Page) => void;
 }
 
-const TarotReadingPage: React.FC<TarotReadingPageProps> = ({ setPage }) => {
+const TarotReadingPage: React.FC<TarotReadingPageProps> = ({ page, setPage }) => {
   const { language, t, addReadingToHistory } = useSettings();
-  const [view, setView] = useState<'selection' | 'reading'>('selection');
+  const [step, setStep] = useState<'selection' | 'reading'>('selection');
   const [drawnCard, setDrawnCard] = useState<TarotCardInfo | null>(null);
   const [interpretation, setInterpretation] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -55,15 +57,15 @@ const TarotReadingPage: React.FC<TarotReadingPageProps> = ({ setPage }) => {
     }
   };
   
-  const handleCardSelect = (selectedVisualCard: TarotCardInfo) => {
-    // Draw a truly random card from the deck
+  const handleCardSelect = () => {
+    triggerHapticFeedback();
     const cardIndex = Math.floor(Math.random() * TAROT_CARDS.length);
     const actualCard = TAROT_CARDS[cardIndex];
     setDrawnCard(actualCard);
 
-    setView('reading');
+    setStep('reading');
     
-    // Animate the flip after a short delay
+    // A short delay to allow the view to change before the card flips
     setTimeout(() => {
         setIsFlipped(true);
         fetchInterpretation(actualCard);
@@ -71,7 +73,7 @@ const TarotReadingPage: React.FC<TarotReadingPageProps> = ({ setPage }) => {
   };
 
   const resetReading = () => {
-    setView('selection');
+    setStep('selection');
     setDrawnCard(null);
     setInterpretation('');
     setError('');
@@ -81,7 +83,7 @@ const TarotReadingPage: React.FC<TarotReadingPageProps> = ({ setPage }) => {
   };
   
   const renderSelectionView = () => (
-     <div className="flex flex-col items-center justify-center text-center w-full flex-grow">
+     <div className="flex flex-col items-center text-center w-full flex-grow animate-fade-in">
         <h2 className="text-4xl font-logo-en font-bold my-8 text-center text-brand-accent tracking-wider">
           {t('tarotReading')}
         </h2>
@@ -89,47 +91,58 @@ const TarotReadingPage: React.FC<TarotReadingPageProps> = ({ setPage }) => {
           {t('tarotPageInstruction')}
         </p>
         <TarotSpread onCardSelect={handleCardSelect} />
+        <div className="mt-8">
+            <Button onClick={() => setPage(Page.HOME)} variant="secondary">
+                {t('goHome')}
+            </Button>
+        </div>
      </div>
   );
   
   const renderReadingView = () => (
-     <div className="flex flex-col items-center justify-center text-center w-full flex-grow">
-        <div className="w-64 h-96 mb-8" style={{ perspective: '1000px' }}>
-          {drawnCard && (
-            <TarotCard
-              isFlipped={isFlipped}
-              cardNameEnglish={drawnCard.english}
-              cardNameArabic={drawnCard.arabic}
-            />
-          )}
-        </div>
+    <div className="w-full max-w-2xl flex flex-col items-center flex-grow py-8 animate-fade-in">
+      <div 
+        className="w-64 h-96 mb-8"
+        style={{ perspective: '1000px' }}
+      >
+        {drawnCard && (
+          <TarotCard
+            isFlipped={isFlipped}
+            cardNameEnglish={drawnCard.english}
+            cardNameArabic={drawnCard.arabic}
+          />
+        )}
+      </div>
 
-        <div className="w-full max-w-2xl">
-          {isLoading ? (
-            <Spinner />
-          ) : error ? (
-            <p className="text-red-400 text-center">{error}</p>
-          ) : (
-            <Card className="animate-fade-in">
-              <h3 className="text-2xl font-logo-en font-bold text-brand-accent mb-4 text-center">
-                {drawnCard?.english}
-              </h3>
-              <p className={`text-lg whitespace-pre-wrap leading-relaxed text-brand-light-text dark:text-brand-text-light ${language === 'ar' ? 'text-right' : 'text-left'}`}>
-                {interpretation}
-                {isStreaming && <span className="inline-block w-1 h-5 bg-brand-accent animate-pulse ml-1 align-bottom"></span>}
-              </p>
-            </Card>
-          )}
-           <div className="text-center mt-6">
-             <Button onClick={resetReading} disabled={isStreaming}>{t('drawAnotherCard')}</Button>
-           </div>
+      <div className={`w-full max-w-2xl transition-opacity duration-700 delay-300 ${isFlipped ? 'opacity-100' : 'opacity-0'}`}>
+        {isLoading ? (
+          <Spinner />
+        ) : error ? (
+          <p className="text-red-400 text-center">{error}</p>
+        ) : (
+          <Card>
+            <h3 className="text-2xl font-logo-en font-bold text-brand-accent mb-4 text-center">
+              {drawnCard?.english}
+            </h3>
+            <p className={`text-lg whitespace-pre-wrap leading-relaxed text-brand-light-text dark:text-brand-text-light ${language === 'ar' ? 'text-right' : 'text-left'}`}>
+              {interpretation}
+              {isStreaming && <span className="inline-block w-1 h-5 bg-brand-accent animate-pulse ml-1 align-bottom"></span>}
+            </p>
+          </Card>
+        )}
+        <div className="text-center mt-6 flex flex-col sm:flex-row gap-4 justify-center">
+            <Button onClick={resetReading} disabled={isStreaming}>{t('drawAnotherCard')}</Button>
+            <Button onClick={() => setPage(Page.HOME)} variant="secondary">{t('goHome')}</Button>
         </div>
-     </div>
+      </div>
+    </div>
   );
-
+  
   return (
-    <div className="container mx-auto p-4 flex flex-col items-center min-h-screen animate-fade-in box-border pb-28">
-      {view === 'selection' ? renderSelectionView() : renderReadingView()}
+    <div className="container mx-auto p-4 flex flex-col items-center flex-grow animate-fade-in box-border pb-24">
+      <div className="flex-grow flex flex-col w-full items-center justify-start">
+        {step === 'selection' ? renderSelectionView() : renderReadingView()}
+      </div>
     </div>
   );
 };

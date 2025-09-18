@@ -13,7 +13,7 @@ const PrivateReadingPage: React.FC<PrivateReadingPageProps> = ({ setPage }) => {
   const whatsappLink = "https://wa.me/+212649427892";
 
   return (
-    <div className="container mx-auto p-4 flex flex-col items-center h-screen justify-center animate-fade-in box-border pb-28">
+    <div className="container mx-auto p-4 flex flex-col items-center justify-center flex-grow animate-fade-in box-border">
       <Card className="w-full max-w-lg text-center">
         <h2 className="text-3xl font-logo-en font-bold mb-4 text-brand-accent tracking-wider">
           {t('privateReading')}
@@ -29,6 +29,11 @@ const PrivateReadingPage: React.FC<PrivateReadingPageProps> = ({ setPage }) => {
             </a>
         </div>
       </Card>
+      <div className="mt-8">
+        <Button onClick={() => setPage(Page.HOME)} variant="secondary">
+            {t('goHome')}
+        </Button>
+      </div>
     </div>
   );
 };

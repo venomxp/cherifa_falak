@@ -12,7 +12,7 @@ const AboutPage: React.FC<AboutPageProps> = ({ setPage }) => {
   const { t } = useSettings();
 
   return (
-    <div className="container mx-auto p-4 flex flex-col items-center h-screen justify-center animate-fade-in box-border pb-28">
+    <div className="container mx-auto p-4 flex flex-col items-center h-screen justify-center animate-fade-in box-border">
       <Card className="w-full max-w-lg text-center">
         <h2 className="text-3xl font-bold mb-4 text-brand-primary dark:text-brand-accent">
           {t('aboutAppTitle')}

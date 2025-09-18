@@ -19,13 +19,13 @@ const LanguageOption: React.FC<{
       onClick={onClick}
       className={`w-full p-4 rounded-xl transition-all duration-300 flex items-center gap-4 text-left rtl:text-right transform focus:outline-none focus:ring-4 focus:ring-brand-accent/50 ${
         isSelected
-          ? 'bg-brand-accent text-brand-dark shadow-lg shadow-brand-accent/20'
-          : 'bg-brand-dark hover:bg-brand-border text-brand-text-light hover:scale-105'
+          ? 'bg-brand-accent text-brand-button-text shadow-lg shadow-brand-accent/20'
+          : 'bg-brand-light dark:bg-brand-dark hover:bg-black/5 dark:hover:bg-brand-border text-brand-light-text dark:text-brand-text-light hover:scale-105'
       }`}
       aria-pressed={isSelected}
     >
       <div className={`w-10 h-10 flex-shrink-0 flex items-center justify-center text-xl font-bold rounded-lg ${
-          isSelected ? 'bg-black/10 text-brand-dark' : 'bg-brand-border text-brand-accent'
+          isSelected ? 'bg-black/10 text-brand-button-text' : 'bg-brand-light-border dark:bg-brand-border text-brand-accent'
       }`}>
         {icon}
       </div>

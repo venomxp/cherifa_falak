@@ -9,12 +9,13 @@ import Spinner from './common/Spinner';
 import { useSettings } from '../hooks/useSettings';
 
 interface HoroscopePageProps {
+  page: Page;
   setPage: (page: Page) => void;
 }
 
 type Period = 'daily' | 'weekly' | 'monthly';
 
-const HoroscopePage: React.FC<HoroscopePageProps> = ({ setPage }) => {
+const HoroscopePage: React.FC<HoroscopePageProps> = ({ page, setPage }) => {
   const { language, t, addReadingToHistory } = useSettings();
   const [selectedSign, setSelectedSign] = useState<ZodiacSign | null>(null);
   const [period, setPeriod] = useState<Period>('daily');
@@ -58,7 +59,7 @@ const HoroscopePage: React.FC<HoroscopePageProps> = ({ setPage }) => {
       setIsLoading(false);
       setIsStreaming(false);
       if (fullHoroscope && !fullHoroscope.includes('عذراً') && !fullHoroscope.includes('Sorry')) {
-        const title = `${t(sign.translationKey)} - ${t(selectedPeriod)}`;
+        const title = `${t(sign.translationKey)} - ${t(period)}`;
         addReadingToHistory({ type: 'Horoscope', title, content: fullHoroscope });
       }
     }
@@ -101,7 +102,7 @@ const HoroscopePage: React.FC<HoroscopePageProps> = ({ setPage }) => {
   };
   
   const renderSignFinder = () => (
-    <Card className="w-full max-w-md mt-6 p-6 text-center animate-fade-in">
+    <Card className="w-full mt-6 p-6 text-center animate-fade-in">
       <h3 className="text-2xl font-bold mb-4 text-brand-accent">{t('discoverYourSignTitle')}</h3>
       <p className="mb-4 text-brand-light-text/80 dark:text-brand-text-light/80">{t('discoverYourSignBody')}</p>
       <input
@@ -153,6 +154,11 @@ const HoroscopePage: React.FC<HoroscopePageProps> = ({ setPage }) => {
                 renderSignFinder()
             )}
         </div>
+        <div className="mt-8">
+            <Button onClick={() => setPage(Page.HOME)} variant="secondary">
+                {t('goHome')}
+            </Button>
+        </div>
     </div>
   );
 
@@ -167,10 +173,10 @@ const HoroscopePage: React.FC<HoroscopePageProps> = ({ setPage }) => {
                      <span className="text-5xl">{selectedSign?.icon}</span>
                      <h2 className="text-3xl font-bold text-brand-accent">{selectedSign ? t(selectedSign.translationKey) : ''}</h2>
                 </div>
-                <div className="flex justify-center border border-brand-border rounded-full p-1 mt-4 max-w-xs mx-auto bg-brand-dark">
-                    <button onClick={() => handlePeriodChange('daily')} className={`w-1/3 p-2 rounded-full font-semibold transition-colors ${period === 'daily' ? 'bg-brand-accent text-brand-dark' : 'text-brand-accent'}`}>{t('daily')}</button>
-                    <button onClick={() => handlePeriodChange('weekly')} className={`w-1/3 p-2 rounded-full font-semibold transition-colors ${period === 'weekly' ? 'bg-brand-accent text-brand-dark' : 'text-brand-accent'}`}>{t('weekly')}</button>
-                    <button onClick={() => handlePeriodChange('monthly')} className={`w-1/3 p-2 rounded-full font-semibold transition-colors ${period === 'monthly' ? 'bg-brand-accent text-brand-dark' : 'text-brand-accent'}`}>{t('monthly')}</button>
+                <div className="flex justify-center border border-brand-light-border dark:border-brand-border rounded-full p-1 mt-4 max-w-xs mx-auto bg-brand-light dark:bg-brand-dark">
+                    <button onClick={() => handlePeriodChange('daily')} className={`w-1/3 p-2 rounded-full font-semibold transition-colors ${period === 'daily' ? 'bg-brand-accent text-brand-button-text' : 'text-brand-light-text/70 dark:text-brand-text-light/70'}`}>{t('daily')}</button>
+                    <button onClick={() => handlePeriodChange('weekly')} className={`w-1/3 p-2 rounded-full font-semibold transition-colors ${period === 'weekly' ? 'bg-brand-accent text-brand-button-text' : 'text-brand-light-text/70 dark:text-brand-text-light/70'}`}>{t('weekly')}</button>
+                    <button onClick={() => handlePeriodChange('monthly')} className={`w-1/3 p-2 rounded-full font-semibold transition-colors ${period === 'monthly' ? 'bg-brand-accent text-brand-button-text' : 'text-brand-light-text/70 dark:text-brand-text-light/70'}`}>{t('monthly')}</button>
                 </div>
             </div>
             {isLoading ? (
@@ -184,12 +190,17 @@ const HoroscopePage: React.FC<HoroscopePageProps> = ({ setPage }) => {
                 </p>
             )}
         </Card>
+        <div className="text-center mt-6">
+            <Button onClick={() => setPage(Page.HOME)} variant="secondary">
+                {t('goHome')}
+            </Button>
+        </div>
      </div>
   );
 
   return (
-    <div className="container mx-auto p-4 flex flex-col items-center min-h-screen animate-fade-in box-border pb-28">
-      <div className="flex-grow flex flex-col items-center justify-center w-full">
+    <div className="container mx-auto p-4 flex flex-col items-center flex-grow animate-fade-in box-border pb-24">
+      <div className="flex flex-col items-center w-full">
         {!selectedSign ? renderSignSelection() : renderHoroscopeDisplay()}
       </div>
     </div>

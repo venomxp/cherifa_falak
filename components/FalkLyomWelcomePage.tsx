@@ -12,8 +12,7 @@ const FalkLyomWelcomePage: React.FC<FalkLyomWelcomePageProps> = ({ setPage }) =>
   const { t } = useSettings();
 
   return (
-    <div className="container mx-auto p-4 flex flex-col items-center h-screen justify-center animate-fade-in space-y-8 text-center box-border pb-28">
-      
+    <div className="container mx-auto p-4 flex flex-col items-center justify-center flex-grow animate-fade-in space-y-8 text-center box-border">
       <div className="relative w-64 h-48 flex items-center justify-center -mb-4">
          {/* A decorative fan of cards */}
         <div className="absolute w-28 h-40 transform -rotate-15 -translate-x-10">
@@ -36,9 +35,14 @@ const FalkLyomWelcomePage: React.FC<FalkLyomWelcomePageProps> = ({ setPage }) =>
         </p>
       </div>
 
-      <Button onClick={() => setPage(Page.FALK_LYOM_GENDER)} className="text-xl px-10 py-4">
-        {t('startReading')}
-      </Button>
+      <div className="flex flex-col gap-4 items-center">
+        <Button onClick={() => setPage(Page.FALK_LYOM_GENDER)} className="text-xl px-10 py-4">
+          {t('startReading')}
+        </Button>
+        <Button onClick={() => setPage(Page.HOME)} variant="secondary">
+            {t('goHome')}
+        </Button>
+      </div>
     </div>
   );
 };

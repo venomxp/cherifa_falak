@@ -1,145 +1,22 @@
 import React from 'react';
 
-// --- SVG Avatar Components ---
+// --- Image-based Avatar Components ---
 
-const MoonAvatar = ({ className }: { className?: string }) => (
-  React.createElement("svg", {
-    xmlns: "http://www.w3.org/2000/svg",
-    className: className,
-    fill: "none",
-    viewBox: "0 0 24 24",
-    stroke: "currentColor",
-    strokeWidth: "1.5"
-  },
-    React.createElement("path", {
-      strokeLinecap: "round",
-      strokeLinejoin: "round",
-      d: "M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z"
-    })
-  )
+// FIX: Replaced JSX with React.createElement to be compatible with a .ts file.
+const ImageAvatar1 = ({ className }: { className?: string }) => (
+  // The provided className from the calling component will control sizing and styling.
+  React.createElement('img', { src: "https://i.imgur.com/zfl97Z1.png", alt: "Avatar 1", className: className, style: { objectFit: 'cover', borderRadius: '50%' }})
 );
-const SunAvatar = ({ className }: { className?: string }) => (
-  React.createElement("svg", {
-    xmlns: "http://www.w3.org/2000/svg",
-    className: className,
-    fill: "none",
-    viewBox: "0 0 24 24",
-    stroke: "currentColor",
-    strokeWidth: "1.5"
-  },
-    React.createElement("path", {
-      strokeLinecap: "round",
-      strokeLinejoin: "round",
-      d: "M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"
-    })
-  )
-);
-const StarAvatar = ({ className }: { className?: string }) => (
-  React.createElement("svg", {
-    xmlns: "http://www.w3.org/2000/svg",
-    className: className,
-    fill: "none",
-    viewBox: "0 0 24 24",
-    stroke: "currentColor",
-    strokeWidth: "1.5"
-  },
-    React.createElement("path", {
-      strokeLinecap: "round",
-      strokeLinejoin: "round",
-      d: "M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"
-    })
-  )
-);
-const EyeAvatar = ({ className }: { className?: string }) => (
-  React.createElement("svg", {
-    xmlns: "http://www.w3.org/2000/svg",
-    className: className,
-    fill: "none",
-    viewBox: "0 0 24 24",
-    stroke: "currentColor",
-    strokeWidth: "1.5"
-  },
-    React.createElement("path", {
-      strokeLinecap: "round",
-      strokeLinejoin: "round",
-      d: "M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"
-    }),
-    React.createElement("path", {
-      strokeLinecap: "round",
-      strokeLinejoin: "round",
-      d: "M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-    })
-  )
-);
-const LotusAvatar = ({ className }: { className?: string }) => (
-    React.createElement("svg", {
-      xmlns: "http://www.w3.org/2000/svg",
-      className: className,
-      viewBox: "0 0 24 24",
-      fill: "currentColor"
-    },
-      React.createElement("path", {
-        d: "M12 2c-.3 0-2.3 2.1-3.6 4.3C7.3 8.3 7 9.8 7 11c0 2.8 2.2 5 5 5s5-2.2 5-5c0-1.2-.3-2.7-1.4-4.7C14.3 4.1 12.3 2 12 2zM3.2 13.2c-.3 0-.5.2-.5.5v.5c0 .3.2.5.5.5h1.1c.4-1.8 1.5-3.4 3-4.6L6.2 9c-.3-.2-.6-.1-.7.1l-.8.8c-.2.2-.2.5 0 .7l2.6 2.6H3.2zM20.8 13.2H16l2.6-2.6c.2-.2.2-.5 0-.7l-.8-.8c-.2-.2-.5-.3-.7-.1l-1.6 1.3c1.5 1.2 2.6 2.8 3 4.6h1.1c.3 0 .5-.2.5-.5v-.5c0-.3-.2-.5-.5-.5zM8 18c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zM16 18c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
-      })
-    )
-);
-const HamsaAvatar = ({ className }: { className?: string }) => (
-  React.createElement("svg", {
-    xmlns: "http://www.w3.org/2000/svg",
-    className: className,
-    fill: "none",
-    viewBox: "0 0 24 24",
-    stroke: "currentColor",
-    strokeWidth: "1.5"
-  },
-    React.createElement("path", {
-      fill: "currentColor",
-      d: "M12.32,2.92C11.54,4,10.6,5.33,10.04,6.85C9.6,8.08,9.75,9.41,10.4,10.45C11.13,11.64,12,12.29,12,14.05V15.5C12,16.89,12.5,17.94,13.88,18.35C14.13,18.43,14.41,18.45,14.69,18.45C15.8,18.45,16.8,17.76,17.2,16.71C17.75,15.2,17.2,13.8,16.84,12.5C16.43,10.94,16.14,9.39,16.42,7.8C16.69,6.29,17.5,5.1,18.6,4.19C18.91,3.92,19.08,3.54,19.08,3.15V3.12C19.08,2.5,18.58,2,17.95,2C17.5,2,17.08,2.19,16.8,2.53C14.74,4.5,14.39,6.18,14.5,7.94C14.65,10.2,15.34,11.85,15.53,13.24C15.65,14.14,15.36,14.9,14.71,15.4C14.15,15.83,13.43,16,12.8,15.75C12.44,15.61,12.2,15.32,12.11,14.95L12,14.05C12,12.29,11.13,11.64,10.4,10.45C9.75,9.41,9.6,8.08,10.04,6.85C10.6,5.33,11.54,4,12.32,2.92C12.6,2.56,12.45,2,12,2C11.55,2,11.4,2.56,11.08,2.92C10.29,4,9.36,5.33,8.8,6.85C8.36,8.08,8.5,9.41,9.16,10.45C9.88,11.64,10.75,12.29,10.75,14.05V15.5C10.75,16.89,11.25,17.94,12.63,18.35C12.88,18.43,13.16,18.45,13.44,18.45C14.55,18.45,15.55,17.76,15.95,16.71C16.5,15.2,16,13.8,15.59,12.5C15.18,10.94,14.89,9.39,15.17,7.8C15.44,6.29,16.25,5.1,17.35,4.19C17.66,3.92,17.83,3.54,17.83,3.15V3.12C17.83,2.5,17.33,2,16.7,2C16.25,2,15.83,2.19,15.55,2.53C13.5,4.5,13.14,6.18,13.25,7.94C13.4,10.2,14.09,11.85,14.28,13.24C14.4,14.14,14.11,14.9,13.46,15.4C12.9,15.83,12.18,16,11.55,15.75C11.19,15.61,10.95,15.32,10.86,14.95L10.75,14.05V12.75H7.09C7.09,12.75,7.09,12.75,7.09,12.75C7.09,12.75,7.09,12.75,7.09,12.75L7.09,12.75C6.39,12.75,5.75,12.11,5.75,11.41V10.25H4.5V11.41C4.5,12.89,5.61,14,7.09,14H10.75V14.05C10.75,14.05,10.75,14.05,10.75,14.05C10.75,14.05,10.75,14.05,10.75,14.05L10.86,14.95C10.86,14.95,10.86,14.95,10.86,14.95C10.86,14.95,10.86,14.95,10.86,14.95L10.86,14.95C10.95,15.32,11.19,15.61,11.55,15.75C11.55,15.75,11.55,15.75,11.55,15.75C11.55,15.75,11.55,15.75,11.55,15.75L11.55,15.75C12.18,16,12.9,15.83,13.46,15.4C13.46,15.4,13.46,15.4,13.46,15.4C13.46,15.4,13.46,15.4,13.46,15.4L13.46,15.4C14.11,14.9,14.4,14.14,14.28,13.24C14.28,13.24,14.28,13.24,14.28,13.24C14.28,13.24,14.28,13.24,14.28,13.24L14.28,13.24C14.09,11.85,13.4,10.2,13.25,7.94C13.25,7.94,13.25,7.94,13.25,7.94C13.25,7.94,13.25,7.94,13.25,7.94L13.25,7.94C13.14,6.18,13.5,4.5,15.55,2.53C15.55,2.53,15.55,2.53,15.55,2.53C15.55,2.53,15.55,2.53,15.55,2.53L15.55,2.53C15.83,2.19,16.25,2,16.7,2C16.7,2,16.7,2,16.7,2C16.7,2,16.7,2,16.7,2L16.7,2C17.33,2,17.83,2.5,17.83,3.12C17.83,3.12,17.83,3.12,17.83,3.12C17.83,3.12,17.83,3.12,17.83,3.12L17.83,3.12C17.83,3.54,17.66,3.92,17.35,4.19C17.35,4.19,17.35,4.19,17.35,4.19C17.35,4.19,17.35,4.19,17.35,4.19L17.35,4.19C16.25,5.1,15.44,6.29,15.17,7.8C15.17,7.8,15.17,7.8,15.17,7.8C15.17,7.8,15.17,7.8,15.17,7.8L15.17,7.8C14.89,9.39,15.18,10.94,15.59,12.5C15.59,12.5,15.59,12.5,15.59,12.5C15.59,12.5,15.59,12.5,15.59,12.5L15.59,12.5C16,13.8,16.5,15.2,15.95,16.71C15.95,16.71,15.95,16.71,15.95,16.71C15.95,16.71,15.95,16.71,15.95,16.71L15.95,16.71C15.55,17.76,14.55,18.45,13.44,18.45C13.44,18.45,13.44,18.45,13.44,18.45C13.44,18.45,13.44,18.45,13.44,18.45L13.44,18.45C13.16,18.45,12.88,18.43,12.63,18.35C12.63,18.35,12.63,18.35,12.63,18.35C12.63,18.35,12.63,18.35,12.63,18.35L12.63,18.35C11.25,17.94,10.75,16.89,10.75,15.5L10.75,15.5L10.75,14.05C10.75,14.05,10.75,14.05,10.75,14.05C10.75,14.05,10.75,14.05,10.75,14.05L10.75,14.05C10.75,12.29,9.88,11.64,9.16,10.45C9.16,10.45,9.16,10.45,9.16,10.45C9.16,10.45,9.16,10.45,9.16,10.45L9.16,10.45C8.5,9.41,8.36,8.08,8.8,6.85C8.8,6.85,8.8,6.85,8.8,6.85C8.8,6.85,8.8,6.85,8.8,6.85L8.8,6.85C9.36,5.33,10.29,4,11.08,2.92C11.08,2.92,11.08,2.92,11.08,2.92C11.08,2.92,11.08,2.92,11.08,2.92L11.08,2.92C11.4,2.56,11.55,2,12,2C12,2,12,2,12,2C12,2,12,2,12,2L12,2C12.45,2,12.6,2.56,12.32,2.92C12.32,2.92,12.32,2.92,12.32,2.92C12.32,2.92,12.32,2.92,12.32,2.92L12.32,2.92Z"
-    })
-  )
-);
-const CrystalAvatar = ({ className }: { className?: string }) => (
-  React.createElement("svg", {
-    xmlns: "http://www.w3.org/2000/svg",
-    className: className,
-    fill: "none",
-    viewBox: "0 0 24 24",
-    stroke: "currentColor",
-    strokeWidth: "1.5"
-  },
-    React.createElement("path", {
-      strokeLinecap: "round",
-      strokeLinejoin: "round",
-      d: "M9.53 16.122a3 3 0 00-5.78 1.128 2.25 2.25 0 01-2.4-2.245 4.5 4.5 0 011.1-2.245m0 0a4.5 4.5 0 005.78 1.128m0 0a3 3 0 015.78 1.128m-5.78 1.128l5.78 1.128m0 0l-2.245 4.5a3 3 0 01-5.78-1.128m5.78-1.128l-5.78 1.128m0 0a4.5 4.5 0 01-1.1 2.245m0 0a2.25 2.25 0 002.4 2.245m13.5-5.781a3 3 0 01-5.78 1.128 2.25 2.25 0 00-2.4 2.245 4.5 4.5 0 001.1 2.245m0 0a4.5 4.5 0 015.78 1.128m0 0a3 3 0 005.78 1.128m-5.78 1.128l5.78 1.128m0 0l2.245 4.5a3 3 0 005.78-1.128m-5.78-1.128l-5.78-1.128m0 0a4.5 4.5 0 00-1.1 2.245M12 3.75l-4.5 6 4.5 6 4.5-6-4.5-6zm0 0v1.5m0 15v-1.5m-6.75-9H3.75m16.5 0h-1.5"
-    })
-  )
-);
-const KeyAvatar = ({ className }: { className?: string }) => (
-    React.createElement("svg", {
-      xmlns: "http://www.w3.org/2000/svg",
-      className: className,
-      fill: "none",
-      viewBox: "0 0 24 24",
-      stroke: "currentColor",
-      strokeWidth: "1.5"
-    },
-      React.createElement("path", {
-        strokeLinecap: "round",
-        strokeLinejoin: "round",
-        d: "M15.75 5.25a3 3 0 013 3m3 0a6 6 0 01-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1121.75 8.25z"
-      })
-    )
+
+// FIX: Replaced JSX with React.createElement to be compatible with a .ts file.
+const ImageAvatar2 = ({ className }: { className?: string }) => (
+  // The provided className from the calling component will control sizing and styling.
+  React.createElement('img', { src: "https://i.imgur.com/rne1qdZ.png", alt: "Avatar 2", className: className, style: { objectFit: 'cover', borderRadius: '50%' }})
 );
 
 export const AVATARS = [
-    { id: 'moon', Component: MoonAvatar },
-    { id: 'sun', Component: SunAvatar },
-    { id: 'star', Component: StarAvatar },
-    { id: 'eye', Component: EyeAvatar },
-    { id: 'lotus', Component: LotusAvatar },
-    { id: 'hamsa', Component: HamsaAvatar },
-    { id: 'crystal', Component: CrystalAvatar },
-    { id: 'key', Component: KeyAvatar },
+    { id: 'image1', Component: ImageAvatar1 },
+    { id: 'image2', Component: ImageAvatar2 },
 ];
 
 export const getAvatarById = (id: string | null): React.FC<{ className?: string }> | undefined => {

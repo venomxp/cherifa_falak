@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useMemo } from 'react';
 import { translations } from '../localization/translations';
 import { TranslationKey, ReadingHistoryItem } from '../types';
-import { scheduleDailyNotification, cancelAllNotifications } from '../services/notificationService';
 
 
 type Theme = 'light' | 'dark';
@@ -19,10 +18,9 @@ interface SettingsContextType {
   setUserDob: (dob: string) => void;
   profilePic: string | null;
   setProfilePic: (pic: string | null) => void;
-  notificationsEnabled: boolean;
-  setNotificationsEnabled: (enabled: boolean) => Promise<void>;
   readingHistory: ReadingHistoryItem[];
   addReadingToHistory: (reading: Omit<ReadingHistoryItem, 'id' | 'date'>) => void;
+  removeReadingFromHistory: (id: number) => void;
   clearReadingHistory: () => void;
 }
 
@@ -38,9 +36,6 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [userName, setUserNameState] = useState<string>(() => localStorage.getItem('userName') || '');
   const [userDob, setUserDobState] = useState<string>(() => localStorage.getItem('userDob') || '');
   const [profilePic, setProfilePicState] = useState<string | null>(() => localStorage.getItem('profilePic') || null);
-  const [notificationsEnabled, setNotificationsEnabledState] = useState<boolean>(() => {
-    return localStorage.getItem('notificationsEnabled') === 'true';
-  });
   const [readingHistory, setReadingHistory] = useState<ReadingHistoryItem[]>(() => {
     try {
       const savedHistory = localStorage.getItem('readingHistory');
@@ -87,6 +82,13 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   }, [language]);
 
   const addReadingToHistory = useMemo(() => (reading: Omit<ReadingHistoryItem, 'id' | 'date'>) => {
+    // Only add to history if a user has created a profile by saving a name.
+    const savedUserName = localStorage.getItem('userName');
+    if (!savedUserName) {
+      console.log("Profile not created (no name saved). Reading will not be added to history.");
+      return;
+    }
+
     const newReading: ReadingHistoryItem = {
       ...reading,
       id: Date.now(),
@@ -98,6 +100,15 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       return updatedHistory;
     });
   }, []);
+  
+  const removeReadingFromHistory = useMemo(() => (idToRemove: number) => {
+    setReadingHistory(prevHistory => {
+      const updatedHistory = prevHistory.filter(item => item.id !== idToRemove);
+      localStorage.setItem('readingHistory', JSON.stringify(updatedHistory));
+      return updatedHistory;
+    });
+  }, []);
+
 
   const clearReadingHistory = () => {
     setReadingHistory([]);
@@ -118,37 +129,9 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     setProfilePicState(newPic);
   };
   
-  const setNotificationsEnabled = async (enabled: boolean) => {
-      if (enabled) {
-          if (!('serviceWorker' in navigator) || !('Notification' in window)) {
-              alert('This browser does not support notifications.');
-              return;
-          }
-
-          if (Notification.permission === 'granted') {
-              localStorage.setItem('notificationsEnabled', 'true');
-              setNotificationsEnabledState(true);
-              scheduleDailyNotification();
-          } else if (Notification.permission !== 'denied') {
-              const permission = await Notification.requestPermission();
-              if (permission === 'granted') {
-                  localStorage.setItem('notificationsEnabled', 'true');
-                  setNotificationsEnabledState(true);
-                  scheduleDailyNotification();
-              }
-          } else {
-              alert(t('notificationsPermissionDenied'));
-          }
-      } else {
-          localStorage.setItem('notificationsEnabled', 'false');
-          setNotificationsEnabledState(false);
-          cancelAllNotifications();
-      }
-  };
-
 
   return (
-    <SettingsContext.Provider value={{ theme, setTheme, language, setLanguage, t, userName, setUserName, userDob, setUserDob, profilePic, setProfilePic, notificationsEnabled, setNotificationsEnabled, readingHistory, addReadingToHistory, clearReadingHistory }}>
+    <SettingsContext.Provider value={{ theme, setTheme, language, setLanguage, t, userName, setUserName, userDob, setUserDob, profilePic, setProfilePic, readingHistory, addReadingToHistory, removeReadingFromHistory, clearReadingHistory }}>
       {children}
     </SettingsContext.Provider>
   );

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Page } from '../../types';
 import { useSettings } from '../../hooks/useSettings';
+import { triggerHapticFeedback } from '../../utils/haptics';
 
 interface BottomNavBarProps {
   currentPage: Page;
@@ -14,9 +15,17 @@ const NavButton: React.FC<{
   children: React.ReactNode;
   disabled?: boolean;
 }> = ({ onClick, isActive, label, children, disabled }) => {
+
+  const handleClick = () => {
+    triggerHapticFeedback();
+    if (onClick) {
+      onClick();
+    }
+  };
+
   return (
     <button
-      onClick={onClick}
+      onClick={handleClick}
       disabled={disabled}
       className={`flex items-center justify-center gap-2 rounded-full transition-all duration-300 h-11 ${
         isActive
@@ -54,12 +63,12 @@ const BottomNavBar: React.FC<BottomNavBarProps> = ({ currentPage, setPage }) => 
     </svg>
   );
 
-  const isHomePage = ![Page.SETTINGS, Page.PROFILE].includes(currentPage);
+  const isHomePage = currentPage === Page.HOME;
   const isProfilePage = currentPage === Page.PROFILE;
   const isSettingsPage = currentPage === Page.SETTINGS;
 
   return (
-    <footer className="fixed bottom-0 left-0 right-0 p-4 flex justify-center z-50 animate-fade-in">
+    <footer className="p-4 flex justify-center animate-fade-in pointer-events-auto">
       <div className="w-full max-w-sm flex items-center justify-around gap-2 bg-white/70 dark:bg-brand-light-dark/70 backdrop-blur-lg rounded-full p-2 shadow-lg ring-1 ring-black/5 dark:ring-white/5">
         
         <NavButton
