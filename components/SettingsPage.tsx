@@ -3,7 +3,7 @@ import { Page } from '../types';
 import { useSettings } from '../hooks/useSettings';
 import Card from './common/Card';
 import LanguagePickerModal from './common/LanguagePickerModal';
-import { triggerHapticFeedback } from '../../utils/haptics';
+import { triggerHapticFeedback } from '../utils/haptics';
 import Button from './common/Button';
 
 // --- SVG Icons ---
