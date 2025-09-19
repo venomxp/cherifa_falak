@@ -6,5 +6,7 @@ export default defineConfig({
   plugins: [react()],
   // Set the base path for GitHub Pages deployment.
   // This should match the name of your repository.
+  base: '/cherifa_falak/',
+  // This should match the name of your repository.
   base: '/falkom/',
 })
