@@ -1,7 +1,7 @@
 import { GoogleGenAI, GenerateContentResponse } from "@google/genai";
 
-// FIX: Updated API key sourcing to align with Gemini API guidelines.
-const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY! });
+// The user's API key is hardcoded to ensure the app works immediately after download.
+const ai = new GoogleGenAI({ apiKey: "AIzaSyCeTqVMkVAv3f4EGoqLj-HLRcIHgfCYHOM" });
 
 // A robust helper function to call the Gemini API with automatic retries on failure
 const generateContentWithRetry = async (prompt: string): Promise<GenerateContentResponse> => {

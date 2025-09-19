@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Page, ZodiacSign } from '../types';
-import { ZODIAC_SIGNS } from '../constants';
-import { getZodiacCompatibilityAnalysis, getLoveCompatibilityAnalysis } from '../services/geminiService';
-import Button from './common/Button';
-import Spinner from './common/Spinner';
-import Card from './common/Card';
-import { useSettings } from '../hooks/useSettings';
+import { Page, ZodiacSign } from '../types.ts';
+import { ZODIAC_SIGNS } from '../constants.ts';
+import { getZodiacCompatibilityAnalysis, getLoveCompatibilityAnalysis } from '../services/geminiService.ts';
+import Button from './common/Button.tsx';
+import Spinner from './common/Spinner.tsx';
+import Card from './common/Card.tsx';
+import { useSettings } from '../hooks/useSettings.tsx';
 
 interface CompatibilityPageProps {
   page: Page;

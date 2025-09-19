@@ -1,5 +1,5 @@
 import React from 'react';
-import { useSettings } from '../../hooks/useSettings';
+import { useSettings } from '../../hooks/useSettings.tsx';
 
 const Spinner: React.FC = () => {
   const { t } = useSettings();

@@ -1,8 +1,8 @@
 import React from 'react';
-import { Page } from '../types';
-import Button from './common/Button';
-import Card from './common/Card';
-import { useSettings } from '../hooks/useSettings';
+import { Page } from '../types.ts';
+import Button from './common/Button.tsx';
+import Card from './common/Card.tsx';
+import { useSettings } from '../hooks/useSettings.tsx';
 
 interface HelpFAQPageProps {
   page: Page;

@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { Page, ZodiacSign } from '../types';
-import { ZODIAC_SIGNS } from '../constants';
-import { getHoroscope } from '../services/horoscopeService';
-import { getGeneratedHoroscope } from '../services/geminiService';
-import Button from './common/Button';
-import Card from './common/Card';
-import Spinner from './common/Spinner';
-import { useSettings } from '../hooks/useSettings';
+import { Page, ZodiacSign } from '../types.ts';
+import { ZODIAC_SIGNS } from '../constants.ts';
+import { getHoroscope } from '../services/horoscopeService.ts';
+import { getGeneratedHoroscope } from '../services/geminiService.ts';
+import Button from './common/Button.tsx';
+import Card from './common/Card.tsx';
+import Spinner from './common/Spinner.tsx';
+import { useSettings } from '../hooks/useSettings.tsx';
 
 interface HoroscopePageProps {
   page: Page;

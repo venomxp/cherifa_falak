@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Page } from '../types';
-import { getNumerologyReport } from '../services/geminiService';
-import Button from './common/Button';
-import Card from './common/Card';
-import Spinner from './common/Spinner';
-import { useSettings } from '../hooks/useSettings';
+import { Page } from '../types.ts';
+import { getNumerologyReport } from '../services/geminiService.ts';
+import Button from './common/Button.tsx';
+import Card from './common/Card.tsx';
+import Spinner from './common/Spinner.tsx';
+import { useSettings } from '../hooks/useSettings.tsx';
 
 interface NumerologyPageProps {
   page: Page;

@@ -1,7 +1,7 @@
 import React from 'react';
-import { Page } from '../../types';
-import Logo from './Logo';
-import { triggerHapticFeedback } from '../../utils/haptics';
+import { Page } from '../../types.ts';
+import Logo from './Logo.tsx';
+import { triggerHapticFeedback } from '../../utils/haptics.ts';
 
 interface TopBarProps {
   toggleMenu: () => void;

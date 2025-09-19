@@ -1,7 +1,7 @@
 import React from 'react';
-import { Page } from '../../types';
-import { useSettings } from '../../hooks/useSettings';
-import { triggerHapticFeedback } from '../../utils/haptics';
+import { Page } from '../../types.ts';
+import { useSettings } from '../../hooks/useSettings.tsx';
+import { triggerHapticFeedback } from '../../utils/haptics.ts';
 
 interface BottomNavBarProps {
   currentPage: Page;

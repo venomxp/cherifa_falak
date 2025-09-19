@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { Page } from '../types';
+import { Page } from '../types.ts';
 // FIX: Changed import from non-existent `getGematriaInterpretation` to `getNumerologyReport`.
-import { getNumerologyReport } from '../services/geminiService';
-import Button from './common/Button';
-import Card from './common/Card';
-import Spinner from './common/Spinner';
-import TarotCard from './common/TarotCard';
+import { getNumerologyReport } from '../services/geminiService.ts';
+import Button from './common/Button.tsx';
+import Card from './common/Card.tsx';
+import Spinner from './common/Spinner.tsx';
+import TarotCard from './common/TarotCard.tsx';
 
 interface GematriaPageProps {
   setPage: (page: Page) => void;

@@ -1,7 +1,7 @@
 import React from 'react';
-import { Page } from '../../types';
-import { triggerHapticFeedback } from '../../utils/haptics';
-import { useSettings } from '../../hooks/useSettings';
+import { Page } from '../../types.ts';
+import { triggerHapticFeedback } from '../../utils/haptics.ts';
+import { useSettings } from '../../hooks/useSettings.tsx';
 
 interface CloseButtonProps {
   setPage: (page: Page) => void;

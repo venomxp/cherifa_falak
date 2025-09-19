@@ -1,5 +1,5 @@
 import React from 'react';
-import { triggerHapticFeedback } from '../../utils/haptics';
+import { triggerHapticFeedback } from '../../utils/haptics.ts';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;

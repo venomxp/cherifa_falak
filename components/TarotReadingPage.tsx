@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-import { Page, TarotCardInfo } from '../types';
-import { getTarotInterpretationStream } from '../services/geminiService';
-import { TAROT_CARDS } from '../constants';
-import Button from './common/Button';
-import Spinner from './common/Spinner';
-import TarotCard from './common/TarotCard';
-import Card from './common/Card';
-import { useSettings } from '../hooks/useSettings';
-import TarotSpread from './common/TarotSpread';
-import { triggerHapticFeedback } from '../utils/haptics';
+import { Page, TarotCardInfo } from '../types.ts';
+import { getTarotInterpretationStream } from '../services/geminiService.ts';
+import { TAROT_CARDS } from '../constants.ts';
+import Button from './common/Button.tsx';
+import Spinner from './common/Spinner.tsx';
+import TarotCard from './common/TarotCard.tsx';
+import Card from './common/Card.tsx';
+import { useSettings } from '../hooks/useSettings.tsx';
+import TarotSpread from './common/TarotSpread.tsx';
+import { triggerHapticFeedback } from '../utils/haptics.ts';
 
 interface TarotReadingPageProps {
   page: Page;

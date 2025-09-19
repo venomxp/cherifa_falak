@@ -1,5 +1,4 @@
-// FIX: Use process.env for API key to align with execution environment
-import { translateHoroscopeToArabic, translateHoroscopeToFrench } from './geminiService';
+import { translateHoroscopeToArabic, translateHoroscopeToFrench } from './geminiService.ts';
 
 const API_BASE_URL = 'https://api.api-ninjas.com/v1/horoscope';
 
@@ -11,7 +10,8 @@ export const getHoroscope = async (signValue: string, language: 'ar' | 'en' | 'f
     const response = await fetch(`${API_BASE_URL}?zodiac=${signValue}`, {
       method: 'GET',
       headers: {
-        'X-Api-Key': process.env.VITE_NINJA_API_KEY!,
+        // The user's API key is hardcoded to ensure the app works immediately after download.
+        'X-Api-Key': "9n1thBTMWxfws4ZUut8rKQ==J7GtRHUfs0tjS1pC",
       },
     });
 

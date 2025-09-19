@@ -1,6 +1,6 @@
 import React from 'react';
-import { Page } from '../../types';
-import { useSettings } from '../../hooks/useSettings';
+import { Page } from '../../types.ts';
+import { useSettings } from '../../hooks/useSettings.tsx';
 
 interface LogoProps {
   className?: string;

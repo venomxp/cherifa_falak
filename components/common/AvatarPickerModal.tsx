@@ -1,7 +1,7 @@
 import React from 'react';
-import { AVATARS } from '../../assets/avatars';
-import Card from './Card';
-import { useSettings } from '../../hooks/useSettings';
+import { AVATARS } from '../../assets/avatars.ts';
+import Card from './Card.tsx';
+import { useSettings } from '../../hooks/useSettings.tsx';
 
 interface AvatarPickerModalProps {
   isOpen: boolean;

@@ -1,4 +1,4 @@
-import { translations } from './localization/translations';
+import { translations } from './localization/translations.ts';
 
 export enum Page {
   SPLASH,

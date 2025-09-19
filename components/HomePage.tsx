@@ -1,8 +1,8 @@
 
 import React from 'react';
-import { Page } from '../types';
-import { useSettings } from '../hooks/useSettings';
-import CategoryButton from './common/CategoryButton';
+import { Page } from '../types.ts';
+import { useSettings } from '../hooks/useSettings.tsx';
+import CategoryButton from './common/CategoryButton.tsx';
 
 interface HomePageProps {
   setPage: (page: Page) => void;

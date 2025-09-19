@@ -1,4 +1,4 @@
-import { ZodiacSign, TarotCardInfo, MoroccanTarotCard } from './types';
+import { ZodiacSign, TarotCardInfo, MoroccanTarotCard } from './types.ts';
 
 // Zodiac signs data now uses translation keys for names to support multiple languages
 export const ZODIAC_SIGNS: ZodiacSign[] = [

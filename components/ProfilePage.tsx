@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Page, ReadingHistoryItem, ReadingType } from '../types';
-import { useSettings } from '../hooks/useSettings';
-import Button from './common/Button';
-import Card from './common/Card';
-import { getAvatarById } from '../assets/avatars';
-import AvatarPickerModal from './common/AvatarPickerModal';
-import ReadingViewerModal from './common/ReadingViewerModal';
-import { triggerHapticFeedback } from '../utils/haptics';
+import { Page, ReadingHistoryItem, ReadingType } from '../types.ts';
+import { useSettings } from '../hooks/useSettings.tsx';
+import Button from './common/Button.tsx';
+import Card from './common/Card.tsx';
+import { getAvatarById } from '../assets/avatars.ts';
+import AvatarPickerModal from './common/AvatarPickerModal.tsx';
+import ReadingViewerModal from './common/ReadingViewerModal.tsx';
+import { triggerHapticFeedback } from '../utils/haptics.ts';
 
 
 interface ProfilePageProps {

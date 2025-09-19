@@ -1,6 +1,6 @@
 import React from 'react';
-import Card from './Card';
-import { useSettings } from '../../hooks/useSettings';
+import Card from './Card.tsx';
+import { useSettings } from '../../hooks/useSettings.tsx';
 
 interface LanguagePickerModalProps {
   isOpen: boolean;

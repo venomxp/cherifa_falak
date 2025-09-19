@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './App';
-import { SettingsProvider } from './hooks/useSettings';
+import App from './App.tsx';
+import { SettingsProvider } from './hooks/useSettings.tsx';
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {

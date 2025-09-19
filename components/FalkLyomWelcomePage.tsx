@@ -1,8 +1,8 @@
 import React from 'react';
-import { Page } from '../types';
-import Button from './common/Button';
-import { useSettings } from '../hooks/useSettings';
-import TarotCard from './common/TarotCard';
+import { Page } from '../types.ts';
+import Button from './common/Button.tsx';
+import { useSettings } from '../hooks/useSettings.tsx';
+import TarotCard from './common/TarotCard.tsx';
 
 interface FalkLyomWelcomePageProps {
   setPage: (page: Page) => void;

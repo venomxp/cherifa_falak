@@ -1,5 +1,5 @@
 import React from 'react';
-import TarotCard from './TarotCard';
+import TarotCard from './TarotCard.tsx';
 
 interface TarotSpreadProps {
   onCardSelect: () => void;

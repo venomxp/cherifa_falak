@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useMemo } from 'react';
-import { translations } from '../localization/translations';
-import { TranslationKey, ReadingHistoryItem } from '../types';
+import { translations } from '../localization/translations.ts';
+import { TranslationKey, ReadingHistoryItem } from '../types.ts';
 
 
 type Theme = 'light' | 'dark';

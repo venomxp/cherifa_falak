@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Page, MoroccanTarotCard } from '../types';
-import { getFalkLyomInterpretation } from '../services/geminiService';
-import { MOROCCAN_TAROT_CARDS } from '../constants';
-import Button from './common/Button';
-import Spinner from './common/Spinner';
-import Card from './common/Card';
-import { useSettings } from '../hooks/useSettings';
+import { Page, MoroccanTarotCard } from '../types.ts';
+import { getFalkLyomInterpretation } from '../services/geminiService.ts';
+import { MOROCCAN_TAROT_CARDS } from '../constants.ts';
+import Button from './common/Button.tsx';
+import Spinner from './common/Spinner.tsx';
+import Card from './common/Card.tsx';
+import { useSettings } from '../hooks/useSettings.tsx';
 
 interface FalkLyomResultPageProps {
   page: Page;

@@ -1,8 +1,8 @@
 import React from 'react';
-import Card from './Card';
-import Button from './Button';
-import { ReadingHistoryItem } from '../../types';
-import { useSettings } from '../../hooks/useSettings';
+import Card from './Card.tsx';
+import Button from './Button.tsx';
+import { ReadingHistoryItem } from '../../types.ts';
+import { useSettings } from '../../hooks/useSettings.tsx';
 
 interface ReadingViewerModalProps {
   isOpen: boolean;

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import TarotCard from './common/TarotCard';
+import TarotCard from './common/TarotCard.tsx';
 
 const SplashScreen: React.FC = () => {
   const [isFanned, setIsFanned] = useState(false);
