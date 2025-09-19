@@ -10,7 +10,7 @@ import Logo from './common/Logo.tsx';
 
 // Icons for inputs
 const UserIcon = ({ className = 'w-6 h-6' }: { className?: string }) => (
-    <svg xmlns="http://www.w.org/2000/svg" className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+    <svg xmlns="http://www.w3.org/2000/svg" className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
     </svg>
 );
@@ -128,7 +128,7 @@ const WelcomeProfilePage: React.FC<WelcomeProfilePageProps> = ({ setPage }) => {
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                             placeholder={t('userName')}
-                            className="w-full text-lg bg-black/30 backdrop-blur-sm border border-brand-accent/40 rounded-full focus:ring-2 focus:ring-brand-accent focus:border-transparent transition-all py-4 pl-14 rtl:pl-6 rtl:pr-14 text-white placeholder:text-white/60"
+                            className="w-full text-lg bg-black/30 border border-brand-accent/40 rounded-full focus:ring-2 focus:ring-brand-accent focus:border-transparent transition-all py-4 pl-14 rtl:pl-6 rtl:pr-14 text-white placeholder:text-white/60"
                             aria-label={t('userName')}
                         />
                     </div>
@@ -136,7 +136,7 @@ const WelcomeProfilePage: React.FC<WelcomeProfilePageProps> = ({ setPage }) => {
                         <CalendarIcon className="absolute top-1/2 left-5 rtl:left-auto rtl:right-5 -translate-y-1/2 w-6 h-6 text-brand-accent/80 pointer-events-none" />
                         <button
                             onClick={() => setIsDatePickerOpen(true)}
-                            className="w-full text-lg bg-black/30 backdrop-blur-sm border border-brand-accent/40 rounded-full focus:ring-2 focus:ring-brand-accent focus:border-transparent transition-all py-4 pl-14 rtl:pl-6 rtl:pr-14 text-left rtl:text-right text-white/80"
+                            className="w-full text-lg bg-black/30 border border-brand-accent/40 rounded-full focus:ring-2 focus:ring-brand-accent focus:border-transparent transition-all py-4 pl-14 rtl:pl-6 rtl:pr-14 text-left rtl:text-right text-white/80"
                             aria-label={t('userDob')}
                         >
                             {formatDateForDisplay(dob, language, t('userDob'))}

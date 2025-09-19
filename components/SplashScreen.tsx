@@ -26,8 +26,8 @@ const SplashScreen: React.FC = () => {
     const centerIndex = Math.floor(cardCount / 2);
     const offset = index - centerIndex;
     const fanRotation = offset * 15; // degrees
-    const fanTranslationX = offset * 50; // percentage
-    const fanTranslationY = Math.abs(offset) * 15; // percentage
+    const fanTranslationX = offset * 40; // percentage
+    const fanTranslationY = Math.abs(offset) * 10; // percentage
 
     return {
       transition: 'transform 1s cubic-bezier(0.68, -0.55, 0.27, 1.55)',
@@ -43,7 +43,7 @@ const SplashScreen: React.FC = () => {
   return (
     <div className="flex justify-center items-center min-h-screen overflow-hidden">
       <div
-        className="relative w-32 h-52 transition-all duration-1000"
+        className="relative w-24 h-40 transition-all duration-1000"
         style={{ perspective: '1000px', transformStyle: 'preserve-3d' }}
       >
         <div

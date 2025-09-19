@@ -11,14 +11,14 @@ interface HelpFAQPageProps {
 }
 
 const FAQItem: React.FC<{ question: string; answer: string }> = ({ question, answer }) => (
-  <details className="p-4 rounded-lg bg-brand-dark group">
+  <details className="p-4 rounded-lg bg-brand-light dark:bg-brand-dark group">
     <summary className="font-semibold text-lg cursor-pointer list-none flex justify-between items-center text-brand-accent">
       {question}
       <span className="transform transition-transform duration-300 group-open:rotate-180">
         <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
       </span>
     </summary>
-    <p className="mt-2 text-brand-text-light/80 leading-relaxed">
+    <p className="mt-2 text-brand-light-text dark:text-brand-text-light/80 leading-relaxed">
       {answer}
     </p>
   </details>
