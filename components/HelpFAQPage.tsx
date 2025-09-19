@@ -7,6 +7,7 @@ import { useSettings } from '../hooks/useSettings.tsx';
 interface HelpFAQPageProps {
   page: Page;
   setPage: (page: Page) => void;
+  goBack: () => void;
 }
 
 const FAQItem: React.FC<{ question: string; answer: string }> = ({ question, answer }) => (
@@ -23,7 +24,7 @@ const FAQItem: React.FC<{ question: string; answer: string }> = ({ question, ans
   </details>
 );
 
-const HelpFAQPage: React.FC<HelpFAQPageProps> = ({ page, setPage }) => {
+const HelpFAQPage: React.FC<HelpFAQPageProps> = ({ page, setPage, goBack }) => {
   const { t } = useSettings();
 
   return (
@@ -42,7 +43,7 @@ const HelpFAQPage: React.FC<HelpFAQPageProps> = ({ page, setPage }) => {
           </div>
         </Card>
         <div className="text-center mt-8 flex justify-center gap-4">
-            <Button onClick={() => setPage(Page.SETTINGS)} variant="secondary">
+            <Button onClick={goBack} variant="secondary">
                 &larr; {t('settings')}
             </Button>
             <Button onClick={() => setPage(Page.HOME)} variant="secondary">{t('goHome')}</Button>

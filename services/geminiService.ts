@@ -1,4 +1,4 @@
-import { GoogleGenAI, GenerateContentResponse } from "@google/genai";
+import { GoogleGenAI, GenerateContentResponse, Type } from "@google/genai";
 
 // The API key is now read from environment variables for security and flexibility.
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
@@ -204,4 +204,88 @@ export const getGeneratedHoroscope = async (sign: string, period: 'weekly' | 'mo
     console.error(`Error generating ${period} horoscope stream:`, error);
     throw new Error(`Failed to get ${period} horoscope.`);
   }
+};
+
+// Generates a mystical divination reading (الطالع)
+export const getTaleeReadingStream = async (name: string, mothersName: string, gender: string, language: 'ar' | 'en' | 'fr') => {
+  const prompt = language === 'ar'
+    ? `أنتِ "شوافة" مغربية حكيمة وخبيرة في كشف الطالع. طالب الكشف هو (${gender}) واسمه "${name}"، وأمه هي السيدة "${mothersName}". يطلب منك أن تكشفي له طالعه.
+مهم جداً: يجب أن تكون القراءة موجهة بشكل كامل لجنس طالب الكشف (${gender})، باستخدام الضمائر والتعبيرات المؤنثة أو المذكرة بشكل صحيح.
+قدمي له/لها قراءة روحانية مفصلة ومبشرة بالخير باللهجة المغربية (الدارجة). يجب أن تكون القراءة غامضة، مليئة بالأمل، وتغطي جوانب حياته المهمة مثل الحب، العمل، والصحة. ابدئي القراءة مباشرة بأسلوب تقليدي وجذاب.`
+    : language === 'fr'
+    ? `Agis en tant que voyante marocaine ("Chouwafa") sage et experte. Une personne de sexe "${gender}" nommée "${name}", dont la mère est "${mothersName}", demande une lecture de son destin (الطالع).
+Très important : la lecture doit être entièrement genrée pour correspondre au sexe de la personne (${gender}), en utilisant les pronoms et adjectifs corrects.
+Fournis une lecture spirituelle détaillée et optimiste en français, mais en conservant un ton et un style mystique marocain authentique. La lecture doit couvrir des aspects importants de sa vie comme l'amour, le travail et la santé. Commence la réponse directement dans un style traditionnel et captivant.`
+    : `Act as a wise and expert Moroccan seer ("Chouwafa"). A person, who is ${gender}, named "${name}", whose mother is "${mothersName}", asks for a destiny reading (الطالع).
+Very important: The reading must be fully gendered to match the person's gender (${gender}), using correct pronouns and adjectives.
+Provide a detailed and hopeful spiritual reading in English, but maintain an authentic mystical Moroccan tone and style. The reading should cover important aspects of their life such as love, work, and health. Start the reading directly in a traditional and engaging manner.`;
+
+  try {
+    return await ai.models.generateContentStream({
+        model: "gemini-2.5-flash",
+        contents: prompt,
+        config: { thinkingConfig: { thinkingBudget: 0 } },
+    });
+  } catch (error) {
+    console.error("Error getting Tale'e reading stream:", error);
+    throw new Error("Failed to get Tale'e reading.");
+  }
+};
+
+// Provides a mystical interpretation for a Gematria value
+export const getGematriaReadingStream = async (name: string, gematriaValue: number, language: 'ar' | 'en' | 'fr') => {
+  const prompt = language === 'ar'
+    ? `أنت خبير روحاني في "حساب الجُمَّل". اسم الشخص هو "${name}" وقيمته الرقمية هي ${gematriaValue}.
+قدم له رسالة اليوم بناءً على هذا الرقم. يجب أن تكون الرسالة عميقة، إيجابية، وملهمة بأسلوب روحاني ومشجع. يجب أن تكون الإجابة باللغة العربية.`
+    : language === 'fr'
+    ? `Agissez en tant qu'expert mystique en Gématrie arabe ("حساب الجُمَّل"). Le nom de la personne est "${name}" et sa valeur numérique est ${gematriaValue}.
+Fournissez un "message du jour" basé sur ce nombre. Le message doit être perspicace, positif et inspirant dans un style spirituel et encourageant. La réponse doit être entièrement en français.`
+    : `Act as a mystical expert in Arabic Gematria ("حساب الجُمَّل"). The person's name is "${name}" and its numerical value is ${gematriaValue}.
+Provide a "message for the day" based on this number. The message should be insightful, positive, and inspiring in a spiritual and encouraging tone. The response must be in English.`;
+
+    try {
+        return await ai.models.generateContentStream({
+           model: "gemini-2.5-flash",
+           contents: prompt,
+           config: { thinkingConfig: { thinkingBudget: 0 } },
+        });
+    } catch (error) {
+        console.error("Error getting Gematria reading stream:", error);
+        throw new Error("Failed to get Gematria reading.");
+    }
+};
+
+// Validates if a string is a plausible human name using AI
+export const validateName = async (name: string): Promise<{ isValid: boolean; suggestion?: string }> => {
+    const prompt = `Analyze the following string and determine if it is a plausible human name. Consider common names, variations, and typos across different cultures. If it's not a plausible name (e.g., random characters like 'asdfg' or nonsensical), set isValid to false. If it seems like a typo of a real name, provide a correction in the suggestion field, otherwise leave suggestion empty.
+String: "${name}"`;
+
+    try {
+        const response = await ai.models.generateContent({
+            model: "gemini-2.5-flash",
+            contents: prompt,
+            config: {
+                responseMimeType: "application/json",
+                responseSchema: {
+                    type: Type.OBJECT,
+                    properties: {
+                        isValid: { type: Type.BOOLEAN, description: "Whether the name is plausible." },
+                        suggestion: { type: Type.STRING, description: "A suggested correction if a typo is detected." }
+                    },
+                    required: ["isValid"]
+                },
+                thinkingConfig: { thinkingBudget: 0 }
+            },
+        });
+        
+        const jsonResponse = JSON.parse(response.text);
+        return {
+            isValid: jsonResponse.isValid,
+            suggestion: jsonResponse.suggestion || undefined,
+        };
+    } catch (error) {
+        console.error("Error validating name with AI:", error);
+        // Fail open to not block the user if the validation service is down.
+        return { isValid: true };
+    }
 };

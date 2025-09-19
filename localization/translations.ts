@@ -8,6 +8,16 @@ export const translations = {
     loading: 'جاري التحميل',
     analyzing: 'جاري التحليل...',
     newAnalysis: 'تحليل جديد',
+    set: 'تعيين',
+    cancel: 'إلغاء',
+    clear: 'مسح',
+    selectDate: 'اختر التاريخ',
+    validatingName: 'يتم التحقق من الاسم...',
+
+    // Welcome Profile Page
+    welcomeProfileTitle: 'أهلاً بك في فالكم',
+    welcomeProfileSubtitle: 'أنشئ ملفك الشخصي لتبدأ رحلتك الروحية.',
+    saveAndContinue: 'حفظ ومتابعة',
 
     // Home Page
     appName: 'Falkom - فالكم',
@@ -15,6 +25,7 @@ export const translations = {
     tarotReading: 'قراءة التاروت',
     horoscopes: 'الأبراج',
     numerology: 'علم الأعداد',
+    gematria: 'حساب الجُمَل',
     compatibility: 'التوافق',
     privateReading: 'للقراءة الخاصة',
     falkLyom: 'فالك اليوم',
@@ -22,8 +33,11 @@ export const translations = {
     tarotReadingDesc: 'اكشف عن طريقك ببطاقات التاروت.',
     horoscopesDesc: 'اقرأ ما تقوله النجوم عنك.',
     numerologyDesc: 'اكتشف أسرار أرقامك.',
+    gematriaDesc: 'اكتشف القوة الرقمية لاسمك.',
     compatibilityDesc: 'تحقق من توافق الحب والصداقة.',
     privateReadingDesc: 'احجز جلسة خاصة لرؤى عميقة.',
+    taleeReading: 'الطالع',
+    taleeReadingDesc: 'اكتشف طالعك باسمك واسم أمك.',
     
     // Falk Lyom Feature
     falkLyomWelcomeTitle: 'فالك اليوم',
@@ -134,7 +148,22 @@ export const translations = {
     analyzeCompatibility: 'تحليل التوافق',
     compatibilityResultTitleNames: 'نسبة التوافق بين {name1} و {name2}',
     compatibilityResultTitleZodiac: 'توافق {sign1} و {sign2}',
+
+    // Tale'e Page
+    taleePageTitle: 'كشف الطالع',
+    yourMothersName: 'اسم الأم',
+    revealDestiny: 'اكشف طالعي',
+    taleeReadingHistoryTitle: 'طالع لـ {name} (الأم: {mothersName})',
     
+    // Gematria Page
+    gematriaPageTitle: "حساب الجُمَل",
+    enterYourNameGematria: "أدخل اسمك لحساب قيمته",
+    calculateValue: "احسب القيمة",
+    yourGematriaValueIs: "قيمة اسمك هي:",
+    getYourReading: "اقرأ رسالة رقمك اليوم",
+    gematriaReadingFor: "رسالة الرقم {value}",
+    gematriaReadingHistoryTitle: "حساب الجُمَّل لـ {name}",
+
     // Profile Page
     userName: 'الاسم',
     userDob: 'تاريخ الميلاد',
@@ -165,10 +194,16 @@ export const translations = {
     errorGenerateReport: 'حدث خطأ أثناء إنشاء التقرير. يرجى المحاولة مرة أخرى.',
     errorCompatibility: 'حدث خطأ أثناء تحليل التوافق. يرجى المحاولة مرة أخرى.',
     errorTarot: 'حدث خطأ أثناء جلب التفسير. يرجى المحاولة مرة أخرى.',
+    errorEnterName: 'الرجاء إدخال الاسم.',
     errorEnterNameAndDob: 'الرجاء إدخال الاسم وتاريخ الميلاد.',
     errorSelectTwoSigns: 'الرجاء اختيار برجين.',
     errorEnterBothNames: 'الرجاء إدخال الاسمين.',
+    errorSelectGender: 'الرجاء اختيار الجنس.',
     errorFalkLyom: 'حدث خطأ. حاول مرة أخرى.',
+    errorTaleeReading: 'حدث خطأ أثناء كشف الطالع. يرجى المحاولة مرة أخرى.',
+    errorGematria: 'الرجاء إدخال اسم صالح.',
+    errorInvalidName: 'الرجاء إدخال اسم حقيقي.',
+    errorInvalidNameWithSuggestion: 'الاسم غير صالح. هل تقصد "{suggestion}"؟',
 
     // ARIA Labels
     goBackToHomeAria: 'العودة إلى الصفحة الرئيسية',
@@ -183,6 +218,16 @@ export const translations = {
     loading: 'Loading...',
     analyzing: 'Analyzing...',
     newAnalysis: 'New Analysis',
+    set: 'Set',
+    cancel: 'Cancel',
+    clear: 'Clear',
+    selectDate: 'Select Date',
+    validatingName: 'Validating name...',
+
+    // Welcome Profile Page
+    welcomeProfileTitle: 'Welcome to Falkom',
+    welcomeProfileSubtitle: 'Create your profile to begin your spiritual journey.',
+    saveAndContinue: 'Save & Continue',
 
     // Home Page
     appName: 'Falkom - فالكم',
@@ -190,6 +235,7 @@ export const translations = {
     tarotReading: 'Tarot Reading',
     horoscopes: 'Horoscopes',
     numerology: 'Numerology',
+    gematria: 'Gematria',
     compatibility: 'Compatibility',
     privateReading: 'Private Reading',
     falkLyom: "Today's Fortune",
@@ -197,8 +243,11 @@ export const translations = {
     tarotReadingDesc: 'Unveil your path with tarot cards.',
     horoscopesDesc: 'Read what the stars say about you.',
     numerologyDesc: 'Discover the secrets of your numbers.',
+    gematriaDesc: 'Discover the numerical power of your name.',
     compatibilityDesc: 'Check your love & friendship compatibility.',
     privateReadingDesc: 'Book a private session for deep insights.',
+    taleeReading: 'Destiny Reading',
+    taleeReadingDesc: "Reveal your destiny with your name.",
 
     // Falk Lyom Feature
     falkLyomWelcomeTitle: "Today's Fortune",
@@ -310,6 +359,21 @@ export const translations = {
     compatibilityResultTitleNames: 'Compatibility between {name1} and {name2}',
     compatibilityResultTitleZodiac: 'Compatibility of {sign1} and {sign2}',
 
+    // Tale'e Page
+    taleePageTitle: 'Destiny Reading',
+    yourMothersName: "Mother's Name",
+    revealDestiny: 'Reveal My Destiny',
+    taleeReadingHistoryTitle: 'Destiny reading for {name} (Mother: {mothersName})',
+    
+    // Gematria Page
+    gematriaPageTitle: "Gematria Calculation",
+    enterYourNameGematria: "Enter your name to calculate its value",
+    calculateValue: "Calculate Value",
+    yourGematriaValueIs: "Your name's value is:",
+    getYourReading: "Get your number's message for today",
+    gematriaReadingFor: "Message for number {value}",
+    gematriaReadingHistoryTitle: "Gematria for {name}",
+
     // Profile Page
     userName: 'Name',
     userDob: 'Date of Birth',
@@ -340,10 +404,17 @@ export const translations = {
     errorGenerateReport: 'An error occurred while generating the report. Please try again.',
     errorCompatibility: 'An error occurred during analysis. Please try again.',
     errorTarot: 'Error fetching interpretation. Please try again.',
+    errorEnterName: 'Please enter the name.',
     errorEnterNameAndDob: 'Please enter the name and date of birth.',
     errorSelectTwoSigns: 'Please select two zodiac signs.',
     errorEnterBothNames: 'Please enter both names.',
+    errorSelectGender: 'Please select a gender.',
     errorFalkLyom: 'An error occurred. Please try again.',
+    errorTaleeReading: 'An error occurred while fetching your destiny reading. Please try again.',
+    errorGematria: "Please enter a valid name.",
+    errorInvalidName: 'Please enter a real name.',
+    errorInvalidNameWithSuggestion: 'Invalid name. Did you mean "{suggestion}"?',
+
 
     // ARIA Labels
     goBackToHomeAria: 'Return to Home Page',
@@ -358,6 +429,16 @@ export const translations = {
     loading: 'Chargement...',
     analyzing: 'Analyse en cours...',
     newAnalysis: 'Nouvelle analyse',
+    set: 'Valider',
+    cancel: 'Annuler',
+    clear: 'Effacer',
+    selectDate: 'Choisir la date',
+    validatingName: 'Validation du nom...',
+
+    // Welcome Profile Page
+    welcomeProfileTitle: 'Bienvenue sur Falkom',
+    welcomeProfileSubtitle: 'Créez votre profil pour commencer votre voyage spirituel.',
+    saveAndContinue: 'Enregistrer et continuer',
 
     // Home Page
     appName: 'Falkom - فالكم',
@@ -365,6 +446,7 @@ export const translations = {
     tarotReading: 'Lecture de Tarot',
     horoscopes: 'Horoscopes',
     numerology: 'Numérologie',
+    gematria: 'Gématrie',
     compatibility: 'Compatibilité',
     privateReading: 'Lecture privée',
     falkLyom: 'Votre Fal du Jour',
@@ -372,8 +454,11 @@ export const translations = {
     tarotReadingDesc: 'Dévoilez votre chemin avec les cartes de tarot.',
     horoscopesDesc: 'Lisez ce que les étoiles disent de vous.',
     numerologyDesc: 'Découvrez les secrets de vos numéros.',
+    gematriaDesc: 'Découvrez le pouvoir numérique de votre nom.',
     compatibilityDesc: 'Vérifiez votre compatibilité amoureuse et amicale.',
     privateReadingDesc: 'Réservez une séance privée pour des visions profondes.',
+    taleeReading: 'Lecture du Destin',
+    taleeReadingDesc: "Révélez votre destin avec votre nom.",
     
     // Falk Lyom Feature
     falkLyomWelcomeTitle: 'Votre Fal du Jour',
@@ -484,7 +569,22 @@ export const translations = {
     analyzeCompatibility: 'Analyser la compatibilité',
     compatibilityResultTitleNames: 'Compatibilité entre {name1} et {name2}',
     compatibilityResultTitleZodiac: 'Compatibilité de {sign1} et {sign2}',
+
+    // Tale'e Page
+    taleePageTitle: 'Lecture du Destin',
+    yourMothersName: 'Nom de la mère',
+    revealDestiny: 'Révéler mon destin',
+    taleeReadingHistoryTitle: 'Lecture du destin pour {name} (Mère: {mothersName})',
     
+    // Gematria Page
+    gematriaPageTitle: "Calcul de Gématrie",
+    enterYourNameGematria: "Entrez votre nom pour calculer sa valeur",
+    calculateValue: "Calculer la valeur",
+    yourGematriaValueIs: "La valeur de votre nom est :",
+    getYourReading: "Obtenez le message de votre numéro pour aujourd'hui",
+    gematriaReadingFor: "Message pour le numéro {value}",
+    gematriaReadingHistoryTitle: "Gématrie pour {name}",
+
     // Profile Page
     userName: 'Nom',
     userDob: 'Date de naissance',
@@ -515,10 +615,16 @@ export const translations = {
     errorGenerateReport: 'Une erreur s\'est produite lors de la génération du rapport. Veuillez réessayer.',
     errorCompatibility: 'Une erreur s\'est produite lors de l\'analyse. Veuillez réessayer.',
     errorTarot: 'Erreur lors de la récupération de l\'interprétation. Veuillez réessayer.',
+    errorEnterName: 'Veuillez entrer le nom.',
     errorEnterNameAndDob: 'Veuillez entrer le nom et la date de naissance.',
     errorSelectTwoSigns: 'Veuillez sélectionner deux signes du zodiaque.',
     errorEnterBothNames: 'Veuillez entrer les deux noms.',
+    errorSelectGender: 'Veuillez sélectionner un genre.',
     errorFalkLyom: 'Une erreur est survenue. Veuillez réessayer.',
+    errorTaleeReading: "Une erreur s'est produite lors de la récupération de votre lecture. Veuillez réessayer.",
+    errorGematria: "Veuillez entrer un nom valide.",
+    errorInvalidName: 'Veuillez entrer un vrai nom.',
+    errorInvalidNameWithSuggestion: 'Nom invalide. Vouliez-vous dire "{suggestion}" ?',
 
     // ARIA Labels
     goBackToHomeAria: 'Retour à la page d\'accueil',

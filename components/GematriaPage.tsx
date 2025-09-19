@@ -1,22 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Page } from '../types.ts';
-// FIX: Changed import from non-existent `getGematriaInterpretation` to `getNumerologyReport`.
-import { getNumerologyReport } from '../services/geminiService.ts';
+import { getGematriaReadingStream, validateName } from '../services/geminiService.ts';
 import Button from './common/Button.tsx';
 import Card from './common/Card.tsx';
 import Spinner from './common/Spinner.tsx';
-import TarotCard from './common/TarotCard.tsx';
+import { useSettings } from '../hooks/useSettings.tsx';
 
 interface GematriaPageProps {
+  page: Page;
   setPage: (page: Page) => void;
 }
 
-const GematriaPage: React.FC<GematriaPageProps> = ({ setPage }) => {
-  const [name, setName] = useState<string>('');
+const GematriaPage: React.FC<GematriaPageProps> = ({ page, setPage }) => {
+  const { language, t, userName, addReadingToHistory, readingHistory } = useSettings();
+  const [name, setName] = useState('');
   const [gematriaValue, setGematriaValue] = useState<number | null>(null);
-  const [interpretation, setInterpretation] = useState<string>('');
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string>('');
+  const [reading, setReading] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [isStreaming, setIsStreaming] = useState(false);
+  const [isValidating, setIsValidating] = useState(false);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    if (userName) setName(userName);
+  }, [userName]);
 
   const abjadMap: { [key: string]: number } = {
     'ا': 1, 'أ': 1, 'إ': 1, 'آ': 1,
@@ -29,91 +36,154 @@ const GematriaPage: React.FC<GematriaPageProps> = ({ setPage }) => {
   };
 
   const calculateGematria = (inputName: string): number => {
-    let sum = 0;
-    for (const char of inputName) {
-      if (abjadMap[char]) {
-        sum += abjadMap[char];
-      }
-    }
-    return sum;
+    return inputName.split('').reduce((sum, char) => sum + (abjadMap[char] || 0), 0);
   };
 
   const handleCalculate = async () => {
     if (!name.trim()) {
-      setError('الرجاء إدخال اسم.');
+      setError(t('errorEnterName'));
+      setGematriaValue(null);
       return;
     }
-    setIsLoading(true);
     setError('');
-    setInterpretation('');
+    setReading('');
+    setIsValidating(true);
     
+    const validationResult = await validateName(name);
+    if (!validationResult.isValid) {
+      setError(validationResult.suggestion 
+        ? t('errorInvalidNameWithSuggestion', { suggestion: validationResult.suggestion })
+        : t('errorInvalidName')
+      );
+      setIsValidating(false);
+      return;
+    }
+    
+    setIsValidating(false);
     const value = calculateGematria(name);
     setGematriaValue(value);
+  };
+  
+  const handleGetReading = async () => {
+    if (gematriaValue === null) return;
 
+    setIsLoading(true);
+    setReading('');
+    setError('');
+
+    // 1. Check history for a reading from today
+    const todayStr = new Date().toISOString().split('T')[0];
+    const expectedTitle = t('gematriaReadingHistoryTitle', { name });
+
+    const todaysReading = readingHistory.find(item => 
+        item.type === 'Gematria' &&
+        item.title === expectedTitle &&
+        item.date.startsWith(todayStr)
+    );
+
+    if (todaysReading) {
+        const contentParts = todaysReading.content.split('\n\n');
+        const mainReading = contentParts.length > 1 ? contentParts.slice(1).join('\n\n') : contentParts[0];
+        
+        // Use timeout for smoother UX, showing the cached result
+        setTimeout(() => {
+            setReading(mainReading);
+            setIsLoading(false);
+        }, 500);
+        return;
+    }
+
+    // 2. If not in history, fetch from API
+    let fullReading = '';
     try {
-      // FIX: Replaced non-existent `getGematriaInterpretation` with `getNumerologyReport`.
-      // Passing an empty string for `dob` as this component does not collect it.
-      // FIX: Added 'ar' for the missing language parameter.
-      const stream = await getNumerologyReport(name, '', value, 'ar');
-      // FIX: The API returns a stream. Iterate over it to get the full text.
-      let fullText = '';
-      for await (const chunk of stream) {
-        fullText += chunk.text;
-      }
-      setInterpretation(fullText);
-    } catch (err) {
-      setError('حدث خطأ أثناء جلب التحليل. يرجى المحاولة مرة أخرى.');
-    } finally {
+      const stream = await getGematriaReadingStream(name, gematriaValue, language);
       setIsLoading(false);
+      setIsStreaming(true);
+      for await (const chunk of stream) {
+        fullReading += chunk.text;
+        setReading(prev => prev + chunk.text);
+      }
+    } catch (err) {
+      setError(t('errorGenerateReport'));
+      setIsLoading(false);
+    } finally {
+      setIsStreaming(false);
+      if (fullReading) {
+        const title = t('gematriaReadingHistoryTitle', { name });
+        addReadingToHistory({ type: 'Gematria', title, content: `**${t('yourGematriaValueIs')} ${gematriaValue}**\n\n${fullReading}` });
+      }
     }
   };
 
+  const reset = () => {
+    setName(userName || '');
+    setGematriaValue(null);
+    setReading('');
+    setError('');
+  };
+
   return (
-    <div className="container mx-auto p-4 flex flex-col items-center min-h-screen animate-fade-in">
-      <h2 className="text-4xl font-bold mb-8 text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-500">
-        حساب الجُمّل (الأبجدي)
-      </h2>
+    <div className="container mx-auto p-4 flex flex-col items-center flex-grow animate-fade-in box-border pb-24">
+      <div className="w-full flex flex-col items-center">
+        <h2 className="text-4xl font-logo-en font-bold my-8 text-center text-brand-accent tracking-wider">
+          {t('gematriaPageTitle')}
+        </h2>
 
-      <Card className="w-full max-w-md mb-8">
-        <label htmlFor="name" className="block text-lg font-semibold mb-2 text-purple-300">
-          أدخل اسمك باللغة العربية
-        </label>
-        <input
-          id="name"
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="مثال: محمد"
-          className="w-full p-3 bg-gray-700 text-white border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-          dir="rtl"
-        />
-      </Card>
+        <Card className="w-full max-w-md mb-6">
+          <label htmlFor="name" className="block text-lg font-semibold mb-2 text-brand-accent">
+            {t('enterYourNameGematria')}
+          </label>
+          <input
+            id="name"
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder={t('yourName')}
+            className="w-full p-3 bg-brand-light dark:bg-brand-dark text-brand-light-text dark:text-brand-text-light border border-brand-light-border dark:border-brand-border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-accent"
+            dir="rtl"
+          />
+           <Button onClick={handleCalculate} className="w-full mt-4" disabled={isValidating}>
+            {isValidating ? t('validatingName') : t('calculateValue')}
+          </Button>
+        </Card>
 
-      <Button onClick={handleCalculate} disabled={isLoading}>
-        {isLoading ? 'جاري الحساب...' : 'احسب واكتشف السر'}
-      </Button>
+        {error && !isLoading && <p className="text-red-400 my-4 text-center">{error}</p>}
 
-      {isLoading && <Spinner />}
-      
-      {error && <p className="text-red-400 mt-4">{error}</p>}
+        {gematriaValue !== null && !reading && !isLoading && (
+          <div className="w-full max-w-md text-center animate-fade-in">
+            <Card className="mb-6">
+              <p className="text-lg font-semibold">{t('yourGematriaValueIs')}</p>
+              <p className="text-6xl font-black text-brand-accent my-2">{gematriaValue}</p>
+            </Card>
+            <Button onClick={handleGetReading} disabled={isLoading}>
+              {t('getYourReading')}
+            </Button>
+          </div>
+        )}
 
-      {interpretation && !isLoading && (
-        <div className="mt-8 w-full max-w-2xl">
-          <TarotCard>
-             <div className="p-4 text-center">
-                <h3 className="text-2xl font-bold text-yellow-300 mb-4">{`تحليل اسم "${name}"`}</h3>
-                <p className="text-xl text-center mb-4 font-bold">
-                    مجموع حساب الجُمّل: <span className="text-yellow-400">{gematriaValue}</span>
-                </p>
-                <p className="text-lg whitespace-pre-wrap leading-relaxed text-gray-200">{interpretation}</p>
-             </div>
-          </TarotCard>
+        {isLoading && <Spinner />}
+
+        {(reading || isStreaming) && !isLoading && (
+          <div className="mt-8 w-full max-w-2xl animate-fade-in">
+            <Card>
+              <div className="p-4">
+                  <h3 className="text-2xl font-bold text-brand-accent mb-4 text-center">{t('gematriaReadingFor', { value: gematriaValue! })}</h3>
+                  <p className={`text-lg whitespace-pre-wrap leading-relaxed text-brand-light-text dark:text-brand-text-light ${language === 'ar' ? 'text-right' : 'text-left'}`}>
+                    {reading}
+                    {isStreaming && <span className="inline-block w-1 h-5 bg-brand-accent animate-pulse ml-1 align-bottom"></span>}
+                  </p>
+              </div>
+            </Card>
+            <div className="text-center mt-6 flex flex-col sm:flex-row gap-4 justify-center">
+                <Button onClick={reset} disabled={isStreaming}>{t('newAnalysis')}</Button>
+            </div>
+          </div>
+        )}
+
+        <div className="mt-8">
+            <Button onClick={() => setPage(Page.HOME)} variant="secondary">{t('goHome')}</Button>
         </div>
-      )}
-
-      <Button onClick={() => setPage(Page.HOME)} className="mt-12 bg-opacity-50 border border-purple-400 hover:bg-purple-700">
-        العودة إلى الرئيسية
-      </Button>
+      </div>
     </div>
   );
 };

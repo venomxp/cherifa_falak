@@ -21,15 +21,17 @@ const SideNavLink: React.FC<{
     isActive: boolean;
     label: string;
     children: React.ReactNode;
-}> = ({ onClick, isActive, label, children }) => {
+    disabled?: boolean;
+}> = ({ onClick, isActive, label, children, disabled }) => {
     return (
         <button
-            onClick={onClick}
+            onClick={!disabled ? onClick : undefined}
+            disabled={disabled}
             className={`flex items-center w-full p-4 rounded-lg text-left rtl:text-right transition-colors duration-200 ${
                 isActive
                 ? 'bg-brand-accent text-brand-button-text'
                 : 'text-brand-light-text dark:text-brand-text-light/80 hover:bg-black/5 dark:hover:bg-white/10 dark:hover:text-white'
-            }`}
+            } ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
         >
             <div className="w-6 h-6 mr-4 rtl:mr-0 rtl:ml-4">{children}</div>
             <span className="text-lg font-semibold">{label}</span>
@@ -39,7 +41,7 @@ const SideNavLink: React.FC<{
 
 
 const SideNavMenu: React.FC<SideNavMenuProps> = ({ isOpen, closeMenu, currentPage, setPage }) => {
-  const { t, language } = useSettings();
+  const { t, language, userName } = useSettings();
 
   const handleNavigate = (page: Page) => {
     triggerHapticFeedback();
@@ -48,9 +50,9 @@ const SideNavMenu: React.FC<SideNavMenuProps> = ({ isOpen, closeMenu, currentPag
   };
 
   const navItems = [
-    { page: Page.HOME, label: t('home'), icon: <HomeIcon className="w-6 h-6" /> },
-    { page: Page.PROFILE, label: t('profile'), icon: <AccountIcon className="w-6 h-6" /> },
-    { page: Page.SETTINGS, label: t('settings'), icon: <SettingsNavIcon className="w-6 h-6" /> },
+    { page: Page.HOME, label: t('home'), icon: <HomeIcon className="w-6 h-6" />, disabled: !userName },
+    { page: Page.PROFILE, label: t('profile'), icon: <AccountIcon className="w-6 h-6" />, disabled: !userName },
+    { page: Page.SETTINGS, label: t('settings'), icon: <SettingsNavIcon className="w-6 h-6" />, disabled: false },
   ];
   
   const menuPositionClass = language === 'ar' ? 'right-0' : 'left-0';
@@ -81,6 +83,7 @@ const SideNavMenu: React.FC<SideNavMenuProps> = ({ isOpen, closeMenu, currentPag
                         onClick={() => handleNavigate(item.page)}
                         isActive={currentPage === item.page}
                         label={item.label}
+                        disabled={item.disabled}
                     >
                         {item.icon}
                     </SideNavLink>

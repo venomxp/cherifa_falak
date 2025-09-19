@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Page } from '../types.ts';
-import { getNumerologyReport } from '../services/geminiService.ts';
+import { getNumerologyReport, validateName } from '../services/geminiService.ts';
 import Button from './common/Button.tsx';
 import Card from './common/Card.tsx';
 import Spinner from './common/Spinner.tsx';
 import { useSettings } from '../hooks/useSettings.tsx';
+import DatePicker from './common/DatePicker.tsx';
 
 interface NumerologyPageProps {
   page: Page;
@@ -18,7 +19,9 @@ const NumerologyPage: React.FC<NumerologyPageProps> = ({ page, setPage }) => {
   const [report, setReport] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isStreaming, setIsStreaming] = useState<boolean>(false);
+  const [isValidating, setIsValidating] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
+  const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
 
   useEffect(() => {
     if (userName) setName(userName);
@@ -42,8 +45,21 @@ const NumerologyPage: React.FC<NumerologyPageProps> = ({ page, setPage }) => {
       setError(t('errorEnterNameAndDob'));
       return;
     }
-    setIsLoading(true);
+    setIsValidating(true);
     setError('');
+    
+    const validationResult = await validateName(name);
+    if (!validationResult.isValid) {
+        setError(validationResult.suggestion 
+            ? t('errorInvalidNameWithSuggestion', { suggestion: validationResult.suggestion })
+            : t('errorInvalidName')
+        );
+        setIsValidating(false);
+        return;
+    }
+
+    setIsValidating(false);
+    setIsLoading(true);
     setReport('');
     setIsStreaming(false);
     let fullReport = '';
@@ -70,6 +86,13 @@ const NumerologyPage: React.FC<NumerologyPageProps> = ({ page, setPage }) => {
         addReadingToHistory({ type: 'Numerology', title, content });
       }
     }
+  };
+
+  const formatDateForDisplay = (dateString: string, lang: string, placeholder: string): string => {
+    if (!dateString || !/^\d{4}-\d{2}-\d{2}$/.test(dateString)) return placeholder;
+    const [year, month, day] = dateString.split('-').map(Number);
+    const date = new Date(year, month - 1, day);
+    return date.toLocaleDateString(lang, { year: 'numeric', month: 'long', day: 'numeric' });
   };
 
   return (
@@ -101,26 +124,34 @@ const NumerologyPage: React.FC<NumerologyPageProps> = ({ page, setPage }) => {
                         <label htmlFor="dob" className="block text-lg font-semibold mb-2 text-brand-accent">
                         {t('enterYourDob')}
                         </label>
-                        <input
-                        id="dob"
-                        type="date"
-                        value={dob}
-                        onChange={(e) => setDob(e.target.value)}
-                        className="w-full p-3 bg-brand-light dark:bg-brand-dark text-brand-light-text dark:text-brand-text-light border border-brand-light-border dark:border-brand-border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-accent"
-                        />
+                        <button
+                          id="dob"
+                          onClick={() => setIsDatePickerOpen(true)}
+                          className="w-full p-3 bg-brand-light dark:bg-brand-dark text-brand-light-text dark:text-brand-text-light border border-brand-light-border dark:border-brand-border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-accent text-left rtl:text-right"
+                        >
+                          {formatDateForDisplay(dob, language, t('selectDate'))}
+                        </button>
                     </div>
                 </div>
-                <Button onClick={handleAnalyze} disabled={isLoading} className="w-full mt-6">
-                    {isLoading ? t('analyzing') : t('analyzeYourNumbers')}
+                <Button onClick={handleAnalyze} disabled={isLoading || isValidating} className="w-full mt-6">
+                    {isValidating ? t('validatingName') : isLoading ? t('analyzing') : t('analyzeYourNumbers')}
                 </Button>
             </Card>
+            {error && !isLoading && <p className="text-red-400 my-4 text-center">{error}</p>}
+            <DatePicker
+              isOpen={isDatePickerOpen}
+              onClose={() => setIsDatePickerOpen(false)}
+              onSet={(date) => { setDob(date); setIsDatePickerOpen(false); }}
+              onClear={() => { setDob(''); setIsDatePickerOpen(false); }}
+              initialDate={dob}
+            />
             <Button onClick={() => setPage(Page.HOME)} variant="secondary">{t('goHome')}</Button>
           </>
         )}
 
         {isLoading && <Spinner />}
         
-        {error && !isLoading && <p className="text-red-400 mt-4 text-center">{error}</p>}
+        {error && !isLoading && !report && !isStreaming && <p className="text-red-400 mt-4 text-center">{error}</p>}
 
         {(report || isStreaming) && !isLoading && (
           <div className="mt-8 w-full max-w-2xl animate-fade-in">

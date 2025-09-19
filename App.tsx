@@ -21,6 +21,9 @@ import TermsConditionsPage from './components/TermsConditionsPage.tsx';
 import HelpFAQPage from './components/HelpFAQPage.tsx';
 import { useSettings } from './hooks/useSettings.tsx';
 import Spinner from './components/common/Spinner.tsx';
+import TaleePage from './components/TaleePage.tsx';
+import GematriaPage from './components/GematriaPage.tsx';
+import WelcomeProfilePage from './components/WelcomeProfilePage.tsx';
 
 const App: React.FC = () => {
   const [showSplash, setShowSplash] = useState(true);
@@ -35,14 +38,27 @@ const App: React.FC = () => {
   const [falkGender, setFalkGender] = useState<string | null>(null);
   const [falkSkinTone, setFalkSkinTone] = useState<string | null>(null);
   const [falkCategory, setFalkCategory] = useState<string | null>(null);
-  const { language } = useSettings();
+  const { language, userName } = useSettings();
 
   // Navigation function that updates the URL hash.
   const navigate = (newPage: Page) => {
     const newPath = pageToPath[newPage];
-    if (window.location.hash !== '#' + newPath) {
-      window.location.hash = newPath;
+    const currentPath = window.location.hash.slice(1) || '/';
+
+    // No need to navigate if we're already there.
+    if (newPath === currentPath) {
+      return;
     }
+    
+    // Always use hash assignment for navigation. This is safer in the sandboxed
+    // environment and avoids the "refused to connect" error, at the cost of
+    // creating a history entry for every navigation.
+    window.location.hash = newPath;
+  };
+  
+  // Function to go back in browser history
+  const goBack = () => {
+    window.history.back();
   };
 
   // Effect to hide the splash screen after a delay.
@@ -88,7 +104,7 @@ const App: React.FC = () => {
   }, [showSplash, isMenuOpen]);
 
   // All pages now display the top navigation bar for consistency.
-  const pagesWithoutTopBar: Page[] = [];
+  const pagesWithoutTopBar: Page[] = [Page.WELCOME_PROFILE];
 
   // Function to render the correct page based on the current state
   const renderPage = () => {
@@ -96,9 +112,33 @@ const App: React.FC = () => {
       return <SplashScreen />;
     }
 
+    const preProfileAllowedPages = [
+        Page.WELCOME_PROFILE,
+        Page.SETTINGS,
+        Page.PRIVACY_POLICY,
+        Page.TERMS_CONDITIONS,
+        Page.HELP_FAQ,
+    ];
+
+    // Gatekeeping logic:
+    // If no profile exists, only allow access to the welcome page and settings-related pages.
+    // Otherwise, redirect to the welcome page.
+    if (!userName && !preProfileAllowedPages.includes(page)) {
+        navigate(Page.WELCOME_PROFILE);
+        return <Spinner />;
+    }
+
+    // If a profile exists and the user tries to navigate to the welcome page, redirect them to home.
+    if (userName && page === Page.WELCOME_PROFILE) {
+        navigate(Page.HOME);
+        return <Spinner />;
+    }
+
     switch (page) {
       case Page.HOME:
         return <HomePage setPage={navigate} />;
+      case Page.WELCOME_PROFILE:
+        return <WelcomeProfilePage setPage={navigate} />;
       case Page.TAROT:
         return <TarotReadingPage page={page} setPage={navigate} />;
       case Page.HOROSCOPE:
@@ -116,19 +156,19 @@ const App: React.FC = () => {
       case Page.FALK_LYOM_WELCOME:
         return <FalkLyomWelcomePage setPage={navigate} />;
       case Page.FALK_LYOM_GENDER:
-        return <FalkLyomGenderPage setPage={navigate} setFalkGender={setFalkGender} />;
+        return <FalkLyomGenderPage setPage={navigate} setFalkGender={setFalkGender} goBack={goBack} />;
       case Page.FALK_LYOM_SKIN_TONE:
         if (!falkGender) {
           navigate(Page.FALK_LYOM_GENDER);
           return <Spinner />;
         }
-        return <FalkLyomSkinTonePage setPage={navigate} setFalkSkinTone={setFalkSkinTone} gender={falkGender} />;
+        return <FalkLyomSkinTonePage setPage={navigate} setFalkSkinTone={setFalkSkinTone} gender={falkGender} goBack={goBack} />;
       case Page.FALK_LYOM_CATEGORY:
         if (!falkSkinTone) {
           navigate(Page.FALK_LYOM_SKIN_TONE);
           return <Spinner />;
         }
-        return <FalkLyomCategoryPage setPage={navigate} setFalkCategory={setFalkCategory} />;
+        return <FalkLyomCategoryPage setPage={navigate} setFalkCategory={setFalkCategory} goBack={goBack} />;
       case Page.FALK_LYOM_RESULT:
         if (!falkCategory) {
           navigate(Page.FALK_LYOM_CATEGORY);
@@ -136,13 +176,18 @@ const App: React.FC = () => {
         }
         return <FalkLyomResultPage page={page} setPage={navigate} gender={falkGender!} skinTone={falkSkinTone!} category={falkCategory!} />;
       case Page.PRIVACY_POLICY:
-        return <PrivacyPolicyPage page={page} setPage={navigate} />;
+        return <PrivacyPolicyPage page={page} setPage={navigate} goBack={goBack} />;
       case Page.TERMS_CONDITIONS:
-        return <TermsConditionsPage page={page} setPage={navigate} />;
+        return <TermsConditionsPage page={page} setPage={navigate} goBack={goBack} />;
       case Page.HELP_FAQ:
-        return <HelpFAQPage page={page} setPage={navigate} />;
+        return <HelpFAQPage page={page} setPage={navigate} goBack={goBack} />;
+      case Page.TALEE:
+        return <TaleePage page={page} setPage={navigate} />;
+      case Page.GEMATRIA:
+        return <GematriaPage page={page} setPage={navigate} />;
       default:
-        navigate(Page.HOME);
+        // Default navigation depends on whether a profile exists
+        navigate(userName ? Page.HOME : Page.WELCOME_PROFILE);
         return <Spinner />;
     }
   };

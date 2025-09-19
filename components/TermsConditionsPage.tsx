@@ -7,9 +7,10 @@ import { useSettings } from '../hooks/useSettings.tsx';
 interface TermsConditionsPageProps {
   page: Page;
   setPage: (page: Page) => void;
+  goBack: () => void;
 }
 
-const TermsConditionsPage: React.FC<TermsConditionsPageProps> = ({ page, setPage }) => {
+const TermsConditionsPage: React.FC<TermsConditionsPageProps> = ({ page, setPage, goBack }) => {
   const { t, language } = useSettings();
 
   return (
@@ -26,7 +27,7 @@ const TermsConditionsPage: React.FC<TermsConditionsPageProps> = ({ page, setPage
           </div>
         </Card>
         <div className="text-center mt-8 flex justify-center gap-4">
-            <Button onClick={() => setPage(Page.SETTINGS)} variant="secondary">
+            <Button onClick={goBack} variant="secondary">
                 &larr; {t('settings')}
             </Button>
             <Button onClick={() => setPage(Page.HOME)} variant="secondary">{t('goHome')}</Button>

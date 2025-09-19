@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Page, ZodiacSign } from '../types.ts';
 import { ZODIAC_SIGNS } from '../constants.ts';
-import { getZodiacCompatibilityAnalysis, getLoveCompatibilityAnalysis } from '../services/geminiService.ts';
+import { getZodiacCompatibilityAnalysis, getLoveCompatibilityAnalysis, validateName } from '../services/geminiService.ts';
 import Button from './common/Button.tsx';
 import Spinner from './common/Spinner.tsx';
 import Card from './common/Card.tsx';
@@ -20,6 +20,7 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ page, setPage }) 
   const [analysis, setAnalysis] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isStreaming, setIsStreaming] = useState<boolean>(false);
+  const [isValidating, setIsValidating] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
 
   // State for Zodiac mode
@@ -48,16 +49,44 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ page, setPage }) 
   };
 
   const handleAnalyze = async () => {
-    setIsLoading(true);
+    setIsValidating(true);
     setError('');
+    
+    let stream;
+    let title = '';
+
+    if (mode === 'names') {
+        if (!name1.trim() || !name2.trim()) {
+            setError(t('errorEnterBothNames'));
+            setIsValidating(false);
+            return;
+        }
+
+        // Validate first name
+        const name1Result = await validateName(name1);
+        if (!name1Result.isValid) {
+            setError(name1Result.suggestion ? t('errorInvalidNameWithSuggestion', { suggestion: name1Result.suggestion }) : t('errorInvalidName'));
+            setIsValidating(false);
+            return;
+        }
+
+        // Validate second name
+        const name2Result = await validateName(name2);
+        if (!name2Result.isValid) {
+            setError(name2Result.suggestion ? t('errorInvalidNameWithSuggestion', { suggestion: name2Result.suggestion }) : t('errorInvalidName'));
+            setIsValidating(false);
+            return;
+        }
+    }
+
+    setIsValidating(false);
+    setIsLoading(true);
     setAnalysis('');
     setPercentage(null);
     setIsStreaming(false);
     let fullAnalysis = '';
-    let title = '';
 
     try {
-      let stream;
       if (mode === 'zodiac') {
         if (!sign1 || !sign2) {
           setError(t('errorSelectTwoSigns'));
@@ -67,11 +96,6 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ page, setPage }) 
         title = t('compatibilityResultTitleZodiac', { sign1: t(sign1.translationKey), sign2: t(sign2.translationKey) });
         stream = await getZodiacCompatibilityAnalysis(t(sign1.translationKey), t(sign2.translationKey), language);
       } else {
-        if (!name1.trim() || !name2.trim()) {
-          setError(t('errorEnterBothNames'));
-          setIsLoading(false);
-          return;
-        }
         const compatPercentage = calculateNameCompatibility(name1, name2);
         setPercentage(compatPercentage);
         title = t('compatibilityResultTitleNames', { name1, name2 });
@@ -138,8 +162,8 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ page, setPage }) 
                         <input type="text" value={name2} onChange={(e) => setName2(e.target.value)} placeholder={t('secondName')} className="w-full p-3 bg-brand-light dark:bg-brand-dark text-brand-light-text dark:text-brand-text-light border border-brand-light-border dark:border-brand-border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-accent" dir={language === 'ar' ? 'rtl' : 'ltr'} />
                     </div>
                 )}
-                <Button onClick={handleAnalyze} disabled={isLoading} className="w-full mt-6">
-                    {isLoading ? t('analyzing') : t('analyzeCompatibility')}
+                <Button onClick={handleAnalyze} disabled={isLoading || isValidating} className="w-full mt-6">
+                    {isValidating ? t('validatingName') : isLoading ? t('analyzing') : t('analyzeCompatibility')}
                 </Button>
             </Card>
             <Button onClick={() => setPage(Page.HOME)} variant="secondary">{t('goHome')}</Button>

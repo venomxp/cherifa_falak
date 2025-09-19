@@ -7,6 +7,8 @@ import { getAvatarById } from '../assets/avatars.ts';
 import AvatarPickerModal from './common/AvatarPickerModal.tsx';
 import ReadingViewerModal from './common/ReadingViewerModal.tsx';
 import { triggerHapticFeedback } from '../utils/haptics.ts';
+import DatePicker from './common/DatePicker.tsx';
+import { validateName } from '../services/geminiService.ts';
 
 
 interface ProfilePageProps {
@@ -47,14 +49,17 @@ const TrashIcon = ({ className = 'w-5 h-5' }: { className?: string }) => (
 
 
 const ProfilePage: React.FC<ProfilePageProps> = ({ setPage }) => {
-    const { t, userName, setUserName, userDob, setUserDob, profilePic, setProfilePic, readingHistory, removeReadingFromHistory, clearReadingHistory } = useSettings();
+    const { t, userName, setUserName, userDob, setUserDob, profilePic, setProfilePic, readingHistory, removeReadingFromHistory, clearReadingHistory, language } = useSettings();
     const [isAvatarPickerOpen, setAvatarPickerOpen] = useState(false);
     const [viewingReading, setViewingReading] = useState<ReadingHistoryItem | null>(null);
+    const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
 
     // Local state for editing fields, initialized from global context
     const [localName, setLocalName] = useState(userName);
     const [localDob, setLocalDob] = useState(userDob);
     const [isSaved, setIsSaved] = useState(false);
+    const [isValidating, setIsValidating] = useState(false);
+    const [validationError, setValidationError] = useState('');
 
     // Keep local state in sync with global context (e.g., after logout)
     useEffect(() => {
@@ -69,7 +74,25 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ setPage }) => {
         clearReadingHistory();
     };
 
-    const handleSave = () => {
+    const handleSave = async () => {
+        setValidationError('');
+        if (!localName.trim()) {
+            setValidationError(t('errorEnterName'));
+            return;
+        }
+
+        setIsValidating(true);
+        const result = await validateName(localName);
+        setIsValidating(false);
+
+        if (!result.isValid) {
+            setValidationError(result.suggestion 
+                ? t('errorInvalidNameWithSuggestion', { suggestion: result.suggestion }) 
+                : t('errorInvalidName')
+            );
+            return;
+        }
+
         setUserName(localName);
         setUserDob(localDob);
         setIsSaved(true);
@@ -89,6 +112,13 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ setPage }) => {
             day: 'numeric'
         });
     }
+
+    const formatDateForDisplay = (dateString: string, lang: string, placeholder: string): string => {
+      if (!dateString || !/^\d{4}-\d{2}-\d{2}$/.test(dateString)) return placeholder;
+      const [year, month, day] = dateString.split('-').map(Number);
+      const date = new Date(year, month - 1, day);
+      return date.toLocaleDateString(lang, { year: 'numeric', month: 'long', day: 'numeric' });
+    };
 
     const hasChanges = localName !== userName || localDob !== userDob;
     const AvatarComponent = getAvatarById(profilePic);
@@ -149,20 +179,21 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ setPage }) => {
                               <div className="flex-shrink-0 w-8 text-center"><CalendarIcon className="w-6 h-6 mx-auto text-brand-accent" /></div>
                               <div className="flex-1">
                                   <label htmlFor="userDobInput" className="block text-sm font-semibold text-brand-accent/80">{t('userDob')}</label>
-                                  <input
+                                  <button
                                       id="userDobInput"
-                                      type="date"
-                                      value={localDob}
-                                      onChange={(e) => setLocalDob(e.target.value)}
-                                      className="w-full text-lg bg-transparent text-brand-light-text dark:text-white focus:outline-none p-1 -m-1 rounded focus:bg-black/10 dark:focus:bg-brand-dark/50 transition-colors"
-                                  />
+                                      onClick={() => setIsDatePickerOpen(true)}
+                                      className="w-full text-lg bg-transparent text-brand-light-text dark:text-white focus:outline-none p-1 -m-1 rounded focus:bg-black/10 dark:focus:bg-brand-dark/50 transition-colors text-left rtl:text-right"
+                                  >
+                                    {formatDateForDisplay(localDob, language, t('selectDate'))}
+                                  </button>
                               </div>
                           </div>
                       </div>
                   </Card>
                   
-                  <Button onClick={handleSave} disabled={!hasChanges || isSaved} className="w-full">
-                     {isSaved ? t('profileSaved') : t('saveProfile')}
+                  {validationError && <p className="text-red-400 text-center text-sm">{validationError}</p>}
+                  <Button onClick={handleSave} disabled={!hasChanges || isSaved || isValidating} className="w-full">
+                     {isValidating ? t('validatingName') : isSaved ? t('profileSaved') : t('saveProfile')}
                   </Button>
                 </div>
                 
@@ -215,6 +246,13 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ setPage }) => {
 
             </div>
 
+            <DatePicker
+              isOpen={isDatePickerOpen}
+              onClose={() => setIsDatePickerOpen(false)}
+              onSet={(date) => { setLocalDob(date); setIsDatePickerOpen(false); }}
+              onClear={() => { setLocalDob(''); setIsDatePickerOpen(false); }}
+              initialDate={localDob}
+            />
             <AvatarPickerModal
                 isOpen={isAvatarPickerOpen}
                 onClose={() => setAvatarPickerOpen(false)}

@@ -7,9 +7,10 @@ import { useSettings } from '../hooks/useSettings.tsx';
 interface FalkLyomGenderPageProps {
   setPage: (page: Page) => void;
   setFalkGender: (gender: string) => void;
+  goBack: () => void;
 }
 
-const FalkLyomGenderPage: React.FC<FalkLyomGenderPageProps> = ({ setPage, setFalkGender }) => {
+const FalkLyomGenderPage: React.FC<FalkLyomGenderPageProps> = ({ setPage, setFalkGender, goBack }) => {
   const { t } = useSettings();
 
   const handleSelect = (genderKey: 'falkMale' | 'falkFemale') => {
@@ -35,7 +36,7 @@ const FalkLyomGenderPage: React.FC<FalkLyomGenderPageProps> = ({ setPage, setFal
       </Card>
       
       <div className="mt-4 flex gap-4">
-        <Button onClick={() => setPage(Page.FALK_LYOM_WELCOME)} variant="secondary">
+        <Button onClick={goBack} variant="secondary">
           &larr; {t('goBack')}
         </Button>
         <Button onClick={() => setPage(Page.HOME)} variant="secondary">{t('goHome')}</Button>

@@ -15,6 +15,7 @@ import { translations } from './localization/translations.ts';
 
 export enum Page {
   SPLASH,
+  WELCOME_PROFILE,
   HOME,
   TAROT,
   HOROSCOPE,
@@ -31,11 +32,14 @@ export enum Page {
   PRIVACY_POLICY,
   TERMS_CONDITIONS,
   HELP_FAQ,
+  TALEE,
+  GEMATRIA,
 }
 
 // Maps Page enums to URL hash paths for routing
 export const pageToPath: Record<Page, string> = {
   [Page.SPLASH]: '/splash',
+  [Page.WELCOME_PROFILE]: '/welcome',
   [Page.HOME]: '/',
   [Page.TAROT]: '/tarot',
   [Page.HOROSCOPE]: '/horoscope',
@@ -52,6 +56,8 @@ export const pageToPath: Record<Page, string> = {
   [Page.PRIVACY_POLICY]: '/privacy-policy',
   [Page.TERMS_CONDITIONS]: '/terms-conditions',
   [Page.HELP_FAQ]: '/help-faq',
+  [Page.TALEE]: '/talee',
+  [Page.GEMATRIA]: '/gematria',
 };
 
 // Maps URL hash paths back to Page enums
@@ -80,7 +86,7 @@ export interface MoroccanTarotCard {
   key: string;
 }
 
-export type ReadingType = 'Tarot' | 'Numerology' | 'Compatibility' | 'Horoscope' | 'Falk Lyom';
+export type ReadingType = 'Tarot' | 'Numerology' | 'Compatibility' | 'Horoscope' | 'Falk Lyom' | 'Tale\'e' | 'Gematria';
 
 export interface ReadingHistoryItem {
   id: number; // Using timestamp as a unique ID

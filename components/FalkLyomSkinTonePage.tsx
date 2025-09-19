@@ -8,9 +8,10 @@ interface FalkLyomSkinTonePageProps {
   setPage: (page: Page) => void;
   setFalkSkinTone: (skinTone: string) => void;
   gender: string;
+  goBack: () => void;
 }
 
-const FalkLyomSkinTonePage: React.FC<FalkLyomSkinTonePageProps> = ({ setPage, setFalkSkinTone, gender }) => {
+const FalkLyomSkinTonePage: React.FC<FalkLyomSkinTonePageProps> = ({ setPage, setFalkSkinTone, gender, goBack }) => {
   const { t } = useSettings();
 
   const handleSelect = (skinTone: string) => {
@@ -49,7 +50,7 @@ const FalkLyomSkinTonePage: React.FC<FalkLyomSkinTonePageProps> = ({ setPage, se
       </Card>
 
       <div className="mt-4 flex gap-4">
-        <Button onClick={() => setPage(Page.FALK_LYOM_GENDER)} variant="secondary">
+        <Button onClick={goBack} variant="secondary">
           &larr; {t('goBack')}
         </Button>
         <Button onClick={() => setPage(Page.HOME)} variant="secondary">{t('goHome')}</Button>

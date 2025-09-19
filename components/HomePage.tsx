@@ -1,4 +1,5 @@
 
+
 import React from 'react';
 import { Page } from '../types.ts';
 import { useSettings } from '../hooks/useSettings.tsx';
@@ -14,10 +15,12 @@ const HomePage: React.FC<HomePageProps> = ({ setPage }) => {
   // Update categories to include gradient and icon details
   const categories = [
     { page: Page.FALK_LYOM_WELCOME, title: t('falkLyom'), description: t('falkLyomDesc'), icon: <img src="https://i.imgur.com/CXOWGWN.png" alt={t('falkLyom')} className="w-full h-full object-contain" />, gradient: 'bg-gradient-to-br from-purple-500 to-indigo-600' },
+    { page: Page.TALEE, title: t('taleeReading'), description: t('taleeReadingDesc'), icon: <img src="https://i.imgur.com/8aV7s4W.png" alt={t('taleeReading')} className="w-full h-full object-contain" />, gradient: 'bg-gradient-to-br from-blue-600 to-slate-800' },
     { page: Page.TAROT, title: t('tarotReading'), description: t('tarotReadingDesc'), icon: <img src="https://i.imgur.com/bpJSvkH.png" alt={t('tarotReading')} className="w-full h-full object-contain" />, gradient: 'bg-gradient-to-br from-cyan-400 to-blue-500' },
-    { page: Page.HOROSCOPE, title: t('horoscopes'), description: t('horoscopesDesc'), icon: <img src="https://i.imgur.com/VYkiB7K.png" alt={t('horoscopes')} className="w-full h-full object-contain" />, gradient: 'bg-gradient-to-br from-orange-400 to-red-500' },
+    { page: Page.GEMATRIA, title: t('gematria'), description: t('gematriaDesc'), icon: <img src="https://i.imgur.com/7g8h4jK.png" alt={t('gematria')} className="w-full h-full object-contain" />, gradient: 'bg-gradient-to-br from-amber-400 to-purple-600' },
     { page: Page.NUMEROLOGY, title: t('numerology'), description: t('numerologyDesc'), icon: <img src="https://i.imgur.com/uw9ATZc.png" alt={t('numerology')} className="w-full h-full object-contain" />, gradient: 'bg-gradient-to-br from-teal-400 to-green-500' },
     { page: Page.COMPATIBILITY, title: t('compatibility'), description: t('compatibilityDesc'), icon: <img src="https://i.imgur.com/DrkYXfC.png" alt={t('compatibility')} className="w-full h-full object-contain" />, gradient: 'bg-gradient-to-br from-pink-500 to-rose-500' },
+    { page: Page.HOROSCOPE, title: t('horoscopes'), description: t('horoscopesDesc'), icon: <img src="https://i.imgur.com/VYkiB7K.png" alt={t('horoscopes')} className="w-full h-full object-contain" />, gradient: 'bg-gradient-to-br from-orange-400 to-red-500' },
     { page: Page.PRIVATE_READING, title: t('privateReading'), description: t('privateReadingDesc'), icon: <img src="https://i.imgur.com/uQxJC94.png" alt={t('privateReading')} className="w-full h-full object-contain" />, gradient: 'bg-gradient-to-br from-slate-600 to-gray-800' },
   ];
 

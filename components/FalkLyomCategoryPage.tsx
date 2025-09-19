@@ -7,9 +7,10 @@ import { useSettings } from '../hooks/useSettings.tsx';
 interface FalkLyomCategoryPageProps {
   setPage: (page: Page) => void;
   setFalkCategory: (category: string) => void;
+  goBack: () => void;
 }
 
-const FalkLyomCategoryPage: React.FC<FalkLyomCategoryPageProps> = ({ setPage, setFalkCategory }) => {
+const FalkLyomCategoryPage: React.FC<FalkLyomCategoryPageProps> = ({ setPage, setFalkCategory, goBack }) => {
   const { t } = useSettings();
 
   const handleSelect = (categoryKey: 'falkLove' | 'falkWork' | 'falkLuck') => {
@@ -38,7 +39,7 @@ const FalkLyomCategoryPage: React.FC<FalkLyomCategoryPageProps> = ({ setPage, se
       </Card>
 
       <div className="mt-4 flex gap-4">
-        <Button onClick={() => setPage(Page.FALK_LYOM_SKIN_TONE)} variant="secondary">
+        <Button onClick={goBack} variant="secondary">
           &larr; {t('goBack')}
         </Button>
         <Button onClick={() => setPage(Page.HOME)} variant="secondary">{t('goHome')}</Button>

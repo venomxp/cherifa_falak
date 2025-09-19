@@ -7,6 +7,7 @@ import Button from './common/Button.tsx';
 import Card from './common/Card.tsx';
 import Spinner from './common/Spinner.tsx';
 import { useSettings } from '../hooks/useSettings.tsx';
+import DatePicker from './common/DatePicker.tsx';
 
 interface HoroscopePageProps {
   page: Page;
@@ -28,6 +29,7 @@ const HoroscopePage: React.FC<HoroscopePageProps> = ({ page, setPage }) => {
   const [showSignFinder, setShowSignFinder] = useState<boolean>(false);
   const [birthDate, setBirthDate] = useState<string>('');
   const [foundSign, setFoundSign] = useState<ZodiacSign | null>(null);
+  const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
 
   const fetchHoroscope = async (sign: ZodiacSign, selectedPeriod: Period) => {
     setIsLoading(true);
@@ -101,18 +103,37 @@ const HoroscopePage: React.FC<HoroscopePageProps> = ({ page, setPage }) => {
     setFoundSign(sign);
   };
   
+  const formatDateForDisplay = (dateString: string, lang: string, placeholder: string): string => {
+    if (!dateString || !/^\d{4}-\d{2}-\d{2}$/.test(dateString)) return placeholder;
+    const [year, month, day] = dateString.split('-').map(Number);
+    const date = new Date(year, month - 1, day);
+    return date.toLocaleDateString(lang, { year: 'numeric', month: 'long', day: 'numeric' });
+  };
+
   const renderSignFinder = () => (
     <Card className="w-full mt-6 p-6 text-center animate-fade-in">
       <h3 className="text-2xl font-bold mb-4 text-brand-accent">{t('discoverYourSignTitle')}</h3>
       <p className="mb-4 text-brand-light-text/80 dark:text-brand-text-light/80">{t('discoverYourSignBody')}</p>
-      <input
-        type="date"
-        value={birthDate}
-        onChange={(e) => {
-          setBirthDate(e.target.value);
-          setFoundSign(null); // Reset on change
+      <button
+        onClick={() => setIsDatePickerOpen(true)}
+        className="w-full p-3 bg-brand-light dark:bg-brand-dark text-brand-light-text dark:text-brand-text-light border border-brand-light-border dark:border-brand-border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-accent mb-4 text-left rtl:text-right"
+      >
+        {formatDateForDisplay(birthDate, language, t('selectDate'))}
+      </button>
+      <DatePicker
+        isOpen={isDatePickerOpen}
+        onClose={() => setIsDatePickerOpen(false)}
+        onSet={(date) => {
+          setBirthDate(date);
+          setFoundSign(null);
+          setIsDatePickerOpen(false);
         }}
-        className="w-full p-3 bg-brand-light dark:bg-brand-dark text-brand-light-text dark:text-brand-text-light border border-brand-light-border dark:border-brand-border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-accent mb-4"
+        onClear={() => {
+          setBirthDate('');
+          setFoundSign(null);
+          setIsDatePickerOpen(false);
+        }}
+        initialDate={birthDate}
       />
       <Button onClick={handleFindSign} disabled={!birthDate}>{t('findMySign')}</Button>
       {foundSign && (
