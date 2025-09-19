@@ -10,8 +10,8 @@ export const getHoroscope = async (signValue: string, language: 'ar' | 'en' | 'f
     const response = await fetch(`${API_BASE_URL}?zodiac=${signValue}`, {
       method: 'GET',
       headers: {
-        // The user's API key is hardcoded to ensure the app works immediately after download.
-        'X-Api-Key': "9n1thBTMWxfws4ZUut8rKQ==J7GtRHUfs0tjS1pC",
+        // The API key is now read from environment variables for security.
+        'X-Api-Key': process.env.NINJA_API_KEY,
       },
     });
 
