@@ -17,12 +17,13 @@ interface HoroscopePageProps {
 type Period = 'daily' | 'weekly' | 'monthly';
 
 const HoroscopePage: React.FC<HoroscopePageProps> = ({ page, setPage }) => {
-  const { language, t, addReadingToHistory } = useSettings();
+  const { language, t, addReadingToHistory, readingHistory } = useSettings();
   const [selectedSign, setSelectedSign] = useState<ZodiacSign | null>(null);
   const [period, setPeriod] = useState<Period>('daily');
   const [horoscope, setHoroscope] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isStreaming, setIsStreaming] = useState<boolean>(false);
+  const [isCached, setIsCached] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
   
   // State for the sign finder tool
@@ -36,14 +37,32 @@ const HoroscopePage: React.FC<HoroscopePageProps> = ({ page, setPage }) => {
     setError('');
     setHoroscope('');
     setIsStreaming(false);
+    setIsCached(false);
     let fullHoroscope = '';
 
     try {
+      const todayStr = new Date().toISOString().split('T')[0];
+      const expectedTitle = `${t(sign.translationKey)} - ${t(selectedPeriod)}`;
+      const todaysReading = readingHistory.find(item =>
+        item.type === 'Horoscope' &&
+        item.title === expectedTitle &&
+        item.date.startsWith(todayStr)
+      );
+
+      if (todaysReading) {
+          setTimeout(() => {
+              setHoroscope(todaysReading.content);
+              setIsCached(true);
+              setIsLoading(false);
+          }, 500);
+          return;
+      }
+
       if (selectedPeriod === 'daily') {
         const result = await getHoroscope(sign.value, language);
         fullHoroscope = result;
         setHoroscope(result);
-      } else { // weekly or monthly use streaming
+      } else { // weekly or monthly
         const stream = await getGeneratedHoroscope(t(sign.translationKey), selectedPeriod, language);
         setIsLoading(false);
         setIsStreaming(true);
@@ -60,7 +79,7 @@ const HoroscopePage: React.FC<HoroscopePageProps> = ({ page, setPage }) => {
     } finally {
       setIsLoading(false);
       setIsStreaming(false);
-      if (fullHoroscope && !fullHoroscope.includes('عذراً') && !fullHoroscope.includes('Sorry')) {
+      if (fullHoroscope && !fullHoroscope.includes('عذراً') && !fullHoroscope.includes('Sorry') && !isCached) {
         const title = `${t(sign.translationKey)} - ${t(period)}`;
         addReadingToHistory({ type: 'Horoscope', title, content: fullHoroscope });
       }
@@ -135,7 +154,7 @@ const HoroscopePage: React.FC<HoroscopePageProps> = ({ page, setPage }) => {
         }}
         initialDate={birthDate}
       />
-      <Button onClick={handleFindSign} disabled={!birthDate}>{t('findMySign')}</Button>
+      <Button onClick={handleFindSign} disabled={!birthDate} variant="primary">{t('findMySign')}</Button>
       {foundSign && (
         <div className="mt-6 p-4 bg-brand-accent/10 border border-brand-accent/20 rounded-lg">
           <p className="text-lg">{t('yourSignIs')}</p>
@@ -205,10 +224,13 @@ const HoroscopePage: React.FC<HoroscopePageProps> = ({ page, setPage }) => {
             ) : error ? (
                 <p className="text-red-400 text-center">{error}</p>
             ) : (
-                <p className={`text-lg whitespace-pre-wrap leading-relaxed p-4 text-brand-light-text dark:text-brand-text-light ${language === 'ar' ? 'text-right' : 'text-left'}`}>
-                  {horoscope}
-                  {isStreaming && <span className="inline-block w-1 h-5 bg-brand-accent animate-pulse ml-1 align-bottom"></span>}
-                </p>
+                <>
+                  {isCached && <p className="text-center text-sm text-brand-accent italic mb-4">{t('cachedReadingMessage')}</p>}
+                  <p className={`text-lg whitespace-pre-wrap leading-relaxed p-4 text-brand-light-text dark:text-brand-text-light ${language === 'ar' ? 'text-right' : 'text-left'}`}>
+                    {horoscope}
+                    {isStreaming && <span className="inline-block w-1 h-5 bg-brand-accent animate-pulse ml-1 align-bottom"></span>}
+                  </p>
+                </>
             )}
         </Card>
         <div className="text-center mt-6">

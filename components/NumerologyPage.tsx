@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Page } from '../types.ts';
-import { getNumerologyReport, validateName } from '../services/geminiService.ts';
+import { getNumerologyReport } from '../services/geminiService.ts';
 import Button from './common/Button.tsx';
 import Card from './common/Card.tsx';
 import Spinner from './common/Spinner.tsx';
@@ -13,13 +13,13 @@ interface NumerologyPageProps {
 }
 
 const NumerologyPage: React.FC<NumerologyPageProps> = ({ page, setPage }) => {
-  const { language, t, userName, userDob, addReadingToHistory } = useSettings();
+  const { language, t, userName, userDob, addReadingToHistory, readingHistory } = useSettings();
   const [name, setName] = useState<string>('');
   const [dob, setDob] = useState<string>('');
   const [report, setReport] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isStreaming, setIsStreaming] = useState<boolean>(false);
-  const [isValidating, setIsValidating] = useState<boolean>(false);
+  const [isCached, setIsCached] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
 
@@ -45,25 +45,33 @@ const NumerologyPage: React.FC<NumerologyPageProps> = ({ page, setPage }) => {
       setError(t('errorEnterNameAndDob'));
       return;
     }
-    setIsValidating(true);
     setError('');
+    setIsCached(false);
     
-    const validationResult = await validateName(name);
-    if (!validationResult.isValid) {
-        setError(validationResult.suggestion 
-            ? t('errorInvalidNameWithSuggestion', { suggestion: validationResult.suggestion })
-            : t('errorInvalidName')
-        );
-        setIsValidating(false);
-        return;
-    }
-
-    setIsValidating(false);
     setIsLoading(true);
     setReport('');
     setIsStreaming(false);
-    let fullReport = '';
 
+    // Check history for a reading from today
+    const todayStr = new Date().toISOString().split('T')[0];
+    const expectedTitle = t('numerologyReadingHistoryTitle', { name, dob });
+    const todaysReading = readingHistory.find(item => 
+        item.type === 'Numerology' &&
+        item.title === expectedTitle &&
+        item.date.startsWith(todayStr)
+    );
+
+    if (todaysReading) {
+        setTimeout(() => {
+            setReport(todaysReading.content);
+            setIsCached(true);
+            setIsLoading(false);
+        }, 500);
+        return;
+    }
+
+    // If not cached, fetch from API
+    let fullReport = '';
     try {
       const gematriaValue = calculateGematria(name);
       const stream = await getNumerologyReport(name, dob, gematriaValue, language);
@@ -81,9 +89,8 @@ const NumerologyPage: React.FC<NumerologyPageProps> = ({ page, setPage }) => {
       setIsLoading(false);
       setIsStreaming(false);
       if (fullReport) {
-        const title = t('yourNumerologyReport');
-        const content = `**${t('userName')}:** ${name}\n**${t('userDob')}:** ${dob}\n\n---\n\n${fullReport}`;
-        addReadingToHistory({ type: 'Numerology', title, content });
+        const title = t('numerologyReadingHistoryTitle', { name, dob });
+        addReadingToHistory({ type: 'Numerology', title, content: fullReport });
       }
     }
   };
@@ -94,6 +101,12 @@ const NumerologyPage: React.FC<NumerologyPageProps> = ({ page, setPage }) => {
     const date = new Date(year, month - 1, day);
     return date.toLocaleDateString(lang, { year: 'numeric', month: 'long', day: 'numeric' });
   };
+
+  const reset = () => {
+    setReport('');
+    setIsCached(false);
+    setError('');
+  }
 
   return (
     <div className="container mx-auto p-4 flex flex-col items-center flex-grow animate-fade-in box-border pb-24">
@@ -133,8 +146,8 @@ const NumerologyPage: React.FC<NumerologyPageProps> = ({ page, setPage }) => {
                         </button>
                     </div>
                 </div>
-                <Button onClick={handleAnalyze} disabled={isLoading || isValidating} className="w-full mt-6">
-                    {isValidating ? t('validatingName') : isLoading ? t('analyzing') : t('analyzeYourNumbers')}
+                <Button onClick={handleAnalyze} disabled={isLoading} className="w-full mt-6" variant="primary">
+                    {isLoading ? t('analyzing') : t('analyzeYourNumbers')}
                 </Button>
             </Card>
             {error && !isLoading && <p className="text-red-400 my-4 text-center">{error}</p>}
@@ -158,6 +171,7 @@ const NumerologyPage: React.FC<NumerologyPageProps> = ({ page, setPage }) => {
             <Card>
               <div className="p-4">
                   <h3 className="text-2xl font-bold text-brand-accent mb-4 text-center">{t('yourNumerologyReport')}</h3>
+                   {isCached && <p className="text-center text-sm text-brand-accent italic mb-4">{t('cachedReadingMessage')}</p>}
                   <p className={`text-lg whitespace-pre-wrap leading-relaxed text-brand-light-text dark:text-brand-text-light ${language === 'ar' ? 'text-right' : 'text-left'}`}>
                     {report}
                     {isStreaming && <span className="inline-block w-1 h-5 bg-brand-accent animate-pulse ml-1 align-bottom"></span>}
@@ -165,7 +179,7 @@ const NumerologyPage: React.FC<NumerologyPageProps> = ({ page, setPage }) => {
               </div>
             </Card>
             <div className="text-center mt-6 flex flex-col sm:flex-row gap-4 justify-center">
-                <Button onClick={() => setReport('')} disabled={isStreaming}>{t('newAnalysis')}</Button>
+                <Button onClick={reset} disabled={isStreaming} variant="primary">{t('newAnalysis')}</Button>
                 <Button onClick={() => setPage(Page.HOME)} variant="secondary">{t('goHome')}</Button>
             </div>
           </div>

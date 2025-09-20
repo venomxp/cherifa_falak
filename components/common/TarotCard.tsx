@@ -56,16 +56,26 @@ const TarotCard: React.FC<TarotCardProps> = ({ children, className = '', isFlipp
 
   const cardFrontContent = cardNameEnglish && cardNameArabic ? (
     <div className="flex flex-col items-center justify-center h-full w-full text-center relative bg-brand-light-dark rounded-md p-3">
-      {/* Ornate borders */}
-      <div className="absolute inset-2 border border-brand-accent/50 rounded-md"></div>
-      <div className="absolute inset-3 border border-brand-accent/20 rounded-sm"></div>
-      
-      {/* Text content on top */}
-      <div className="relative z-10 flex flex-col justify-center items-center p-4">
-          <p className="text-2xl font-['Cinzel_Decorative'] font-bold text-brand-accent tracking-wider" style={{textShadow: '1px 1px 3px rgba(0,0,0, 0.5)'}}>{cardNameEnglish}</p>
-          <div className="w-1/2 h-px bg-brand-accent/70 my-2"></div>
-          <p className="text-xl font-['Tajawal'] font-semibold text-brand-text-light">{cardNameArabic}</p>
-      </div>
+        {/* Ornate SVG Frame */}
+        <svg className="absolute inset-0 w-full h-full text-brand-accent/80" fill="none" viewBox="0 0 100 150" strokeWidth="0.5">
+            {/* Outer border */}
+            <rect x="5" y="5" width="90" height="140" rx="4" stroke="currentColor" strokeWidth="1"/>
+            {/* Inner border */}
+            <rect x="9" y="9" width="82" height="132" rx="2" stroke="currentColor"/>
+
+            {/* Corner Decorations - a simple flourish */}
+            <path d="M 9 20 C 12 15, 15 12, 20 9" stroke="currentColor"/>
+            <path d="M 80 9 C 85 12, 88 15, 91 20" stroke="currentColor"/>
+            <path d="M 9 130 C 12 135, 15 138, 20 141" stroke="currentColor"/>
+            <path d="M 80 141 C 85 138, 88 135, 91 130" stroke="currentColor"/>
+        </svg>
+
+        {/* Text content on top */}
+        <div className="relative z-10 flex flex-col justify-center items-center p-4">
+            <p className="text-2xl font-['Cinzel_Decorative'] font-bold text-brand-accent tracking-wider" style={{textShadow: '1px 1px 3px rgba(0,0,0, 0.5)'}}>{cardNameEnglish}</p>
+            <div className="w-1/2 h-px bg-brand-accent/70 my-2"></div>
+            <p className="text-xl font-['Tajawal'] font-semibold text-brand-text-light">{cardNameArabic}</p>
+        </div>
     </div>
   ) : (
     children

@@ -43,7 +43,7 @@ export const getHoroscope = async (signValue: string, language: 'ar' | 'en' | 'f
   } catch (error) {
     console.error("Error fetching horoscope:", error);
     const specificError = error instanceof Error ? error.message : "يرجى التأكد من صلاحية مفتاح الـ API.";
-    if (language === 'ar') return `عذراً، حدث خطأ أثناء جلب الطالع. (${specificError})`;
+    if (language === 'ar') return `عذراً، حدث خطأ أثناء جلب البرج. (${specificError})`;
     if (language === 'fr') return `Désolé, une erreur s'est produite lors de la récupération de l'horoscope. (${specificError})`;
     return `Sorry, an error occurred while fetching the horoscope. (${specificError})`;
   }

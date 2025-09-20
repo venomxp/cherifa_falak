@@ -38,9 +38,8 @@ const TarotReadingPage: React.FC<TarotReadingPageProps> = ({ page, setPage }) =>
       setIsStreaming(true);
 
       for await (const chunk of stream) {
-        const textChunk = chunk.text;
-        fullInterpretation += textChunk;
-        setInterpretation((prev) => prev + textChunk);
+        fullInterpretation += chunk.text;
+        setInterpretation((prev) => prev + chunk.text);
       }
     } catch (err) {
       setError(t('errorTarot'));
@@ -48,10 +47,11 @@ const TarotReadingPage: React.FC<TarotReadingPageProps> = ({ page, setPage }) =>
     } finally {
       setIsStreaming(false);
       if (fullInterpretation) {
+        const historyItemContent = JSON.stringify({ card, interpretation: fullInterpretation });
         addReadingToHistory({
           type: 'Tarot',
-          title: card.english,
-          content: fullInterpretation,
+          title: t('tarotReadingHistoryTitle'),
+          content: historyItemContent,
         });
       }
     }
@@ -59,13 +59,16 @@ const TarotReadingPage: React.FC<TarotReadingPageProps> = ({ page, setPage }) =>
   
   const handleCardSelect = () => {
     triggerHapticFeedback();
+    setIsLoading(true);
+    setStep('reading');
+    drawNewCard();
+  };
+
+  const drawNewCard = () => {
     const cardIndex = Math.floor(Math.random() * TAROT_CARDS.length);
     const actualCard = TAROT_CARDS[cardIndex];
     setDrawnCard(actualCard);
-
-    setStep('reading');
     
-    // A short delay to allow the view to change before the card flips
     setTimeout(() => {
         setIsFlipped(true);
         fetchInterpretation(actualCard);
@@ -131,7 +134,7 @@ const TarotReadingPage: React.FC<TarotReadingPageProps> = ({ page, setPage }) =>
           </Card>
         )}
         <div className="text-center mt-6 flex flex-col sm:flex-row gap-4 justify-center">
-            <Button onClick={resetReading} disabled={isStreaming}>{t('drawAnotherCard')}</Button>
+            <Button onClick={resetReading} disabled={isStreaming} variant="primary">{t('drawAnotherCard')}</Button>
             <Button onClick={() => setPage(Page.HOME)} variant="secondary">{t('goHome')}</Button>
         </div>
       </div>

@@ -34,6 +34,7 @@ export enum Page {
   HELP_FAQ,
   TALEE,
   GEMATRIA,
+  READING_HISTORY,
 }
 
 // Maps Page enums to URL hash paths for routing
@@ -58,6 +59,7 @@ export const pageToPath: Record<Page, string> = {
   [Page.HELP_FAQ]: '/help-faq',
   [Page.TALEE]: '/talee',
   [Page.GEMATRIA]: '/gematria',
+  [Page.READING_HISTORY]: '/profile/history',
 };
 
 // Maps URL hash paths back to Page enums

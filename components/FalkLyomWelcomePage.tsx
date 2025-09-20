@@ -36,7 +36,7 @@ const FalkLyomWelcomePage: React.FC<FalkLyomWelcomePageProps> = ({ setPage }) =>
       </div>
 
       <div className="flex flex-col gap-4 items-center">
-        <Button onClick={() => setPage(Page.FALK_LYOM_GENDER)} className="text-xl px-10 py-4">
+        <Button onClick={() => setPage(Page.FALK_LYOM_GENDER)} className="text-xl px-10 py-4" variant="primary">
           {t('startReading')}
         </Button>
         <Button onClick={() => setPage(Page.HOME)} variant="secondary">

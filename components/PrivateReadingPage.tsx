@@ -23,7 +23,7 @@ const PrivateReadingPage: React.FC<PrivateReadingPageProps> = ({ setPage }) => {
         </p>
         <div className="mt-8">
             <a href={whatsappLink} target="_blank" rel="noopener noreferrer">
-              <Button className="w-full text-lg">
+              <Button className="w-full text-lg" variant="primary">
                 {t('bookOnWhatsApp')}
               </Button>
             </a>

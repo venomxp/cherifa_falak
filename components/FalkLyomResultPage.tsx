@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Page, MoroccanTarotCard } from '../types.ts';
-import { getFalkLyomInterpretation } from '../services/geminiService.ts';
 import { MOROCCAN_TAROT_CARDS } from '../constants.ts';
+import { falkLyomInterpretations } from '../localization/falkLyomData.ts';
 import Button from './common/Button.tsx';
 import Spinner from './common/Spinner.tsx';
 import Card from './common/Card.tsx';
@@ -23,38 +23,57 @@ const FalkLyomResultPage: React.FC<FalkLyomResultPageProps> = ({ page, setPage, 
   const [error, setError] = useState<string>('');
 
   useEffect(() => {
-    const fetchInterpretation = async () => {
+    const getLocalReading = () => {
+      if (!category || !gender || !skinTone) return;
+
       setIsLoading(true);
       setError('');
       setInterpretation('');
-      
+
       // Draw a random card
       const cardIndex = Math.floor(Math.random() * MOROCCAN_TAROT_CARDS.length);
       const card = MOROCCAN_TAROT_CARDS[cardIndex];
       setDrawnCard(card);
 
+      // Get local interpretation
       try {
-        const result = await getFalkLyomInterpretation(card.name, category, gender, skinTone, language);
+        // Map the translated category string back to a simple key for the data object
+        let categoryKey: 'love' | 'work' | 'luck';
+        if (category === t('loveCategory')) {
+            categoryKey = 'love';
+        } else if (category === t('workCategory')) {
+            categoryKey = 'work';
+        } else {
+            categoryKey = 'luck';
+        }
+        
+        const interpretationsForCard = falkLyomInterpretations[language][card.key][categoryKey];
+        const randomIndex = Math.floor(Math.random() * interpretationsForCard.length);
+        const result = interpretationsForCard[randomIndex];
+        
         setInterpretation(result);
+
         if (result) {
+            const historyItemContent = JSON.stringify({ card, interpretation: result });
             addReadingToHistory({
                 type: 'Falk Lyom',
-                title: `${card.name} - ${category}`,
-                content: result,
+                title: t('falkLyomReadingHistoryTitle', { category }),
+                content: historyItemContent,
             });
         }
       } catch (err) {
+        console.error("Error getting local Falk Lyom interpretation", err);
         setError(t('errorFalkLyom'));
       } finally {
-        setIsLoading(false);
+          setIsLoading(false);
       }
     };
-
-    if (category && gender && skinTone) {
-        fetchInterpretation();
-    }
+    
+    // Use a small timeout to make the loading feel more natural
+    const timer = setTimeout(getLocalReading, 500);
+    return () => clearTimeout(timer);
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [category, gender, skinTone, language, t]);
+  }, [category, gender, skinTone, language]);
 
   return (
     <div className="container mx-auto p-4 flex flex-col items-center flex-grow animate-fade-in box-border">
@@ -83,7 +102,7 @@ const FalkLyomResultPage: React.FC<FalkLyomResultPageProps> = ({ page, setPage, 
         </Card>
 
         <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
-            <Button onClick={() => setPage(Page.FALK_LYOM_CATEGORY)} disabled={isLoading}>
+            <Button onClick={() => setPage(Page.FALK_LYOM_CATEGORY)} disabled={isLoading} variant="primary">
                 {t('readingAgain')}
             </Button>
             <Button onClick={() => setPage(Page.HOME)} variant="secondary">{t('goHome')}</Button>

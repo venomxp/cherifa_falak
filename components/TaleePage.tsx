@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Page } from '../types.ts';
-import { getTaleeReadingStream, validateName } from '../services/geminiService.ts';
+import { getTaleeReadingStream } from '../services/geminiService.ts';
 import Button from './common/Button.tsx';
 import Card from './common/Card.tsx';
 import Spinner from './common/Spinner.tsx';
@@ -19,7 +19,7 @@ const TaleePage: React.FC<TaleePageProps> = ({ page, setPage }) => {
   const [reading, setReading] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isStreaming, setIsStreaming] = useState<boolean>(false);
-  const [isValidating, setIsValidating] = useState<boolean>(false);
+  const [isCached, setIsCached] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
 
   useEffect(() => {
@@ -36,30 +36,9 @@ const TaleePage: React.FC<TaleePageProps> = ({ page, setPage }) => {
       return;
     }
     
-    setIsValidating(true);
     setError('');
+    setIsCached(false);
 
-    const nameResult = await validateName(name);
-    if (!nameResult.isValid) {
-        setError(nameResult.suggestion 
-            ? t('errorInvalidNameWithSuggestion', { suggestion: nameResult.suggestion }) 
-            : t('errorInvalidName')
-        );
-        setIsValidating(false);
-        return;
-    }
-    
-    const motherNameResult = await validateName(mothersName);
-    if (!motherNameResult.isValid) {
-        setError(motherNameResult.suggestion 
-            ? t('errorInvalidNameWithSuggestion', { suggestion: motherNameResult.suggestion }) 
-            : t('errorInvalidName')
-        );
-        setIsValidating(false);
-        return;
-    }
-
-    setIsValidating(false);
     setIsLoading(true);
     setReading('');
     setIsStreaming(false);
@@ -78,6 +57,7 @@ const TaleePage: React.FC<TaleePageProps> = ({ page, setPage }) => {
         // Use timeout for smoother UX, showing the cached result
         setTimeout(() => {
             setReading(todaysReading.content);
+            setIsCached(true);
             setIsLoading(false);
         }, 500);
         return;
@@ -112,6 +92,7 @@ const TaleePage: React.FC<TaleePageProps> = ({ page, setPage }) => {
     setMothersName('');
     setGender('');
     setError('');
+    setIsCached(false);
     // keep user name
   }
 
@@ -162,8 +143,8 @@ const TaleePage: React.FC<TaleePageProps> = ({ page, setPage }) => {
                       </div>
                     </div>
                 </div>
-                <Button onClick={handleAnalyze} disabled={isLoading || isValidating} className="w-full mt-6">
-                    {isValidating ? t('validatingName') : isLoading ? t('analyzing') : t('revealDestiny')}
+                <Button onClick={handleAnalyze} disabled={isLoading} className="w-full mt-6" variant="primary">
+                    {isLoading ? t('analyzing') : t('revealDestiny')}
                 </Button>
             </Card>
             {error && !isLoading && <p className="text-red-400 my-4 text-center">{error}</p>}
@@ -180,6 +161,7 @@ const TaleePage: React.FC<TaleePageProps> = ({ page, setPage }) => {
             <Card>
               <div className="p-4">
                   <h3 className="text-2xl font-bold text-brand-accent mb-4 text-center">{t('taleeReadingHistoryTitle', { name, mothersName })}</h3>
+                  {isCached && <p className="text-center text-sm text-brand-accent italic mb-4">{t('cachedReadingMessage')}</p>}
                   <p className={`text-lg whitespace-pre-wrap leading-relaxed text-brand-light-text dark:text-brand-text-light ${language === 'ar' ? 'text-right' : 'text-left'}`}>
                     {reading}
                     {isStreaming && <span className="inline-block w-1 h-5 bg-brand-accent animate-pulse ml-1 align-bottom"></span>}
@@ -187,7 +169,7 @@ const TaleePage: React.FC<TaleePageProps> = ({ page, setPage }) => {
               </div>
             </Card>
             <div className="text-center mt-6 flex flex-col sm:flex-row gap-4 justify-center">
-                <Button onClick={reset} disabled={isStreaming}>{t('newAnalysis')}</Button>
+                <Button onClick={reset} disabled={isStreaming} variant="primary">{t('newAnalysis')}</Button>
                 <Button onClick={() => setPage(Page.HOME)} variant="secondary">{t('goHome')}</Button>
             </div>
           </div>

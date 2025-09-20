@@ -1,4 +1,4 @@
-import { GoogleGenAI, GenerateContentResponse, Type } from "@google/genai";
+import { GoogleGenAI, GenerateContentResponse } from "@google/genai";
 
 // The API key is now read from environment variables for security and flexibility.
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
@@ -15,6 +15,12 @@ const generateContentWithRetry = async (prompt: string): Promise<GenerateContent
       });
       return response;
     } catch (error) {
+      // Don't retry on quota exhaustion (429) errors, as it won't succeed.
+      if (error instanceof Error && (error.message.includes('RESOURCE_EXHAUSTED') || error.message.includes('429'))) {
+         console.error("Gemini API call failed due to quota exhaustion. Not retrying.", error);
+         throw error; // Re-throw the original error without retrying
+      }
+
       console.error("Gemini API call failed, retrying...", error);
       retries--;
       if (retries === 0) {
@@ -35,7 +41,7 @@ export const translateHoroscopeToArabic = async (horoscope: string, period: 'dai
     return response.text.trim();
   } catch (error) {
     console.error("Error translating horoscope:", error);
-    return `عذراً، حدث خطأ أثناء ترجمة الطالع ${periodArabic}.`;
+    return `عذراً، حدث خطأ أثناء ترجمة البرج ${periodArabic}.`;
   }
 };
 
@@ -153,35 +159,6 @@ Explain its core meaning, its upright significance, and what message it might ho
     }
 };
 
-// Generates a fortune for the "Falk Lyom" feature
-export const getFalkLyomInterpretation = async (cardName: string, category: string, gender: string, skinTone: string, language: 'ar' | 'en' | 'fr'): Promise<string> => {
-  let prompt: string;
-
-  switch (language) {
-    case 'fr':
-      prompt = `Agis en tant que voyante marocaine sage. Une personne (${gender}, ${skinTone}) a tiré la carte "${cardName}" en demandant des conseils sur "${category}".
-Fournis une lecture courte (deux ou trois phrases), mystique et encourageante en français. Le ton doit être traditionnel, authentique et plein d'espoir. Commence la réponse directement, sans phrases d'introduction.`;
-      break;
-    case 'en':
-      prompt = `Act as a wise Moroccan fortune teller. A person (${gender}, ${skinTone}) drew the card "${cardName}" asking about "${category}".
-Provide a short (two or three sentences), mystical, and encouraging reading in English. The tone should be traditional, authentic, and hopeful. Start the answer directly, without any introductory phrases.`;
-      break;
-    case 'ar':
-    default:
-      prompt = `أنتِ شوافة مغربية حكيمة و كلامك موزون. شخص (${gender}، لونه ${skinTone}) سحب كارطة "${cardName}" وهو يسأل عن "${category}".
-قدمي له قراءة قصيرة (جملتين أو ثلاث) وغامضة ومشجعة باللهجة المغربية (الدارجة). يجب أن تكون النبرة تقليدية وأصيلة، ومليئة بالأمل. لا تستخدمي أي مقدمات مثل "أرى في الكارطة" أو "الكارطة تقول". ابدئي الإجابة مباشرةً.`;
-      break;
-  }
-
-  try {
-    const response = await generateContentWithRetry(prompt);
-    return response.text.trim();
-  } catch (error) {
-    console.error("Error getting Falk Lyom interpretation:", error);
-    throw new Error("Failed to get Falk Lyom interpretation.");
-  }
-};
-
 // Generates a weekly or monthly horoscope
 export const getGeneratedHoroscope = async (sign: string, period: 'weekly' | 'monthly', language: 'ar' | 'en' | 'fr') => {
   const periodArabic = period === 'weekly' ? 'الأسبوعي' : 'الشهري';
@@ -252,40 +229,5 @@ Provide a "message for the day" based on this number. The message should be insi
     } catch (error) {
         console.error("Error getting Gematria reading stream:", error);
         throw new Error("Failed to get Gematria reading.");
-    }
-};
-
-// Validates if a string is a plausible human name using AI
-export const validateName = async (name: string): Promise<{ isValid: boolean; suggestion?: string }> => {
-    const prompt = `Analyze the following string and determine if it is a plausible human name. Consider common names, variations, and typos across different cultures. If it's not a plausible name (e.g., random characters like 'asdfg' or nonsensical), set isValid to false. If it seems like a typo of a real name, provide a correction in the suggestion field, otherwise leave suggestion empty.
-String: "${name}"`;
-
-    try {
-        const response = await ai.models.generateContent({
-            model: "gemini-2.5-flash",
-            contents: prompt,
-            config: {
-                responseMimeType: "application/json",
-                responseSchema: {
-                    type: Type.OBJECT,
-                    properties: {
-                        isValid: { type: Type.BOOLEAN, description: "Whether the name is plausible." },
-                        suggestion: { type: Type.STRING, description: "A suggested correction if a typo is detected." }
-                    },
-                    required: ["isValid"]
-                },
-                thinkingConfig: { thinkingBudget: 0 }
-            },
-        });
-        
-        const jsonResponse = JSON.parse(response.text);
-        return {
-            isValid: jsonResponse.isValid,
-            suggestion: jsonResponse.suggestion || undefined,
-        };
-    } catch (error) {
-        console.error("Error validating name with AI:", error);
-        // Fail open to not block the user if the validation service is down.
-        return { isValid: true };
     }
 };

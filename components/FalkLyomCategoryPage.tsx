@@ -1,8 +1,8 @@
 import React from 'react';
 import { Page } from '../types.ts';
 import Button from './common/Button.tsx';
-import Card from './common/Card.tsx';
 import { useSettings } from '../hooks/useSettings.tsx';
+import Card from './common/Card.tsx';
 
 interface FalkLyomCategoryPageProps {
   setPage: (page: Page) => void;
@@ -18,27 +18,42 @@ const FalkLyomCategoryPage: React.FC<FalkLyomCategoryPageProps> = ({ setPage, se
     setPage(Page.FALK_LYOM_RESULT);
   };
 
+  const categories = [
+    {
+      key: 'falkLove' as const,
+      title: t('loveCategory'),
+    },
+    {
+      key: 'falkWork' as const,
+      title: t('workCategory'),
+    },
+    {
+      key: 'falkLuck' as const,
+      title: t('luckCategory'),
+    },
+  ];
+
   return (
-    <div className="container mx-auto p-4 flex flex-col items-center justify-center flex-grow animate-fade-in space-y-8 text-center box-border">
-      <h2 className="text-4xl font-bold text-brand-accent">
+    <div className="container mx-auto p-4 flex flex-col items-center justify-center flex-grow animate-fade-in text-center box-border">
+      <h2 className="text-4xl font-bold text-brand-accent mb-8">
         {t('falkLyomCategoryTitle')}
       </h2>
 
       <Card className="w-full max-w-md">
         <div className="space-y-4 p-4">
-          <Button onClick={() => handleSelect('falkLove')} className="w-full text-2xl py-5">
-            {t('loveCategory')}
-          </Button>
-          <Button onClick={() => handleSelect('falkWork')} className="w-full text-2xl py-5">
-            {t('workCategory')}
-          </Button>
-          <Button onClick={() => handleSelect('falkLuck')} className="w-full text-2xl py-5">
-            {t('luckCategory')}
-          </Button>
+          {categories.map((cat) => (
+            <Button
+              key={cat.key}
+              onClick={() => handleSelect(cat.key)}
+              className="w-full text-2xl py-5"
+            >
+              {cat.title}
+            </Button>
+          ))}
         </div>
       </Card>
 
-      <div className="mt-4 flex gap-4">
+      <div className="mt-8 flex gap-4">
         <Button onClick={goBack} variant="secondary">
           &larr; {t('goBack')}
         </Button>

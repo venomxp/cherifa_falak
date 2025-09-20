@@ -21,17 +21,17 @@ const AvatarPickerModal: React.FC<AvatarPickerModalProps> = ({ isOpen, onClose, 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in" onClick={onClose} role="dialog" aria-modal="true">
       <div onClick={(e) => e.stopPropagation()}>
-        <Card className="w-full max-w-sm">
-            <h3 className="text-2xl font-bold text-center mb-6 text-brand-accent">{t('chooseYourSymbol')}</h3>
-            <div className="flex justify-center items-center gap-4">
+        <Card className="w-full max-w-md">
+            <h3 className="text-3xl font-bold text-center mb-8 text-brand-accent tracking-wide">{t('chooseYourSymbol')}</h3>
+            <div className="grid grid-cols-3 gap-6 place-items-center">
                 {AVATARS.map(({ id, Component }) => (
                     <button 
                         key={id} 
                         onClick={() => handleSelect(id)} 
-                        className="p-2 bg-brand-dark rounded-full aspect-square flex items-center justify-center transition-all duration-300 transform hover:scale-110 hover:bg-brand-accent/20 ring-2 ring-transparent focus:outline-none focus:ring-brand-accent"
+                        className="p-2 bg-brand-dark/50 rounded-full border-2 border-transparent hover:border-brand-accent focus:border-brand-accent focus:outline-none transition-all duration-200 transform hover:scale-105"
                         aria-label={`Select ${id} symbol`}
                     >
-                        <Component className="w-10 h-10 text-brand-accent" />
+                        <Component className="w-16 h-16" />
                     </button>
                 ))}
             </div>

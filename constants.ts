@@ -57,3 +57,24 @@ export const MOROCCAN_TAROT_CARDS: MoroccanTarotCard[] = [
   { name: 'سيد الرجال', key: 'sid_rjal' },
   { name: 'لالة عايشة', key: 'lalla_aicha' },
 ];
+
+
+// An aggregated list of all critical images to be preloaded on app start.
+export const CRITICAL_IMAGE_URLS: string[] = [
+  // Home Page Category Illustrations
+  "https://i.postimg.cc/YSzKjGqN/1.png",
+  "https://i.postimg.cc/cH1q3xrp/2.png",
+  "https://i.postimg.cc/J0gSSjP8/3.png",
+  "https://i.postimg.cc/k4T0F0SB/4.png",
+  "https://i.postimg.cc/RhqjPg1G/5.png",
+  "https://i.postimg.cc/MZFkc8xL/6.png",
+  "https://i.postimg.cc/WbFBgf11/7.png",
+  "https://i.postimg.cc/wTCSVc1c/8.png",
+  // Profile Avatars
+  "https://i.postimg.cc/fTSBW09p/1.png",
+  "https://i.postimg.cc/W4Tn7WHc/2.png",
+  "https://i.postimg.cc/fR45VT7L/3.png",
+  "https://i.postimg.cc/g0sKtVCX/4.png",
+  "https://i.postimg.cc/mgQjCfVS/5.png",
+  "https://i.postimg.cc/ydNyMJKf/6.png",
+];

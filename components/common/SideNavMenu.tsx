@@ -2,6 +2,7 @@ import React from 'react';
 import { Page } from '../../types.ts';
 import { useSettings } from '../../hooks/useSettings.tsx';
 import { triggerHapticFeedback } from '../../utils/haptics.ts';
+import Logo from './Logo.tsx';
 
 // Icons for the menu
 const HomeIcon = ({ className }: { className: string }) => ( <svg xmlns="http://www.w3.org/2000/svg" className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg> );
@@ -56,6 +57,7 @@ const SideNavMenu: React.FC<SideNavMenuProps> = ({ isOpen, closeMenu, currentPag
   ];
   
   const menuPositionClass = language === 'ar' ? 'right-0' : 'left-0';
+  const borderClass = language === 'ar' ? 'border-l border-black/10 dark:border-white/10' : 'border-r border-black/10 dark:border-white/10';
 
   return (
     <div
@@ -70,12 +72,15 @@ const SideNavMenu: React.FC<SideNavMenuProps> = ({ isOpen, closeMenu, currentPag
       {/* Menu Panel */}
       <div
         onClick={(e) => e.stopPropagation()}
-        className={`absolute top-0 h-full w-72 max-w-[80vw] bg-brand-light dark:bg-brand-light-dark shadow-2xl transition-all duration-300 ease-in-out ${menuPositionClass} ${
+        className={`absolute top-0 h-full w-72 max-w-[80vw] bg-brand-light/80 dark:bg-brand-dark/80 backdrop-blur-lg shadow-2xl transition-all duration-300 ease-in-out ${menuPositionClass} ${borderClass} ${
           isOpen ? 'translate-x-0' : (language === 'ar' ? 'translate-x-full' : '-translate-x-full')
         }`}
       >
         <div className="p-4 flex flex-col h-full">
-            <h2 className="text-2xl font-bold text-brand-accent p-4">{t('appName')}</h2>
+            {/* Replaced app name text with a centered logo */}
+            <div className="flex justify-center p-4">
+                <Logo setPage={page => handleNavigate(page)} />
+            </div>
             <nav className="mt-4 space-y-2">
                 {navItems.map(item => (
                     <SideNavLink

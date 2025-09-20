@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Page } from '../types.ts';
-import { getGematriaReadingStream, validateName } from '../services/geminiService.ts';
+import { getGematriaReadingStream } from '../services/geminiService.ts';
 import Button from './common/Button.tsx';
 import Card from './common/Card.tsx';
 import Spinner from './common/Spinner.tsx';
@@ -18,7 +18,7 @@ const GematriaPage: React.FC<GematriaPageProps> = ({ page, setPage }) => {
   const [reading, setReading] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isStreaming, setIsStreaming] = useState(false);
-  const [isValidating, setIsValidating] = useState(false);
+  const [isCached, setIsCached] = useState(false);
   const [error, setError] = useState('');
 
   useEffect(() => {
@@ -39,7 +39,7 @@ const GematriaPage: React.FC<GematriaPageProps> = ({ page, setPage }) => {
     return inputName.split('').reduce((sum, char) => sum + (abjadMap[char] || 0), 0);
   };
 
-  const handleCalculate = async () => {
+  const handleCalculate = () => {
     if (!name.trim()) {
       setError(t('errorEnterName'));
       setGematriaValue(null);
@@ -47,19 +47,6 @@ const GematriaPage: React.FC<GematriaPageProps> = ({ page, setPage }) => {
     }
     setError('');
     setReading('');
-    setIsValidating(true);
-    
-    const validationResult = await validateName(name);
-    if (!validationResult.isValid) {
-      setError(validationResult.suggestion 
-        ? t('errorInvalidNameWithSuggestion', { suggestion: validationResult.suggestion })
-        : t('errorInvalidName')
-      );
-      setIsValidating(false);
-      return;
-    }
-    
-    setIsValidating(false);
     const value = calculateGematria(name);
     setGematriaValue(value);
   };
@@ -68,6 +55,7 @@ const GematriaPage: React.FC<GematriaPageProps> = ({ page, setPage }) => {
     if (gematriaValue === null) return;
 
     setIsLoading(true);
+    setIsCached(false);
     setReading('');
     setError('');
 
@@ -88,6 +76,7 @@ const GematriaPage: React.FC<GematriaPageProps> = ({ page, setPage }) => {
         // Use timeout for smoother UX, showing the cached result
         setTimeout(() => {
             setReading(mainReading);
+            setIsCached(true);
             setIsLoading(false);
         }, 500);
         return;
@@ -120,6 +109,7 @@ const GematriaPage: React.FC<GematriaPageProps> = ({ page, setPage }) => {
     setGematriaValue(null);
     setReading('');
     setError('');
+    setIsCached(false);
   };
 
   return (
@@ -142,8 +132,8 @@ const GematriaPage: React.FC<GematriaPageProps> = ({ page, setPage }) => {
             className="w-full p-3 bg-brand-light dark:bg-brand-dark text-brand-light-text dark:text-brand-text-light border border-brand-light-border dark:border-brand-border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-accent"
             dir="rtl"
           />
-           <Button onClick={handleCalculate} className="w-full mt-4" disabled={isValidating}>
-            {isValidating ? t('validatingName') : t('calculateValue')}
+           <Button onClick={handleCalculate} className="w-full mt-4" variant="primary">
+            {t('calculateValue')}
           </Button>
         </Card>
 
@@ -155,7 +145,7 @@ const GematriaPage: React.FC<GematriaPageProps> = ({ page, setPage }) => {
               <p className="text-lg font-semibold">{t('yourGematriaValueIs')}</p>
               <p className="text-6xl font-black text-brand-accent my-2">{gematriaValue}</p>
             </Card>
-            <Button onClick={handleGetReading} disabled={isLoading}>
+            <Button onClick={handleGetReading} disabled={isLoading} variant="primary">
               {t('getYourReading')}
             </Button>
           </div>
@@ -168,6 +158,7 @@ const GematriaPage: React.FC<GematriaPageProps> = ({ page, setPage }) => {
             <Card>
               <div className="p-4">
                   <h3 className="text-2xl font-bold text-brand-accent mb-4 text-center">{t('gematriaReadingFor', { value: gematriaValue! })}</h3>
+                  {isCached && <p className="text-center text-sm text-brand-accent italic mb-4">{t('cachedReadingMessage')}</p>}
                   <p className={`text-lg whitespace-pre-wrap leading-relaxed text-brand-light-text dark:text-brand-text-light ${language === 'ar' ? 'text-right' : 'text-left'}`}>
                     {reading}
                     {isStreaming && <span className="inline-block w-1 h-5 bg-brand-accent animate-pulse ml-1 align-bottom"></span>}
@@ -175,7 +166,7 @@ const GematriaPage: React.FC<GematriaPageProps> = ({ page, setPage }) => {
               </div>
             </Card>
             <div className="text-center mt-6 flex flex-col sm:flex-row gap-4 justify-center">
-                <Button onClick={reset} disabled={isStreaming}>{t('newAnalysis')}</Button>
+                <Button onClick={reset} disabled={isStreaming} variant="primary">{t('newAnalysis')}</Button>
             </div>
           </div>
         )}

@@ -8,11 +8,13 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const Button: React.FC<ButtonProps> = ({ children, className = '', variant = 'primary', onClick, ...props }) => {
-  const baseClasses = "px-6 py-3 font-bold rounded-full transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg focus:outline-none focus:ring-4";
+  // Base classes for the button. A cleaner, modern style without the 3D effect.
+  const baseClasses = "px-6 py-3 font-bold rounded-full transition-all duration-200 transform disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-4 hover:brightness-110 active:scale-95";
 
+  // New variant classes. Primary is the main call-to-action (solid, darker). Secondary is for less prominent actions (light fill).
   const variantClasses = {
-    primary: "text-brand-button-text bg-brand-accent hover:bg-brand-accent-dark shadow-lg shadow-brand-accent/20 focus:ring-brand-accent/50",
-    secondary: "text-brand-accent bg-transparent border-2 border-brand-accent/50 hover:bg-brand-accent/10 hover:border-brand-accent focus:ring-brand-accent/50",
+    primary: "bg-slate-500 text-white hover:bg-slate-600 focus:ring-slate-400 dark:bg-slate-600 dark:hover:bg-slate-500 dark:focus:ring-slate-500",
+    secondary: "bg-slate-200 text-slate-700 hover:bg-slate-300 focus:ring-slate-300 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700 dark:focus:ring-slate-700",
   };
   
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {

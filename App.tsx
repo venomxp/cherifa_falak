@@ -24,6 +24,9 @@ import Spinner from './components/common/Spinner.tsx';
 import TaleePage from './components/TaleePage.tsx';
 import GematriaPage from './components/GematriaPage.tsx';
 import WelcomeProfilePage from './components/WelcomeProfilePage.tsx';
+import ReadingHistoryPage from './components/ReadingHistoryPage.tsx';
+import { preloadImages } from './utils/preload.ts';
+import { CRITICAL_IMAGE_URLS } from './constants.ts';
 
 const App: React.FC = () => {
   const [showSplash, setShowSplash] = useState(true);
@@ -103,6 +106,11 @@ const App: React.FC = () => {
     };
   }, [showSplash, isMenuOpen]);
 
+  // Effect to preload critical images for a smoother experience.
+  useEffect(() => {
+    preloadImages(CRITICAL_IMAGE_URLS);
+  }, []);
+
   // All pages now display the top navigation bar for consistency.
   const pagesWithoutTopBar: Page[] = [Page.WELCOME_PROFILE];
 
@@ -153,22 +161,24 @@ const App: React.FC = () => {
         return <SettingsPage setPage={navigate} />;
       case Page.PROFILE:
         return <ProfilePage setPage={navigate} />;
+       case Page.READING_HISTORY:
+        return <ReadingHistoryPage setPage={navigate} goBack={() => navigate(Page.PROFILE)} />;
       case Page.FALK_LYOM_WELCOME:
         return <FalkLyomWelcomePage setPage={navigate} />;
       case Page.FALK_LYOM_GENDER:
-        return <FalkLyomGenderPage setPage={navigate} setFalkGender={setFalkGender} goBack={goBack} />;
+        return <FalkLyomGenderPage setPage={navigate} setFalkGender={setFalkGender} goBack={() => navigate(Page.FALK_LYOM_WELCOME)} />;
       case Page.FALK_LYOM_SKIN_TONE:
         if (!falkGender) {
           navigate(Page.FALK_LYOM_GENDER);
           return <Spinner />;
         }
-        return <FalkLyomSkinTonePage setPage={navigate} setFalkSkinTone={setFalkSkinTone} gender={falkGender} goBack={goBack} />;
+        return <FalkLyomSkinTonePage setPage={navigate} setFalkSkinTone={setFalkSkinTone} gender={falkGender} goBack={() => navigate(Page.FALK_LYOM_GENDER)} />;
       case Page.FALK_LYOM_CATEGORY:
         if (!falkSkinTone) {
           navigate(Page.FALK_LYOM_SKIN_TONE);
           return <Spinner />;
         }
-        return <FalkLyomCategoryPage setPage={navigate} setFalkCategory={setFalkCategory} goBack={goBack} />;
+        return <FalkLyomCategoryPage setPage={navigate} setFalkCategory={setFalkCategory} goBack={() => navigate(Page.FALK_LYOM_SKIN_TONE)} />;
       case Page.FALK_LYOM_RESULT:
         if (!falkCategory) {
           navigate(Page.FALK_LYOM_CATEGORY);
@@ -176,11 +186,11 @@ const App: React.FC = () => {
         }
         return <FalkLyomResultPage page={page} setPage={navigate} gender={falkGender!} skinTone={falkSkinTone!} category={falkCategory!} />;
       case Page.PRIVACY_POLICY:
-        return <PrivacyPolicyPage page={page} setPage={navigate} goBack={goBack} />;
+        return <PrivacyPolicyPage page={page} setPage={navigate} goBack={() => navigate(Page.SETTINGS)} />;
       case Page.TERMS_CONDITIONS:
-        return <TermsConditionsPage page={page} setPage={navigate} goBack={goBack} />;
+        return <TermsConditionsPage page={page} setPage={navigate} goBack={() => navigate(Page.SETTINGS)} />;
       case Page.HELP_FAQ:
-        return <HelpFAQPage page={page} setPage={navigate} goBack={goBack} />;
+        return <HelpFAQPage page={page} setPage={navigate} goBack={() => navigate(Page.SETTINGS)} />;
       case Page.TALEE:
         return <TaleePage page={page} setPage={navigate} />;
       case Page.GEMATRIA:

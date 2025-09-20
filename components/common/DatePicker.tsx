@@ -114,10 +114,10 @@ const DatePicker: React.FC<DatePickerProps> = ({ isOpen, onClose, onSet, onClear
         </div>
 
         {/* Footer */}
-        <div className="flex justify-end gap-2 p-4 border-t border-brand-light-border dark:border-brand-border">
+        <div className="flex justify-center gap-2 p-4 border-t border-brand-light-border dark:border-brand-border">
           <Button onClick={handleClear} variant="secondary">{t('clear')}</Button>
           <Button onClick={onClose} variant="secondary">{t('cancel')}</Button>
-          <Button onClick={handleSet}>{t('set')}</Button>
+          <Button onClick={handleSet} variant="primary">{t('set')}</Button>
         </div>
       </div>
     </div>
