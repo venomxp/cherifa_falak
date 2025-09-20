@@ -5,12 +5,15 @@ import Button from './common/Button.tsx';
 import Card from './common/Card.tsx';
 import Spinner from './common/Spinner.tsx';
 import TarotCard from './common/TarotCard.tsx';
+import { useSettings } from '../hooks/useSettings.tsx';
 
 interface LoveCompatibilityPageProps {
   setPage: (page: Page) => void;
 }
 
 const LoveCompatibilityPage: React.FC<LoveCompatibilityPageProps> = ({ setPage }) => {
+  // FIX: Use settings for i18n and dynamic language.
+  const { t, language } = useSettings();
   const [name1, setName1] = useState<string>('');
   const [name2, setName2] = useState<string>('');
   const [percentage, setPercentage] = useState<number | null>(null);
@@ -33,7 +36,8 @@ const LoveCompatibilityPage: React.FC<LoveCompatibilityPageProps> = ({ setPage }
 
   const handleAnalyze = async () => {
     if (!name1.trim() || !name2.trim()) {
-      setError('الرجاء إدخال الاسمين.');
+      // FIX: Use translation key for error message.
+      setError(t('errorEnterBothNames'));
       return;
     }
     setIsLoading(true);
@@ -44,62 +48,71 @@ const LoveCompatibilityPage: React.FC<LoveCompatibilityPageProps> = ({ setPage }
     setPercentage(compatibilityPercentage);
 
     try {
-      // FIX: Added 'ar' for the missing language parameter.
-      const stream = await getLoveCompatibilityAnalysis(name1, name2, compatibilityPercentage, 'ar');
-      // FIX: The API returns a stream. Iterate over it to get the full text.
+      // FIX: Use dynamic language from settings instead of hardcoded 'ar'.
+      const stream = await getLoveCompatibilityAnalysis(name1, name2, compatibilityPercentage, language);
+      // The API returns a stream. Iterate over it to get the full text.
       let fullText = '';
       for await (const chunk of stream) {
         fullText += chunk.text;
       }
       setAnalysis(fullText);
     } catch (err) {
-      setError('حدث خطأ أثناء تحليل التوافق. يرجى المحاولة مرة أخرى.');
+      // FIX: Use translation key for error message.
+      setError(t('errorCompatibility'));
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="container mx-auto p-4 flex flex-col items-center min-h-screen animate-fade-in">
-      <h2 className="text-4xl font-bold mb-8 text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-500">
-        قياس توافق الحب
+    <div className="container mx-auto p-4 flex flex-col items-center flex-grow animate-fade-in box-border pb-24">
+      {/* FIX: Use consistent page title styling and translation. */}
+      <h2 className="text-4xl font-logo-en font-bold my-8 text-center text-brand-accent tracking-wider">
+        {t('compatibility')}
       </h2>
 
       <Card className="w-full max-w-md mb-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-                <label htmlFor="name1" className="block text-lg font-semibold mb-2 text-purple-300">
-                الاسم الأول
+                {/* FIX: Use translation key for label. */}
+                <label htmlFor="name1" className="block text-lg font-semibold mb-2 text-brand-accent">
+                {t('yourName')}
                 </label>
                 <input
                 id="name1"
                 type="text"
                 value={name1}
                 onChange={(e) => setName1(e.target.value)}
-                placeholder="ادخل الاسم الأول"
-                className="w-full p-3 bg-gray-700 text-white border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-                dir="rtl"
+                // FIX: Use translation key for placeholder.
+                placeholder={t('yourName')}
+                // FIX: Use consistent input styling and dynamic text direction.
+                className="w-full p-3 bg-brand-light dark:bg-brand-dark text-brand-light-text dark:text-brand-text-light border border-brand-light-border dark:border-brand-border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-accent"
+                dir={language === 'ar' ? 'rtl' : 'ltr'}
                 />
             </div>
             <div>
-                <label htmlFor="name2" className="block text-lg font-semibold mb-2 text-purple-300">
-                الاسم الثاني
+                {/* FIX: Use translation key for label. */}
+                <label htmlFor="name2" className="block text-lg font-semibold mb-2 text-brand-accent">
+                {t('secondName')}
                 </label>
                 <input
                 id="name2"
                 type="text"
                 value={name2}
                 onChange={(e) => setName2(e.target.value)}
-                placeholder="ادخل الاسم الثاني"
-                className="w-full p-3 bg-gray-700 text-white border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-                dir="rtl"
+                // FIX: Use translation key for placeholder.
+                placeholder={t('secondName')}
+                // FIX: Use consistent input styling and dynamic text direction.
+                className="w-full p-3 bg-brand-light dark:bg-brand-dark text-brand-light-text dark:text-brand-text-light border border-brand-light-border dark:border-brand-border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-accent"
+                dir={language === 'ar' ? 'rtl' : 'ltr'}
                 />
             </div>
         </div>
       </Card>
 
-      <Button onClick={handleAnalyze} disabled={isLoading}>
-        {isLoading ? 'جاري التحليل...' : 'اكتشف نسبة التوافق'}
+      {/* FIX: Use translation keys and consistent button component usage. */}
+      <Button onClick={handleAnalyze} disabled={isLoading} variant="primary">
+        {isLoading ? t('analyzing') : t('analyzeCompatibility')}
       </Button>
 
       {isLoading && <Spinner />}
@@ -107,23 +120,29 @@ const LoveCompatibilityPage: React.FC<LoveCompatibilityPageProps> = ({ setPage }
       {error && <p className="text-red-400 mt-4">{error}</p>}
 
       {analysis && !isLoading && percentage !== null && (
-        <div className="mt-8 w-full max-w-2xl">
-          <TarotCard>
+        <div className="mt-8 w-full max-w-2xl animate-fade-in">
+          <Card>
             <div className="p-4 text-center">
-                 <h3 className="text-2xl font-bold text-yellow-300 mb-2">{`تحليل العلاقة بين ${name1} و ${name2}`}</h3>
+                 {/* FIX: Use translation key for title. */}
+                 <h3 className="text-2xl font-bold text-brand-accent mb-2">{t('compatibilityResultTitleNames', { name1, name2 })}</h3>
                 <div className="text-center mb-4">
-                    <p className="text-2xl font-bold">نسبة التوافق</p>
-                    <p className="text-6xl font-black text-pink-400 my-2">{percentage}%</p>
+                    {/* FIX: Use translation key for label. */}
+                    <p className="text-2xl font-bold">{t('compatibility')}</p>
+                    <p className="text-6xl font-black text-brand-accent my-2">{percentage}%</p>
                 </div>
-                <p className="text-lg whitespace-pre-wrap leading-relaxed text-gray-200">{analysis}</p>
+                {/* FIX: Use consistent text colors. */}
+                <p className={`text-lg whitespace-pre-wrap leading-relaxed text-brand-light-text dark:text-brand-text-light ${language === 'ar' ? 'text-right' : 'text-left'}`}>{analysis}</p>
             </div>
-          </TarotCard>
+          </Card>
         </div>
       )}
 
-      <Button onClick={() => setPage(Page.HOME)} className="mt-12 bg-opacity-50 border border-purple-400 hover:bg-purple-700">
-        العودة إلى الرئيسية
-      </Button>
+      {/* FIX: Use consistent button component usage. */}
+      <div className="mt-8">
+        <Button onClick={() => setPage(Page.HOME)} variant="secondary">
+          {t('goHome')}
+        </Button>
+      </div>
     </div>
   );
 };

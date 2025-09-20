@@ -100,6 +100,15 @@
         }
       }
     </script>
+    <script>
+      // Polyfill for the 'process' object to ensure compatibility in browser environments
+      // where it's not natively available. This allows the app to access environment
+      // variables like `process.env.API_KEY` which are expected to be injected by the
+      // execution environment.
+      if (typeof window.process === 'undefined') {
+        window.process = { env: {} };
+      }
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Cinzel+Decorative:wght@700&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">

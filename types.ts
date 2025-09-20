@@ -1,3 +1,16 @@
+// FIX: Removed the triple-slash directive for "vite/client" because it was causing a
+// type resolution error and the types for `import.meta.env` are not used in the codebase.
+// The `declare var process` below handles type checking for `process.env`.
+
+// To satisfy TypeScript when using process.env in a browser-targeted project
+// without pulling in the full 'node' types. The execution environment is
+// expected to provide this object.
+declare var process: {
+  env: {
+    [key: string]: string | undefined;
+  };
+};
+
 import { translations } from './localization/translations.ts';
 
 export enum Page {
