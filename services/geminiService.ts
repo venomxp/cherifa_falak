@@ -1,7 +1,7 @@
 import { GoogleGenAI, GenerateContentResponse } from "@google/genai";
 
 // The API key is now read from Vite environment variables for security and flexibility.
-const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_API_KEY });
+const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY });
 
 // A robust helper function to call the Gemini API with automatic retries on failure
 const generateContentWithRetry = async (prompt: string): Promise<GenerateContentResponse> => {
